@@ -1,0 +1,157 @@
+<div>
+    <!-- <app-page-header [heading]="'Purchase Requisition Add'" [icon]="'fa fa-university'"></app-page-header> -->
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="page-header">Purchase Requisition Add</h4>
+        </div>
+        <div class="col-md-6 pull-right" style="text-align: right">
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-refresh"></i> Reload</button>
+            <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-requisition')">
+                <i class="fa fa-arrow-left"></i> Back</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <hr/>
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" [formGroup]="form">
+                    <div class="card bg-light mb-3">
+                        <div class="card-header" style="background-color:#868e96; color: #fff;">Purchase Requisition Add</div>
+                        <div class="card-body">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header">Header Line</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-3">
+                                            <label>Purchase Organization</label>
+                                            <select class="form-control" formControlName="purchase_org" [ngClass]="displayFieldCss('purchase_org')" [(ngModel)]="purchaseRequisition.purchase_organization" name="purchase_organization" (ngModelChange)="changePurchaseOrganization(purchaseRequisition.purchase_organization)">
+                                                <option value="">Select Purchase Organization</option>
+                                                <option *ngFor="let purchaseOrganization of purchaseOrganizationList" value={{purchaseOrganization.id}}>{{purchaseOrganization.name}} </option>
+                                            </select>
+                                            <div class="invalid-feedback" *ngIf="form.controls['purchase_org'].hasError('required')">
+                                                    Please select purchase organization
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Purchase Group</label>
+                                            <select class="form-control" formControlName="purchase_grp" [ngClass]="displayFieldCss('purchase_grp')">
+                                                <option value="">Select Group</option>
+                                                <option *ngFor="let purchaseGroup of purchaseGroupList;" value={{purchaseGroup.id}}>{{purchaseGroup.name}} </option>
+                                            </select>
+                                            <div class="invalid-feedback" *ngIf="isFieldValid('purchase_grp')">
+                                                    Please select purchase group
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Company</label>
+                                            <select class="form-control" name="company" formControlName="company" [ngClass]="displayFieldCss('company')" [(ngModel)]="purchaseRequisition.company" name="company" (ngModelChange)="changeCompany(purchaseRequisition.company)">
+                                                <option value="">Select Company</option>
+                                                <option *ngFor="let purchaseOrganizationCompany of purchaseOrganizationCompanyList;" value={{purchaseOrganizationCompany.id}}>{{purchaseOrganizationCompany.company_name}} </option>
+                                            </select>
+                                            <div class="invalid-feedback" *ngIf="isFieldValid('company')">
+                                                    Please select company
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>PR Date</label>
+                                            <div class="input-group">
+                                                <input class="form-control" placeholder="yyyy-mm-dd" name="created_at" formControlName="created_at" [ngClass]="displayFieldCss('created_at')"  ngbDatepicker #d="ngbDatepicker">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="invalid-feedback" *ngIf="isFieldValid('created_at')">
+                                                        Please enter date
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="card bg-light mb-3">
+                                <div class="card-header">Material Line</div>
+                                <div class="card-body">
+                                    <div class="row" formArrayName="requisition_detail"  *ngFor="let requisition of getRequisitionDetail(form); let i = index;">
+                                        <div [formGroupName]="i" class="col-md-12">
+                                            <div class="row">
+                                                <div class="form-group col-md-2">
+                                                    <label>Material</label>
+                                                    <select class="form-control" name="material" formControlName="material">
+                                                        <option value="">Select Material</option>
+                                                        <option *ngFor="let purchaseOrganizationMaterial of purchaseOrganizationMaterialList;" value="{{purchaseOrganizationMaterial.id}}">{{purchaseOrganizationMaterial.material_fullname}}</option>
+                                                        
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-1">
+                                                    <label>Quantity</label>
+                                                    <input appOnlyNumber class="form-control" placeholder="Quantity" name="quantity" formControlName="quantity">
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label>UOM</label>
+                                                    <select class="form-control"  name="uom" formControlName="uom">
+                                                        <option value="">Select UOM</option>
+                                                        <option *ngFor="let uom of UOMList;" value="{{uom.id}}">{{uom.name}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label>Branch</label>
+                                                    <select class="form-control"  name="branch" formControlName="branch">
+                                                        <option value="">Select Branch</option>
+                                                       
+                                                        <option *ngFor="let companyBranch of companyBranchDropdownList;" value="{{companyBranch.id}}">{{companyBranch.branch_name}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label>Storage</label>
+                                                    <select class="form-control"  name="storage_location" formControlName="storage_location">
+                                                        <option value="">Select Storage</option>
+                                                        <option *ngFor="let companyStorage of companyStorageDropdownList;" value="{{companyStorage.id}}">{{companyStorage.storage_address}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label>Bin</label>
+                                                    <select class="form-control"  name="storage_bin" formControlName="storage_bin">
+                                                        <option value="">Select Bin</option>
+                                                        <option *ngFor="let companyStoragebin of companyStoragebinDropdownList;" value="{{companyStoragebin.id}}">{{companyStoragebin.bin_no}}</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="form-group col-md-1" style="padding-top:30px;">
+                                                    <a routerLink="." (click)="addRequisitionDetail()" title="Add More" name="Add More" *ngIf="i == 0">
+                                                        <i class="fa fa-plus"></i> Add More</a>
+                                                    <a href="javascript:void(0);" title="Delete" name="Delete" *ngIf="i > 0"  (click)="deleteRequisitionDetail(i)">
+                                                        <i class="fa fa-times-circle fa-2" ></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Special Note</label>
+                                    <textarea class="form-control" rows="3" placeholder="Special Note" name="note" formControlName="special_note" [ngClass]="displayFieldCss('special_note')"></textarea>
+                                    <div class="invalid-feedback" *ngIf="isFieldValid('special_note')">
+                                            Please enter special note
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12" style="text-align: right">
+                                    <button type="submit" class="btn btn-primary" (click)="addPurchaseRequisition()">Submit</button>
+                                    <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

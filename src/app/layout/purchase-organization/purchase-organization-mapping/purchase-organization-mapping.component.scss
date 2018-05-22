@@ -1,0 +1,11 @@
+.companyList  {    
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.125);  
+    padding: 13px; 
+    border-radius: 0.25rem;   
+    }
+.companyList li {     list-style: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 5px 0;
+    font-size: 14px;}
+.companyList li ul li {  padding: 7px 22px; }

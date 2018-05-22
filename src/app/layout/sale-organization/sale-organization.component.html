@@ -1,0 +1,86 @@
+<div>
+  <!-- <app-page-header [heading]="'Sale Organization List'" [icon]="'fa fa-university'"></app-page-header> -->
+  <div class="row">
+    <div class="col-md-6">
+      <h4 class="page-header">Sale Organization List</h4>
+    </div>
+    <div class="col-md-6 pull-right" style="text-align: right">
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-refresh"></i> Reload</button>
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('sale-organization/add')">
+        <i class="fa fa-plus"></i> New Sale Organization</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-9">
+              <h5>Sale Organization</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <table class="card-body table table-hover table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sl.No.</th>
+              <th>Organization Name</th>
+              <th>Organization Description</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let saleOrganization of saleOrganizationList ; let i = index">
+              <th scope="row">{{i +1}}</th>
+              <td>{{saleOrganization.name}}</td>
+              <td>{{saleOrganization.description}}</td>
+              <td>
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveSaleOrganization(saleOrganization.id)" *ngIf="saleOrganization.status==true">
+                  <i class="fa fa-thumbs-up"></i> Active</a>
+                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeSaleOrganization(saleOrganization.id)" *ngIf="saleOrganization.status==false">
+                  <i class="fa fa-thumbs-down"></i> Inactive</a>
+              </td>
+              <td>
+                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/sale-organization/edit', saleOrganization.id]">
+                  <i class="fa fa-edit"></i>
+                </a>&nbsp;&nbsp;&nbsp;
+
+              </td>
+
+            </tr>
+            <tr *ngIf="saleOrganizationList.length == 0">
+              <td colspan="5" class="text-center">No record found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="totalsaleOrganizationList > 10">
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totalsaleOrganizationList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

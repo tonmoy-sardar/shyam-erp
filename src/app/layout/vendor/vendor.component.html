@@ -1,0 +1,93 @@
+<div>
+  <!-- <app-page-header [heading]="'Vendor List'" [icon]="'fa fa-university'"></app-page-header> -->
+  <div class="row">
+    <div class="col-md-6">
+      <h4 class="page-header">Vendor List</h4>
+    </div>
+    <div class="col-md-6 pull-right" style="text-align: right">
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-refresh"></i> Reload</button>
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('vendor/add')">
+        <i class="fa fa-plus"></i> New Vendor</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-9">
+              <h5>Vendor</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <table class="card-body table table-hover table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sl.No.</th>
+              <th>Vendor Name</th>
+              <th>PAN</th>
+              <th>CIN.</th>
+              <th>Email</th>
+              <th>Contact No</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vendor of vendorList ; let i = index">
+              <th scope="row">{{i +1}}</th>
+              <td>{{vendor.vendor_fullname}}</td>
+              <td>{{vendor.pan_no}}</td>
+              <td>{{vendor.cin_no}}</td>
+              <td>{{vendor.vendor_address[0].email}}</td>
+              <td>{{vendor.vendor_address[0].mobile}}</td>
+              <td>
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(vendor.id)" *ngIf="vendor.status==true">
+                  <i class="fa fa-thumbs-up"></i> Active</a>
+                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(vendor.id)" *ngIf="vendor.status==false">
+                  <i class="fa fa-thumbs-down"></i> Inactive</a>
+              </td>
+              <td>
+                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/vendor/edit', vendor.id]">
+                  <i class="fa fa-edit"></i>
+                </a>&nbsp;&nbsp;&nbsp;
+                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteVendor(vendor.id)">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+              </td>
+            </tr>
+
+            <tr *ngIf="vendorList.length == 0">
+              <td colspan="8" class="text-center">No record found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="totalvendorList > 10">
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totalvendorList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,185 @@
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">ERP System</a>
+    <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+        <!-- <span class="navbar-toggler-icon"></span> -->
+        <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+    </button>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-shopping-cart"></i> Purchase
+                    <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/purchase-requisition']">
+                        <i class="fa fa-pencil" aria-hidden="true"></i> Purchase Requisition
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/purchase-orders']">
+                        <i class="fa fa-shopping-basket" aria-hidden="true"></i> Purchase Orders
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/grn']">
+                        <i class="fa fa-truck" aria-hidden="true"></i> GRN
+                    </a>
+                    <!--<a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/grn-reverse']">
+                    <i class="fa fa-truck" aria-hidden="true"></i> GRN Reverse
+                </a>-->
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/purchase-invoice']">
+                        <i class="fa fa-money" aria-hidden="true"></i> Purchase Invoice
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/payment']">
+                        <i class="fa fa-money" aria-hidden="true"></i> Payments
+                    </a>
+                </div>
+            </li>
+            <!--<li class="nav-item">         
+            <a routerLink="/company" [routerLinkActive]="['router-link-active']"  class="nav-link" >
+                <i class="fa fa-rupee"></i>&nbsp;Customer Invoice
+            </a>
+        </li>
+        <li class="nav-item dropdown" ngbDropdown>
+            <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                <i class="fa fa-briefcase"></i> Stocks<b class="caret"></b>
+            </a>
+            <div class="dropdown-menu-right" ngbDropdownMenu>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-list" aria-hidden="true"></i> Stock List
+                </a>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-list" aria-hidden="true"></i> Stock Transfer
+                </a>   
+            </div>
+        </li>
+        <li class="nav-item dropdown" ngbDropdown>
+            <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                <i class="fa fa-list-alt"></i> Reports<b class="caret"></b>
+            </a>
+            <div class="dropdown-menu-right" ngbDropdownMenu>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-pencil" aria-hidden="true"></i> Purchase Requisition
+                </a>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-shopping-basket" aria-hidden="true"></i> Purchase Orders
+                </a>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-truck" aria-hidden="true"></i> GRN
+                </a>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-money" aria-hidden="true"></i> Transfer Material
+                </a>
+            </div>
+        </li>
+        <li class="nav-item dropdown" ngbDropdown>
+            <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                <i class="fa fa-list-alt"></i> Expenses<b class="caret"></b>
+            </a>
+            <div class="dropdown-menu-right" ngbDropdownMenu>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-list-alt" aria-hidden="true"></i> Employee Expense
+                </a>
+                <a class="dropdown-item" href="javascript:void(0)" >
+                    <i class="fa fa-list-alt" aria-hidden="true"></i> My Expense
+                </a>   
+            </div>
+        </li>
+        <li class="nav-item">         
+            <a routerLink="/company" [routerLinkActive]="['router-link-active']"  class="nav-link" >
+                <i class="fa fa-list-alt"></i>&nbsp;Transactions
+            </a>
+        </li>
+        <li class="nav-item">         
+            <a routerLink="/company" [routerLinkActive]="['router-link-active']"  class="nav-link" >
+                <i class="fa fa-list-alt"></i>&nbsp;Accounting
+            </a>
+        </li>-->
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-cog"></i> Setting
+                    <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/states']">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i> States
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/gst-rates']">
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> GST Rates
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/vendor']">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i> Vendors
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/terms-condition']">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i> Terms & Conditions
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/transport']">
+                        <i class="fa fa-truck" aria-hidden="true"></i> Transporters
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/banks']">
+                        <i class="fa fa-university" aria-hidden="true"></i> Banks
+                    </a>
+                    <!--<a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/department']">
+                        <i class="fa fa-sitemap" aria-hidden="true"></i> Department
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/designation']">
+                        <i class="fa fa-address-card" aria-hidden="true"></i> Designation
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/employees']">
+                        <i class="fa fa-users" aria-hidden="true"></i> Employees
+                    </a>-->
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/material']">
+                        <i class="fa fa-list" aria-hidden="true"></i> Material
+                    </a>
+                    <!--<a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-list" aria-hidden="true"></i> Party Types
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-list" aria-hidden="true"></i> Other Party
+                    </a>-->
+                </div>
+            </li>
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-building-o"></i> Company
+                    <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/company']">
+                        <i class="fa fa-university" aria-hidden="true"></i> Company
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/purchase-organization']">
+                        <i class="fa fa-university" aria-hidden="true"></i> Purchase Org
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/purchase-group']">
+                        <i class="fa fa-university" aria-hidden="true"></i> Purchase Group
+                    </a>
+                    <!-- <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-university" aria-hidden="true"></i> Purchase Org Group Mapping
+                    </a> -->
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/sale-organization']">
+                        <i class="fa fa-university" aria-hidden="true"></i> Sale Org
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/sale-group']">
+                        <i class="fa fa-university" aria-hidden="true"></i> Sale Group
+                    </a>
+
+                </div>
+            </li>
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-user"></i> Admin
+                    <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <!--<a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}
+                    </a>-->
+
+                    <a class="dropdown-item" [routerLink]="['/login']" (click)="onLoggedout()">
+                        <i class="fa fa-fw fa-power-off"></i>Log Out
+                    </a>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div style="width: 110px;"></div>
+</nav>

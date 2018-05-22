@@ -1,0 +1,254 @@
+<div>
+    <!-- <app-page-header [heading]="'Purchase Order Add'" [icon]="'fa fa-university'"></app-page-header> -->
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="page-header">Purchase Order Add</h4>
+        </div>
+        <div class="col-md-6 pull-right" style="text-align: right">
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-refresh"></i> Reload</button>
+            <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-orders')">
+                <i class="fa fa-arrow-left"></i> Back</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <hr/>
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" [formGroup]="form" novalidate>
+                    <div class="card bg-light mb-3">
+                        <div class="card-header" style="background-color:#868e96; color: #fff;">Pruchase Order Add</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Requisition No.</label>
+                                    <select class="form-control" (change)="requisitionChange($event.target.value)" name="requisition" formControlName="requisition"
+                                        [ngClass]="displayFieldCss('requisition')">
+                                        <option value="">Select Requisition</option>
+                                        <option value="{{requisition.id}}" *ngFor="let requisition of requisition_list">{{requisition.requisition_map[0].requisition_no}}</option>
+                                    </select>
+                                    <div class="invalid-feedback" *ngIf="form.controls['requisition'].hasError('required')">
+                                        Please select requisition
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Vendor</label>
+                                    <select class="form-control" (change)="vendorChange($event.target.value)" name="vendor" formControlName="vendor" [ngClass]="displayFieldCss('vendor')">
+                                        <option value="">Select vendor</option>
+                                        <option value="{{vendor.id}}" *ngFor="let vendor of vendor_list">{{vendor.vendor_fullname}}</option>
+                                    </select>
+                                    <div class="invalid-feedback" *ngIf="form.controls['vendor'].hasError('required')">
+                                        Please select vendor
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Vendor Address</label>
+                                    <select class="form-control" name="vendor_address" formControlName="vendor_address" [ngClass]="displayFieldCss('vendor_address')">
+                                        <option value="">Select address</option>
+                                        <option value="{{address.id}}" *ngFor="let address of vendor_address_list">{{address.address}}</option>
+                                    </select>
+                                    <div class="invalid-feedback" *ngIf="form.controls['vendor_address'].hasError('required')">
+                                        Please select vendor address
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Quotation No.</label>
+                                    <input class="form-control" placeholder="Quotation No." name="quotation_no" formControlName="quotation_no" [ngClass]="displayFieldCss('quotation_no')">
+                                    <div class="invalid-feedback" *ngIf="form.controls['quotation_no'].hasError('required')">
+                                        Please enter quotation no
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Quotation Date</label>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="yyyy-mm-dd" name="quotation_date" ngbDatepicker #d="ngbDatepicker" name="quotation_date"
+                                            formControlName="quotation_date" [ngClass]="displayFieldCss('quotation_date')">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback" *ngIf="form.controls['quotation_date'].hasError('required')">
+                                            Please enter quotation date
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-light mb-3" *ngIf="visible_key">
+                                <div class="card-header">Material Details</div>
+                                <div class="card-body">
+                                    <table class="card-body table table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Material</th>
+                                                <th>PR. Quantity</th>
+                                                <th>UOM</th>
+                                                <th>Plant</th>
+                                                <th>Storage</th>
+                                                <th>Bin</th>
+                                                <th>HSN/SAC</th>
+                                                <th>IGST(%)</th>
+                                                <th>CGST(%)</th>
+                                                <th>SGST(%)</th>
+                                                <th>PO Quantity</th>
+                                                <th>Rate</th>
+                                                <th>Discount(%)</th>
+                                                <th>GST Amount</th>
+                                                <th>Delivery Date</th>
+                                                <th>Sub Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let mat of requisition_details.requisition_detail; let k = index">
+                                                <th scope="row" width="20px">
+                                                    <input type="checkbox" (change)="matCheck($event, mat)">
+                                                </th>
+                                                <td>{{mat.material.material_code}}({{mat.material.material_fullname}})</td>
+                                                <td>{{mat.quantity}}</td>
+                                                <td>{{mat.uom.name}}</td>
+                                                <td>{{mat.branch.branch_name}}</td>
+                                                <td>{{mat.storage_location.storage_address}}</td>
+                                                <td>{{mat.storage_bin.bin_no}}</td>
+                                                <td>{{mat.material.material_tax[0].hsn}}</td>
+                                                <td>{{mat.material.material_tax[0].igst}}</td>
+                                                <td>{{mat.material.material_tax[0].cgst}}</td>
+                                                <td>{{mat.material.material_tax[0].sgst}}</td>
+                                                <td width="80px">
+                                                    <input type="number" class="form-control" name="order_quantity" [(ngModel)]="material_details_list[k].order_quantity" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                </td>
+                                                <td width="80px">
+                                                    <input type="number" class="form-control" name="rate" [(ngModel)]="material_details_list[k].rate" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                </td>
+                                                <td width="80px">
+                                                    <input type="number" class="form-control" name="discount_percent" [(ngModel)]="material_details_list[k].discount_percent" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                </td>
+                                                <td width="80px">
+                                                    <input type="number" class="form-control" name="gst_amount" [(ngModel)]="material_details_list[k].gst_amount" [ngModelOptions]="{standalone: true}" readonly >
+                                                </td>
+                                                <td width="150px">
+                                                    <div class="input-group">
+                                                        <input class="form-control" placeholder="yyyy-mm-dd" name="delivery_date" ngbDatepicker #i="ngbDatepicker" [(ngModel)]="material_details_list[k].delivery_date"  [ngModelOptions]="{standalone: true}">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-secondary" (click)="i.toggle()" type="button">
+                                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td width="80px">
+                                                    <input type="number" class="form-control" name="sub_total" [(ngModel)]="material_details_list[k].sub_total" [ngModelOptions]="{standalone: true}" readonly>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card bg-light mb-3" *ngIf="visible_key">
+                                <div class="card-header">Freight Details</div>
+                                <div class="card-body">
+                                    <div class="row" formArrayName="purchase_order_freight" *ngFor="let freight of getPurchaseOrderFreight(form); let i = index;">
+                                        <div [formGroupName]="i" class="col-md-12">
+                                            <div class="row">
+                                                <!-- <div class="form-group col-md-2">
+                                                    <label>Freight Option</label>
+                                                    <div class="input-group">
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="freight" value="vendor"> Vendor</label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="freight" value="own"> Own</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label>Freight Vendor</label>
+                                                    <select class="form-control">
+                                                        <option value="">Select Transporter</option>
+                                                        <option>ATC</option>
+                                                        <option>Test Transporter name</option>
+                                                        <option>ATC</option>
+                                                        <option>Test Transporter name</option>
+                                                    </select>
+                                                </div> -->
+                                                <!-- <div class="form-group col-md-2">
+                                                    <label>Rate </label>
+                                                    <input type="number" class="form-control" name="freight_rate" formControlName="freight_rate" [ngClass]="{
+                                                        'is-invalid': freight.get('freight_rate').invalid && (freight.get('freight_rate').dirty || freight.get('freight_rate').touched),
+                                                        'is-valid': freight.get('freight_rate').valid && (freight.get('freight_rate').dirty || freight.get('freight_rate').touched)
+                                                      }" (keyup)="getFreightTotal(freight.get('freight_rate').value, freight.get('freight_amount').value, freight.get('freight_gst_rate').value, i)">
+                                                    <div class="invalid-feedback" *ngIf="freight.get('freight_rate').touched && freight.get('freight_rate').hasError('required')">
+                                                        Please enter rate
+                                                    </div>
+                                                </div> -->
+                                                <div class="form-group col-md-2">
+                                                    <label>Freight Amount </label>
+                                                    <input type="number" class="form-control" name="freight_amount" formControlName="freight_amount" [ngClass]="{
+                                                        'is-invalid': freight.get('freight_amount').invalid && (freight.get('freight_amount').dirty || freight.get('freight_amount').touched),
+                                                        'is-valid': freight.get('freight_amount').valid && (freight.get('freight_amount').dirty || freight.get('freight_amount').touched)
+                                                      }" (keyup)="getFreightTotal(freight.get('freight_rate').value, freight.get('freight_amount').value, freight.get('freight_gst_rate').value, i)">
+                                                    <div class="invalid-feedback" *ngIf="freight.get('freight_amount').touched && freight.get('freight_amount').hasError('required')">
+                                                        Please enter freight amount
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label>GST </label>
+                                                    <select class="form-control" name="freight_gst_rate" formControlName="freight_gst_rate" [ngClass]="{
+                                                        'is-invalid': freight.get('freight_gst_rate').invalid && (freight.get('freight_gst_rate').dirty || freight.get('freight_gst_rate').touched),
+                                                        'is-valid': freight.get('freight_gst_rate').valid && (freight.get('freight_gst_rate').dirty || freight.get('freight_gst_rate').touched)
+                                                      }" (change)="getFreightTotal(freight.get('freight_rate').value, freight.get('freight_amount').value, freight.get('freight_gst_rate').value, i)">
+                                                        <option value="">Select GST</option>
+                                                        <option value="{{gst.id}}" *ngFor="let gst of gst_rates_list">{{gst.gst_pattern}}</option>
+                                                    </select>
+                                                    <div class="invalid-feedback" *ngIf="freight.get('freight_gst_rate').touched && freight.get('freight_gst_rate').hasError('required')">
+                                                        Please enter GST
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label>Freight Total</label>
+                                                    <input type="number" class="form-control" name="freight_total" [(ngModel)]="form.value.purchase_order_freight[i].freight_total"
+                                                        formControlName="freight_total" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-light mb-3" *ngIf="visible_key">
+                                <div class="card-header">Terms & Conditions</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div *ngFor="let term of terms_condition_list;let i = index" class="col-md-2">
+                                            <div class="form-control">
+                                                <input type="checkbox" (change)="termsCheck($event, term.id)">
+                                                <label>{{term.term_text}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-light mb-3" *ngIf="visible_key">
+                                <div class="card-header">PO Amount</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-2">
+                                            <label>Total Amount(GST included)</label>
+                                            <input class="form-control" placeholder="Quotation No." name="grand_total" formControlName="grand_total"  [(ngModel)]="form.value.grand_total" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12" style="text-align: right">
+                                    <button type="submit" class="btn btn-primary" (click)="addPurchaseOrder()">Submit</button>
+                                    <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

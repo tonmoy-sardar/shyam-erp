@@ -1,0 +1,88 @@
+<div>
+  <!-- <app-page-header [heading]="'Terms & Condition List'" [icon]="'fa fa-university'"></app-page-header> -->
+  <div class="row">
+    <div class="col-md-6">
+      <h4 class="page-header">Terms & Condition List</h4>
+    </div>
+    <div class="col-md-6 pull-right" style="text-align: right">
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-refresh"></i> Reload</button>
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('terms-condition/add')">
+        <i class="fa fa-plus"></i> New Terms & Condition</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-9">
+              <h5>Terms & Condition</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <table class="card-body table table-hover table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sl.No.</th>
+              <th>Terms & Condition</th>
+              <th>Company Name</th>
+              <th>Created Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let term of termsList ; let i = index">
+              <th scope="row">{{i +1}}</th>
+              <td>{{term.term_text}}</td>
+              <td>{{getCompanyName(term.company)}}</td>
+              <td>{{term.created_at | date:'dd-MM-yyyy'}}</td>
+              <td>
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(term.id)" *ngIf="term.status==true">
+                  <i class="fa fa-thumbs-up"></i> Active</a>
+                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(term.id)" *ngIf="term.status==false">
+                  <i class="fa fa-thumbs-down"></i> Inactive</a>
+              </td>
+              <td>
+                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/terms-condition/edit', term.id]">
+                  <i class="fa fa-edit"></i>
+                </a>&nbsp;&nbsp;&nbsp;
+                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteTerm(term.id)">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+              </td>
+            </tr>
+            <tr *ngIf="termsList.length == 0">
+              <td colspan="6" class="text-center">No record found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="totaltermsList > 10">
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totaltermsList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

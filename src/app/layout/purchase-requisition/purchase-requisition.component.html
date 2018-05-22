@@ -1,0 +1,103 @@
+<div>
+  <!-- <app-page-header [heading]="'Purchase Requisition List'" [icon]="'fa fa-university'"></app-page-header> -->
+  <div class="row">
+    <div class="col-md-6">
+      <h4 class="page-header">Purchase Requisition List</h4>
+    </div>
+    <div class="col-md-6 pull-right" style="text-align: right">
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-refresh"></i> Reload</button>
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-requisition/add')">
+        <i class="fa fa-plus"></i> New Purchase Organization</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-9">
+              <h5>Purchase Requisition</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <table class="card-body table table-hover table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sl.No.</th>
+              <th>PR No</th>
+              <th>Company</th>
+              <th>P. Org.</th>
+              <th>P. Group</th>
+              <th>PR Raised Date</th>
+              <th>PR Raised By</th>
+              <th>Status</th>
+              <th>Is approved</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let purchaseRequisition of purchaseRequisitionList ; let i = index">
+              <th scope="row">{{i +1}}</th>
+              <td>{{purchaseRequisition.requisition_map[0].requisition_no}}</td>
+              <td>{{purchaseRequisition.company.company_name}}</td>
+              <td>{{purchaseRequisition.purchase_org.name}}</td>
+              <td>{{purchaseRequisition.purchase_grp.name}}</td>
+              <td>{{purchaseRequisition.created_at | date: 'dd-MM-yyyy'}}</td>
+              <td>{{purchaseRequisition.created_by.first_name}}</td>
+              <td>
+                <select class="form-control" [(ngModel)]="purchaseRequisition.is_finalised" name="is_finalised"  (ngModelChange)="changeStatus(purchaseRequisition.is_finalised,purchaseRequisition.id)">
+                  <option value='0'>Change Status</option>
+                  <option value='2'>Cancel</option>
+                  <option value='1'>Active</option>
+                </select>
+              </td>
+              <td>
+                <select class="form-control" [(ngModel)]="purchaseRequisition.is_approve" name="is_approve"  (ngModelChange)="changeApproveStatus(purchaseRequisition.is_approve,purchaseRequisition.id)">
+                  <option value='0'>Change Approve</option>
+                  <option value='1'>Approve</option>
+                  <option value='2'>Dis-Approve</option>
+                </select>
+              </td>
+              <td>
+                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/purchase-requisition/details', purchaseRequisition.id]">
+                  <i class="fa fa-eye"></i>
+                </a>
+              </td>
+
+            </tr>
+            
+            <!-- <tr *ngIf="purchaseRequisitionList.length == 0">
+              <td colspan="12" class="text-center">No record found</td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="totalPurchaseRequisitionList > 10">
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totalPurchaseRequisitionList" [(page)]="defaultPagination" (pageChange)="pagination()"
+          size="sm"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<div>
+  <!-- <app-page-header [heading]="'GRN List'" [icon]="'fa fa-university'"></app-page-header> -->
+  <div class="row">
+    <div class="col-md-6">
+      <h4 class="page-header">GRN List</h4>
+    </div>
+    <div class="col-md-6 pull-right" style="text-align: right">
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-refresh"></i> Reload</button>
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('grn/add')">
+        <i class="fa fa-plus"></i> New GRN</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-9">
+              <h5>GRN</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <table class="card-body table table-hover table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sl.No.</th>
+              <th>Grn No</th>
+              <th>Po No</th>
+              <th>Company</th>
+              <th>P Org</th>
+              <th>P Group</th>
+              <th>Vendor</th>
+              <th>Vendor Address</th>
+              <th>GRN Raised Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let grn of grnList ; let i = index">
+              <th scope="row">{{i +1}}</th>
+              <td>{{grn.grn_map[0].grn_no}}</td>
+              <td>{{grn.purchase_order_no[0].purchase_order_no}}</td>
+              <td>{{grn.company.company_name}}</td>
+              <td>{{grn.pur_org.name}}</td>
+              <td>{{grn.pur_grp.name}}</td>
+              <td>{{grn.vendor.vendor_fullname}}</td>
+              <td>{{grn.vendor_address.address}}</td>
+              <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
+              <td>
+                <!-- <select class="form-control">
+                  <option>Change Status</option>
+                  <option>Cancel</option>
+                  <option>Active</option>
+                </select> -->
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(grn.id)" *ngIf="grn.status==true">
+                  <i class="fa fa-thumbs-up"></i> Active</a>
+                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(grn.id)" *ngIf="grn.status==false">
+                  <i class="fa fa-thumbs-down"></i> Inactive</a>
+              </td>
+              <td>
+                <!-- <select class="form-control">
+                  <option>Change Approve</option>
+                  <option>Approve</option>
+                  <option>Dis-Approve</option>
+                </select> -->
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="disApproveGrn(grn.id)" *ngIf="grn.is_approve==1">
+                  <i class="fa fa-thumbs-up"></i> Approve</a>
+                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="approveGrn(grn.id)" *ngIf="grn.is_approve==0">
+                  <i class="fa fa-thumbs-down"></i> Dis-approve</a>
+              </td>
+            </tr>
+            <tr *ngIf="grnList.length == 0">
+              <td colspan="12" class="text-center">No record found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="totalgrnList > 10">
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totalgrnList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

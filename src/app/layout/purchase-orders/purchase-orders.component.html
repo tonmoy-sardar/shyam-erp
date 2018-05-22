@@ -1,0 +1,103 @@
+<div>
+  <!-- <app-page-header [heading]="'Purchase Order List'" [icon]="'fa fa-university'"></app-page-header> -->
+  <div class="row">
+    <div class="col-md-6">
+      <h4 class="page-header">Purchase Order List</h4>
+    </div>
+    <div class="col-md-6 pull-right" style="text-align: right">
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-refresh"></i> Reload</button>
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-orders/add')">
+        <i class="fa fa-plus"></i> New Purchase Order</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-9">
+              <h5>Purchase Orders</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <table class="card-body table table-hover table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sl.No.</th>
+              <th>Po No</th>
+              <th>Indent No</th>
+              <th>Po Amount</th>
+              <th>Company</th>
+              <th>Plant</th>
+              <th>Storage</th>
+              <th>Bin</th>
+              <th>Po Raised Date</th>
+              <th>Status</th>
+              <th>Is approved</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let purchaseOrder of purchaseOrderList ; let i = index">
+              <th scope="row">{{i +1}}</th>
+              <td>{{purchaseOrder.purchase_order_map[0].purchase_order_no}}</td>
+              <td>{{purchaseOrder.requisition_no[0].requisition_no}}</td>
+              <td>{{purchaseOrder.grand_total}}</td>
+              <td>{{purchaseOrder.company.company_name}}</td>
+              <td>{{purchaseOrder.purchase_order_detail[0].company_branch.branch_address}}</td>
+              <td>{{purchaseOrder.purchase_order_detail[0].storage_location.storage_address}}</td>
+              <td>{{purchaseOrder.purchase_order_detail[0].storage_bin.bin_no}}</td>
+              <td>{{purchaseOrder.quotation_date | date:'dd-MM-yyyy'}}</td>
+              <td>
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(purchaseOrder.id)" *ngIf="purchaseOrder.status==true">
+                    <i class="fa fa-thumbs-up"></i> Active</a>
+                  <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(purchaseOrder.id)" *ngIf="purchaseOrder.status==false">
+                    <i class="fa fa-thumbs-down"></i> Inactive</a>
+              </td>
+              <td>
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="disApprovePurchaseOrder(purchaseOrder.id)" *ngIf="purchaseOrder.is_approve==1">
+                    <i class="fa fa-thumbs-up"></i> Approve</a>
+                  <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="approvePurchaseOrder(purchaseOrder.id)" *ngIf="purchaseOrder.is_approve==0">
+                    <i class="fa fa-thumbs-down"></i> Dis-approve</a>
+              </td>
+              <td>
+                <a href="javascript:void(0);" title="Details" name="Details" [routerLink]="['/purchase-orders/details', purchaseOrder.id]">
+                  <i class="fa fa-eye"></i>
+                </a>
+              </td>
+
+            </tr>
+            <tr *ngIf="purchaseOrderList.length == 0">
+              <td colspan="12" class="text-center">No record found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="totalpurchaseOrderList > 10">
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totalpurchaseOrderList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="page-header">Payment List</h4>
+        </div>
+        <div class="col-md-6 pull-right" style="text-align: right">
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-refresh"></i> Reload</button>
+            <button type="button" class="btn btn-primary" (click)="btnClickNav('payment/add')">
+                <i class="fa fa-plus"></i> New Payment</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <hr/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h5>Payment</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <form role="form" (ngSubmit)="dataSearch()">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <table class="card-body table table-hover table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Sl.No.</th>
+                            <th>Company</th>
+                            <th>Payment No</th>
+                            <th>PO INV No</th>
+                            <th>PO No</th>
+                            <th>Party Name</th>
+                            <th>Created At</th>
+                            <th>Created By</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let payment of paymentList ; let i = index">
+                            <th scope="row">{{i +1}}</th>
+                            <td>{{payment.company.company_name}}</td>
+                            <td>{{payment.payment_map[0].payment_no}}</td>
+                            <td>{{payment.purchase_inv_no}}</td>          
+                            <td>{{payment.po_order_no}}</td>
+                            <td>Shyam FT</td>
+                            <td>{{payment.created_at | date: 'dd-MM-yyyy'}}</td>
+                            <td>{{payment.created_by.first_name}}</td>
+                            <td>{{payment.total_amount}}</td>
+                            <td><span *ngIf="payment.status==true">Approved</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="totalPaymentList > 10">
+        <div class="col-md-12">
+            <div class="card-body pull-right">
+                <ngb-pagination [collectionSize]="totalPaymentList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+            </div>
+        </div>
+    </div>
+</div>
