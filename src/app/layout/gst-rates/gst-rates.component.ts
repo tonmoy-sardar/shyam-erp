@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GstRatesService } from '../../core/services/gst-rates.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-gst-rates',
@@ -16,16 +17,19 @@ export class GstRatesComponent implements OnInit {
   constructor(
     private router: Router,
     private gstRatesService: GstRatesService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getGstList();
   }
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getGstList();
   }
@@ -42,12 +46,13 @@ export class GstRatesComponent implements OnInit {
       (data: any[]) => {
         this.totalgstRatesList = data['count'];
         this.gstRatesList = data['results'];
-        // console.log(this.gstRatesList)
+        this.spinner.hide();
       }
     );
   };
 
   activeGst (id) {
+    this.spinner.show();
     let gstRate;
 
     gstRate = {
@@ -71,6 +76,7 @@ export class GstRatesComponent implements OnInit {
   };
 
   inactiveGst (id) {
+    this.spinner.show();
     let gstRate;
 
     gstRate = {
@@ -95,6 +101,7 @@ export class GstRatesComponent implements OnInit {
   };
 
   deleteGST (id) {
+    this.spinner.show();
     let gstRate;
 
     gstRate = {
@@ -118,6 +125,7 @@ export class GstRatesComponent implements OnInit {
   };
 
   pagination () {
+    this.spinner.show();
     this.getGstList();
   };
 

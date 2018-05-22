@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
 import { VendorService } from '../../../core/services/vendor.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-vendor-edit',
@@ -24,10 +25,12 @@ export class VendorEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private statesService: StatesService,
-    private vendorService: VendorService
+    private vendorService: VendorService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       vendor_fullname: ['', Validators.required],
       vendor_type: ['', Validators.required],
@@ -96,6 +99,7 @@ export class VendorEditComponent implements OnInit {
       this.vendor_details.vendor_account.forEach( x => {
         account_control.push(this.createBankInfo());
       })
+      this.spinner.hide();
     })
   }
   createContactInfo() {
@@ -178,12 +182,14 @@ export class VendorEditComponent implements OnInit {
   };
   updateVendor() {
     if (this.form.valid) {
+      this.spinner.show();
       this.vendorService.updateVendor(this.vendor_details).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Vendor updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('vendor');
         },
         error => {

@@ -1,5 +1,4 @@
 <div>
-    <!-- <app-page-header [heading]="'Sale Group List'" [icon]="'fa fa-university'"></app-page-header> -->
     <div class="row">
         <div class="col-md-6">
             <h4 class="page-header">Sale Group List</h4>
@@ -60,11 +59,8 @@
                                     <i class="fa fa-thumbs-down"></i> Inactive</a>
                             </td>
                             <td>
-                                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/purchase-group/edit', saleGroup.id]">
+                                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/sale-group/edit', saleGroup.id]">
                                     <i class="fa fa-edit"></i>
-                                </a>&nbsp;&nbsp;&nbsp;
-                                <a href="javascript:void(0);" title="Map" name="Map" [routerLink]="['/purchase-group/mapping', saleGroup.id]">
-                                    <i class="fa fa-map-signs"></i>
                                 </a>
                             </td>
                         </tr>
@@ -84,3 +80,4 @@
         </div>
     </div>
 </div>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>

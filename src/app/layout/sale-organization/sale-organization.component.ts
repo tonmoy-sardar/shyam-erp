@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaleOrganizationService } from '../../core/services/sale-organization.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sale-organization',
@@ -16,14 +17,17 @@ export class SaleOrganizationComponent implements OnInit {
   constructor(
     private saleOrganizationService: SaleOrganizationService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getSaleOrganizationList();
   }
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getSaleOrganizationList();
   }
@@ -39,11 +43,13 @@ export class SaleOrganizationComponent implements OnInit {
       (data: any[]) => {
         this.totalsaleOrganizationList = data['count'];
         this.saleOrganizationList = data['results'];
+        this.spinner.hide();
       }
     );
   };
 
   activeSaleOrganization = function (id) {
+    this.spinner.show();
     let saleOrganization;
 
     saleOrganization = {
@@ -67,6 +73,7 @@ export class SaleOrganizationComponent implements OnInit {
   };
 
   inactiveSaleOrganization = function (id) {
+    this.spinner.show();
     let saleOrganization;
 
     saleOrganization = {
@@ -91,6 +98,7 @@ export class SaleOrganizationComponent implements OnInit {
   };
 
   pagination = function () {
+    this.spinner.show();
     this.getSaleOrganizationList();
   };
 }

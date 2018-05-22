@@ -5,6 +5,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { TransportService } from '../../../core/services/transport.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-transport-add',
@@ -21,11 +22,13 @@ export class TransportAddComponent implements OnInit {
     private toastr: ToastrService,
     private transportService: TransportService,
     private companyService: CompanyService,
-    private statesService: StatesService
+    private statesService: StatesService,
+    private spinner: NgxSpinnerService
   ) { }
 
 
   ngOnInit() {
+    this.spinner.show();
     this.form = new FormGroup({
       transporter_name: new FormControl('', Validators.required),
       email: new FormControl('', [
@@ -62,7 +65,7 @@ export class TransportAddComponent implements OnInit {
   getStateList() {
     this.statesService.getStateActiveList().subscribe(res => {
         this.stateList = res;
-        // console.log(this.stateList);
+        this.spinner.hide();
       }
     );
   };
@@ -82,12 +85,14 @@ export class TransportAddComponent implements OnInit {
   };
   addNewTransport() {
     if (this.form.valid) {
+      this.spinner.show();
       this.transportService.addNewTransporter(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Transporter added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('transport');
         },
         error => {

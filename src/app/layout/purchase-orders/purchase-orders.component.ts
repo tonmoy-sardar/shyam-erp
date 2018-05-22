@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PurchaseOrdersService } from '../../core/services/purchase-orders.service';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../../core/services/company.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-orders',
@@ -19,10 +20,12 @@ export class PurchaseOrdersComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private purchaseOrdersService: PurchaseOrdersService,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseOrderList();
     this.getCompanyList()
@@ -33,6 +36,7 @@ export class PurchaseOrdersComponent implements OnInit {
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseOrderList();
   }
@@ -40,17 +44,10 @@ export class PurchaseOrdersComponent implements OnInit {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
       }
     );
   };
-  // getCompanyName(id) {
-  //   var data = { id: 0, company_name: '' }
-  //   data = this.companyList.filter(x => x.id === id)[0];
-  //   if (data != undefined) {
-  //     return data.company_name
-  //   }
-  // }
+  
   getPurchaseOrderList(){
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
@@ -59,12 +56,13 @@ export class PurchaseOrdersComponent implements OnInit {
       (data: any[]) => {
         this.totalpurchaseOrderList = data['count'];
         this.purchaseOrderList = data['results'];
-        // console.log(this.purchaseOrderList)
+        this.spinner.hide();
       }
     );
   }
 
   activeState(id) {
+    this.spinner.show();
     let PurchaseOrder;
 
     PurchaseOrder = {
@@ -88,6 +86,7 @@ export class PurchaseOrdersComponent implements OnInit {
   };
 
   inactiveState(id) {
+    this.spinner.show();
     let PurchaseOrder;
 
     PurchaseOrder = {
@@ -112,6 +111,7 @@ export class PurchaseOrdersComponent implements OnInit {
   };
 
   approvePurchaseOrder(id) {
+    this.spinner.show();
     let PurchaseOrder;
 
     PurchaseOrder = {
@@ -135,6 +135,7 @@ export class PurchaseOrdersComponent implements OnInit {
   };
 
   disApprovePurchaseOrder(id) {
+    this.spinner.show();
     let PurchaseOrder;
 
     PurchaseOrder = {
@@ -159,6 +160,7 @@ export class PurchaseOrdersComponent implements OnInit {
   };
 
   pagination() {
+    this.spinner.show();
     this.getPurchaseOrderList();
   };
 

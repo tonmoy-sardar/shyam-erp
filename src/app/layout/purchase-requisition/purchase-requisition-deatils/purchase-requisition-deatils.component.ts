@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PurchaseRequisitionService } from '../../../core/services/purchase-requisition.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-requisition-deatils',
@@ -13,10 +14,12 @@ export class PurchaseRequisitionDeatilsComponent implements OnInit {
   constructor(
     private purchaseRequisitionService: PurchaseRequisitionService,
     private router: Router, 
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.purchaseRequisition = {
       company: {company_name:'',id:''},
       requisition_map:[{id:'',requisition_no:''}],
@@ -35,7 +38,7 @@ export class PurchaseRequisitionDeatilsComponent implements OnInit {
     this.purchaseRequisitionService.getPurchaseRequisitionDetails(id).subscribe(
       (data: any[]) =>{
         this.purchaseRequisition = data;
-        console.log(this.purchaseRequisition);
+        this.spinner.hide();
       }
      );
   }

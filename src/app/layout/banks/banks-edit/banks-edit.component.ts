@@ -4,6 +4,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { BanksService } from '../../../core/services/banks.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-banks-edit',
@@ -22,11 +23,12 @@ export class BanksEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
-
+    this.spinner.show();
     this.form = this.formBuilder.group({
       company: [null, Validators.required],
       bank_branch: [null, Validators.required],
@@ -49,6 +51,7 @@ export class BanksEditComponent implements OnInit {
     this.banksService.getBankDetails(id).subscribe(
       (data: any[]) => {
         this.banks = data;
+        this.spinner.hide();
       }
     );
   }
@@ -84,14 +87,15 @@ export class BanksEditComponent implements OnInit {
     };
   }
 
-  updateBank()  
-  {
+  updateBank(){
     if (this.form.valid) {
+      this.spinner.show();
       this.banksService.updateBank(this.banks).subscribe(
         response => {
           this.toastr.success('Bank updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('banks');          
         },
         error => {

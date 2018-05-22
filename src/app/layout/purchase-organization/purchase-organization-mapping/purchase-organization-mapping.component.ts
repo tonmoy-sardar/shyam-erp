@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PurchaseOrganizationService } from '../../../core/services/purchase-organization.service';
-
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-purchase-organization-mapping',
   templateUrl: './purchase-organization-mapping.component.html',
@@ -16,10 +17,11 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
-    //this.route.snapshot.params['id']
+    this.spinner.show();
     this.getCompanyBranchTree();
     this.getPurchaseOragnizationList(this.route.snapshot.params['id'])
   }
@@ -34,7 +36,8 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
 
   getPurchaseOragnizationList(id){
     this.purchaseOrganizationService.getPurchaseOrganizationMapingList(id).subscribe(res => {
-      this.PurchaseOrganizationMapingList = res['results']
+      this.PurchaseOrganizationMapingList = res['results'];
+      this.spinner.hide();
     })
   }
   
@@ -58,6 +61,7 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
   };
 
   updatePurchaseOrganizationMapping() {
+    this.spinner.show();
     this.purchaseOrganizationService.deletePurchaseOrganizationMapping(this.route.snapshot.params['id']).subscribe(res => {
       for (var i = 0; i < this.companyBranchTree.length; i++) {
         if (this.companyBranchTree[i].company_branch.filter(item => { return item.checked; }).length > 0) {
@@ -77,6 +81,7 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
           this.toastr.success('Purchase organization mapping successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('purchase-organization')
         }
   

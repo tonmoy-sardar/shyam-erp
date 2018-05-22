@@ -7,6 +7,7 @@ import { PurchaseOrganizationService } from '../../../core/services/purchase-org
 import { PurchaseGroupService } from '../../../core/services/purchase-group.service';
 import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-material-add',
@@ -30,10 +31,11 @@ export class MaterialAddComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
-
+    this.spinner.show();
     this.form = this.formBuilder.group({
       material_type: ['', Validators.required],
       material_code: [null, Validators.required],
@@ -172,7 +174,7 @@ export class MaterialAddComponent implements OnInit {
     this.purchaseOrganizationService.getPurchaseOrganizationActiveList().subscribe(
       (data: any[]) => {
         this.purchaseOrganizationList = data;
-
+        this.spinner.hide();
       }
     );
   }
@@ -189,6 +191,7 @@ export class MaterialAddComponent implements OnInit {
 
   addMaterial() {
     if (this.form.valid) {
+      this.spinner.show();
       let material_purchase_org_arr = [];
       this.form.value.material_purchase_org.forEach(x => {
         material_purchase_org_arr.push({ pur_org: x });
@@ -210,6 +213,7 @@ export class MaterialAddComponent implements OnInit {
           this.toastr.success('Material added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('material');
         },
         error => {

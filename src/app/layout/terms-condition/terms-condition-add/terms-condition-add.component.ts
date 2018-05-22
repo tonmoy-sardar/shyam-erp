@@ -4,6 +4,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { TermsConditionService } from '../../../core/services/terms-condition.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-terms-condition-add',
@@ -17,10 +18,12 @@ export class TermsConditionAddComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private termsConditionService: TermsConditionService,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = new FormGroup({
       term_type: new FormControl('', Validators.required),
       company: new FormControl('', Validators.required),
@@ -40,18 +43,20 @@ export class TermsConditionAddComponent implements OnInit {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
+        this.spinner.hide();
       }
     );
   };
   addNewTerms() {
     if (this.form.valid) {
+      this.spinner.show();
       this.termsConditionService.addNewTerms(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Terms and services added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('terms-condition');
         },
         error => {

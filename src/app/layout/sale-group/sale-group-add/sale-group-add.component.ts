@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SaleGroupService } from '../../../core/services/sale-group.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sale-group-add',
@@ -15,14 +16,17 @@ export class SaleGroupAddComponent implements OnInit {
     private saleGroupService: SaleGroupService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       description: [null, Validators.required]
     });
+    this.spinner.hide();
   }
   
   goToList= function (toNav) {
@@ -31,11 +35,13 @@ export class SaleGroupAddComponent implements OnInit {
 
   addNewSaleGroup = function(){
     if (this.form.valid) {
+      this.spinner.show();
       this.saleGroupService.addNewSaleGroup(this.form.value).subscribe(
         response => {
           this.toastr.success('Sale group added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('sale-group');
         },
         error => {

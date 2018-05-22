@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { GrnService } from '../../../core/services/grn.service';
 import { PurchaseOrdersService } from '../../../core/services/purchase-orders.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-grn-add',
@@ -23,10 +24,12 @@ export class GrnAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private purchaseOrdersService: PurchaseOrdersService,
-    private grnService: GrnService
+    private grnService: GrnService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       po_order: ['', Validators.required],
       pur_org: ['', Validators.required],
@@ -47,11 +50,12 @@ export class GrnAddComponent implements OnInit {
   getPurchaseOrderList() {
     this.purchaseOrdersService.getPurchaseOrderListWithoutPagination().subscribe(res => {
       this.purchaseOrderList = res;
-      // console.log(this.purchaseOrderList)
+      this.spinner.hide();
     })
   }
 
   purchaseOrderChange(id) {
+    this.spinner.show();
     const grn_detail_control = <FormArray>this.form.controls['grn_detail'];
     if (id) {
       this.clearFormArray(grn_detail_control)
@@ -81,12 +85,14 @@ export class GrnAddComponent implements OnInit {
           vendor_address: this.purchase_order_details.vendor_address.id,
         })
         this.visible_key = true;
+        this.spinner.hide();
       })
     }
     else {
       this.clearFormArray(grn_detail_control);
       this.material_details_list = [];
       this.visible_key = false;
+      this.spinner.hide();
     }
 
   }
@@ -164,6 +170,7 @@ export class GrnAddComponent implements OnInit {
       }
     })
     if (this.form.valid) {
+      this.spinner.show();
       var challanDate = new Date(this.form.value.challan_date.year,this.form.value.challan_date.month-1,this.form.value.challan_date.day)
       this.form.patchValue({
         challan_date: challanDate.toISOString()
@@ -175,6 +182,7 @@ export class GrnAddComponent implements OnInit {
           this.toastr.success('GNR added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('grn');
         },
         error => {

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SaleGroupService } from '../../../core/services/sale-group.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sale-group-edit',
@@ -17,10 +18,12 @@ export class SaleGroupEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       description: [null, Validators.required]
@@ -33,11 +36,11 @@ export class SaleGroupEditComponent implements OnInit {
     this.getSaleGroupDetails(this.route.snapshot.params['id']);
   }
 
-  getSaleGroupDetails = function (id) {
-
+  getSaleGroupDetails(id) {
     this.saleGroupService.getSaleGroupDetails(id).subscribe(
       (data: any[]) => {
-        this.purchaseGroup = data;
+        this.saleGroup = data;
+        this.spinner.hide();
       }
     );
   }
@@ -49,11 +52,13 @@ export class SaleGroupEditComponent implements OnInit {
 
   updateSaleGroup = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.saleGroupService.updateSaleGroup(this.saleGroup).subscribe(
         response => {
           this.toastr.success('Sale group updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('sale-group');
         },
         error => {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MaterialService } from '../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-material',
@@ -18,16 +19,18 @@ export class MaterialComponent implements OnInit {
   constructor(
     private materialService: MaterialService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
-    this.defaultPagination = 1;
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getMaterialList();
   }
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getMaterialList();
   }
@@ -38,15 +41,15 @@ export class MaterialComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.materialService.getMaterialList(params).subscribe(
       (data: any[]) => {
-        this.totalMaterialList = data['count'];
-        
+        this.totalMaterialList = data['count'];        
         this.materialList = data['results']
-        console.log(this.materialList);
+        this.spinner.hide();
       }
     );
   };
 
   deleteMaterial = function (id) {
+    this.spinner.show();
     let material;
 
     material = {
@@ -74,6 +77,7 @@ export class MaterialComponent implements OnInit {
   };
 
   pagination() {
+    this.spinner.show();
     this.getMaterialList();
   };
 }

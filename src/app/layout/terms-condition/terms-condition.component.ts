@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TermsConditionService } from '../../core/services/terms-condition.service';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../../core/services/company.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-terms-condition',
@@ -19,16 +20,19 @@ export class TermsConditionComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private termsConditionService: TermsConditionService,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getTermsList();
     this.getCompanyDropdownList()
   }
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getTermsList();
   }
@@ -53,7 +57,7 @@ export class TermsConditionComponent implements OnInit {
       (data: any[]) => {
         this.totaltermsList = data['count'];
         this.termsList = data['results'];
-        // console.log(this.termsList)
+        this.spinner.hide();
       }
     );
   };
@@ -65,6 +69,7 @@ export class TermsConditionComponent implements OnInit {
     }
   }
   activeState(id) {
+    this.spinner.show();
     let terms;
 
     terms = {
@@ -88,6 +93,7 @@ export class TermsConditionComponent implements OnInit {
   };
 
   inactiveState(id) {
+    this.spinner.show();
     let terms;
 
     terms = {
@@ -112,6 +118,7 @@ export class TermsConditionComponent implements OnInit {
   };
 
   deleteTerm(id) {
+    this.spinner.show();
     let terms;
 
     terms = {
@@ -135,6 +142,7 @@ export class TermsConditionComponent implements OnInit {
   };
 
   pagination() {
+    this.spinner.show();
     this.getTermsList();
   };
 }

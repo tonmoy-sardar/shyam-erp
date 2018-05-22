@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BanksService } from '../../core/services/banks.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-banks',
@@ -16,15 +17,18 @@ export class BanksComponent implements OnInit {
   constructor(
     private router: Router,
     private banksService: BanksService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getBankList();
   }
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getBankList();
   }
@@ -41,12 +45,13 @@ export class BanksComponent implements OnInit {
       (data: any[]) => {
         this.totalBankList = data['count'];
         this.bankList = data['results'];
-        console.log(this.bankList)
+        this.spinner.hide();
       }
     );
   };
 
   activeBank (id) {
+    this.spinner.show();
     let gstRate;
 
     gstRate = {
@@ -70,6 +75,7 @@ export class BanksComponent implements OnInit {
   };
 
   inactiveBank (id) {
+    this.spinner.show();
     let gstRate;
 
     gstRate = {
@@ -94,6 +100,7 @@ export class BanksComponent implements OnInit {
   };
 
   deleteBank (id) {
+    this.spinner.show();
     let bank;
 
     bank = {
@@ -117,6 +124,7 @@ export class BanksComponent implements OnInit {
   };
 
   pagination () {
+    this.spinner.show();
     this.getBankList();
   };
 

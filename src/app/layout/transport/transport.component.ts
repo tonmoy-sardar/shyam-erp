@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TransportService } from '../../core/services/transport.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-transport',
@@ -16,10 +17,12 @@ export class TransportComponent implements OnInit {
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private transportService: TransportService
+    private transportService: TransportService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.gettransportList();
   }
@@ -29,6 +32,7 @@ export class TransportComponent implements OnInit {
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.gettransportList();
   }
@@ -41,12 +45,13 @@ export class TransportComponent implements OnInit {
       (data: any[]) => {
         this.totaltransportList = data['count'];
         this.transportList = data['results'];
-        // console.log(this.transportList)
+        this.spinner.hide();
       }
     );
   };
   
   activeState(id) {
+    this.spinner.show();
     let transporter;
 
     transporter = {
@@ -70,6 +75,7 @@ export class TransportComponent implements OnInit {
   };
 
   inactiveState(id) {
+    this.spinner.show();
     let transporter;
 
     transporter = {
@@ -94,6 +100,7 @@ export class TransportComponent implements OnInit {
   };
 
   deletetransport(id) {
+    this.spinner.show();
     let transporter;
 
     transporter = {
@@ -117,6 +124,7 @@ export class TransportComponent implements OnInit {
   };
 
   pagination() {
+    this.spinner.show();
     this.gettransportList();
   };
 }

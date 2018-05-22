@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseGroupService } from '../../core/services/purchase-group.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-group',
@@ -14,12 +15,14 @@ export class PurchaseGroupComponent implements OnInit {
   totalpurchaseGroupList: number;
   search_key = '';
   constructor(
-    private purchaseGroupService: PurchaseGroupService
-    , private router: Router,
-    private toastr: ToastrService
+    private purchaseGroupService: PurchaseGroupService,
+    private router: Router,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseGroupList();
   }
@@ -28,6 +31,7 @@ export class PurchaseGroupComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseGroupList();
   }
@@ -39,11 +43,13 @@ export class PurchaseGroupComponent implements OnInit {
       (data: any[]) => {
         this.totalpurchaseGroupList = data['count'];
         this.purchaseGroupList = data['results'];
+        this.spinner.hide();
       }
     );
   };
 
   activePurchaseGroup = function (id) {
+    this.spinner.show();
     let purchaseGroup;
 
     purchaseGroup = {
@@ -67,6 +73,7 @@ export class PurchaseGroupComponent implements OnInit {
   };
 
   inactivePurchaseGroup = function (id) {
+    this.spinner.show();
     let purchaseGroup;
 
     purchaseGroup = {
@@ -90,6 +97,7 @@ export class PurchaseGroupComponent implements OnInit {
     );
   };
   pagination = function () {
+    this.spinner.show();
     this.getPurchaseGroupList();
   };
 }

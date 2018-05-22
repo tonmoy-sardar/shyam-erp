@@ -9,6 +9,8 @@ import { PurchaseOrdersService } from '../../../core/services/purchase-orders.se
 import { VendorService } from '../../../core/services/vendor.service';
 import { TermsConditionService } from '../../../core/services/terms-condition.service';
 import { GstRatesService } from '../../../core/services/gst-rates.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 declare var require: any;
 var converter = require('number-to-words');
 
@@ -44,10 +46,12 @@ export class PurchaseOrdersAddComponent implements OnInit {
     private companyService: CompanyService,
     private vendorService: VendorService,
     private termsConditionService: TermsConditionService,
-    private gstRatesService: GstRatesService
+    private gstRatesService: GstRatesService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       requisition: ['', Validators.required],
       quotation_no: ['', Validators.required],
@@ -71,7 +75,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
   getGstRatesList() {
     this.gstRatesService.getGSTListWithoutPagination().subscribe(res => {
       this.gst_rates_list = res;
-      // console.log(res)
+      this.spinner.hide();
     })
   }
   getTermsConditionList() {
@@ -99,6 +103,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
     })
   }
   requisitionChange(id) {
+    this.spinner.show();
     const order_freight_control = <FormArray>this.form.controls['purchase_order_freight'];
     const order_detail_control = <FormArray>this.form.controls['purchase_order_detail'];
     const order_terms_control = <FormArray>this.form.controls['purchase_order_terms'];
@@ -132,6 +137,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
         if (this.requisition_details.requisition_detail.length > 0) {
           order_freight_control.push(this.create_purchase_order_freight());
           this.visible_key = true;
+          this.spinner.hide();
         }
       })
     }
@@ -141,6 +147,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
       this.clearFormArray(order_terms_control);
       this.material_details_list = [];
       this.visible_key = false;
+      this.spinner.hide();
     }
   }
 
@@ -328,6 +335,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
       }
     })
     if (this.form.valid) {
+      this.spinner.show();
       var QtnDate = new Date(this.form.value.quotation_date.year,this.form.value.quotation_date.month-1,this.form.value.quotation_date.day)
       this.form.patchValue({
         quotation_date: QtnDate.toISOString()
@@ -338,6 +346,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
           this.toastr.success('Purchase order added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('purchase-orders');
         },
         error => {

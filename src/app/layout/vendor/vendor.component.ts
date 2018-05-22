@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { VendorService } from '../../core/services/vendor.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-vendor',
@@ -16,10 +17,12 @@ export class VendorComponent implements OnInit {
   constructor(
     private router: Router,
     private vendorService: VendorService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getVendorList();
   }
@@ -29,6 +32,7 @@ export class VendorComponent implements OnInit {
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getVendorList();
   }
@@ -41,12 +45,13 @@ export class VendorComponent implements OnInit {
       (data: any[]) => {
         this.totalvendorList = data['count'];
         this.vendorList = data['results'];
-        // console.log(this.vendorList)
+        this.spinner.hide();
       }
     );
   };
   
   activeState(id) {
+    this.spinner.show();
     let vendor;
 
     vendor = {
@@ -70,6 +75,7 @@ export class VendorComponent implements OnInit {
   };
 
   inactiveState(id) {
+    this.spinner.show();
     let vendor;
 
     vendor = {
@@ -94,6 +100,7 @@ export class VendorComponent implements OnInit {
   };
 
   deleteVendor(id) {
+    this.spinner.show();
     let vendor;
 
     vendor = {
@@ -117,6 +124,7 @@ export class VendorComponent implements OnInit {
   };
 
   pagination() {
+    this.spinner.show();
     this.getVendorList();
   };
 

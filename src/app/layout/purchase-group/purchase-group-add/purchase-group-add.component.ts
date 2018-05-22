@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PurchaseGroupService } from '../../../core/services/purchase-group.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-group-add',
@@ -15,14 +16,17 @@ export class PurchaseGroupAddComponent implements OnInit {
     private purchaseGroupService: PurchaseGroupService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       description: [null, Validators.required]
     });
+    this.spinner.hide();
   }
 
   goToList = function (toNav) {
@@ -31,11 +35,13 @@ export class PurchaseGroupAddComponent implements OnInit {
 
   addNewPurchaseGroup = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.purchaseGroupService.addNewPurchaseGroup(this.form.value).subscribe(
         response => {
           this.toastr.success('Purchase group added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('purchase-group');
         },
         error => {

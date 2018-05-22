@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PurchaseOrdersService } from '../../../core/services/purchase-orders.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-details',
@@ -14,10 +15,12 @@ export class PurchaseDetailsComponent implements OnInit {
   constructor(
     private purchaseOrdersService: PurchaseOrdersService,
     private router: Router, 
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.getPurchaseOrderDetails(this.route.snapshot.params['id']);
   }
 
@@ -26,7 +29,7 @@ export class PurchaseDetailsComponent implements OnInit {
       (data: any[]) =>{
         this.purchaseOrder = data;
         this.visible_key = true
-        // console.log(this.purchaseOrder);
+        this.spinner.hide();
       }
      );
   }

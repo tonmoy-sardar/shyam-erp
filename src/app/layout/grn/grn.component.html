@@ -1,5 +1,4 @@
 <div>
-  <!-- <app-page-header [heading]="'GRN List'" [icon]="'fa fa-university'"></app-page-header> -->
   <div class="row">
     <div class="col-md-6">
       <h4 class="page-header">GRN List</h4>
@@ -66,22 +65,12 @@
               <td>{{grn.vendor_address.address}}</td>
               <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
               <td>
-                <!-- <select class="form-control">
-                  <option>Change Status</option>
-                  <option>Cancel</option>
-                  <option>Active</option>
-                </select> -->
                 <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(grn.id)" *ngIf="grn.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
                 <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(grn.id)" *ngIf="grn.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <!-- <select class="form-control">
-                  <option>Change Approve</option>
-                  <option>Approve</option>
-                  <option>Dis-Approve</option>
-                </select> -->
                 <a href="javascript:void(0);" title="Active" name="Active" (click)="disApproveGrn(grn.id)" *ngIf="grn.is_approve==1">
                   <i class="fa fa-thumbs-up"></i> Approve</a>
                 <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="approveGrn(grn.id)" *ngIf="grn.is_approve==0">
@@ -104,3 +93,4 @@
     </div>
   </div>
 </div>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>

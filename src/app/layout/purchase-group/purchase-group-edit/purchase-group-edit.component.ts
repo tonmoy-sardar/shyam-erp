@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PurchaseGroupService } from '../../../core/services/purchase-group.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-group-edit',
@@ -17,10 +18,12 @@ export class PurchaseGroupEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       description: [null, Validators.required]
@@ -34,10 +37,10 @@ export class PurchaseGroupEditComponent implements OnInit {
   }
 
   getPurchaseGroupDetails = function (id) {
-
     this.purchaseGroupService.getPurchaseGroupDetails(id).subscribe(
       (data: any[]) => {
         this.purchaseGroup = data;
+        this.spinner.hide();
       }
     );
   }
@@ -49,11 +52,13 @@ export class PurchaseGroupEditComponent implements OnInit {
 
   updatePurchaseGroup = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.purchaseGroupService.updatePurchaseGroup(this.purchaseGroup).subscribe(
         response => {
           this.toastr.success('Purchase group updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('purchase-group');
         },
         error => {

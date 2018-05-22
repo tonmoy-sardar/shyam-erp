@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GstRatesService } from '../../../core/services/gst-rates.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-gst-rates-edit',
   templateUrl: './gst-rates-edit.component.html',
@@ -16,10 +18,12 @@ export class GstRatesEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private gstRatesService: GstRatesService
+    private gstRatesService: GstRatesService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = new FormGroup({
       gst_pattern: new FormControl('', Validators.required),
       igst: new FormControl('', Validators.required),
@@ -39,6 +43,7 @@ export class GstRatesEditComponent implements OnInit {
     this.gstRatesService.getGSTDetails(id).subscribe(
       (data: any[]) => {
         this.gstRates = data;
+        this.spinner.hide();
       }
     );
   }
@@ -61,11 +66,13 @@ export class GstRatesEditComponent implements OnInit {
 
   updateGstRate() {
     if (this.form.valid) {
+      this.spinner.show();
       this.gstRatesService.updateGST(this.gstRates).subscribe(
         response => {
           this.toastr.success('GST rate updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('gst-rates');
         },
         error => {

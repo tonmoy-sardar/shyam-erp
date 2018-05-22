@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GrnService } from '../../core/services/grn.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-grn',
@@ -16,10 +17,12 @@ export class GrnComponent implements OnInit {
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private grnService: GrnService
+    private grnService: GrnService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getGrnList();
   }
@@ -29,6 +32,7 @@ export class GrnComponent implements OnInit {
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getGrnList();
   }
@@ -41,12 +45,13 @@ export class GrnComponent implements OnInit {
       (data: any[]) => {
         this.totalgrnList = data['count'];
         this.grnList = data['results'];
-        // console.log(this.grnList)
+        this.spinner.hide();
       }
     );
   }
 
   activeState(id) {
+    this.spinner.show();
     let grn;
 
     grn = {
@@ -70,6 +75,7 @@ export class GrnComponent implements OnInit {
   };
 
   inactiveState(id) {
+    this.spinner.show();
     let grn;
 
     grn = {
@@ -94,6 +100,7 @@ export class GrnComponent implements OnInit {
   };
 
   approveGrn(id) {
+    this.spinner.show();
     let grn;
 
     grn = {
@@ -117,6 +124,7 @@ export class GrnComponent implements OnInit {
   };
 
   disApproveGrn(id) {
+    this.spinner.show();
     let grn;
 
     grn = {
@@ -141,6 +149,7 @@ export class GrnComponent implements OnInit {
   };
 
   pagination() {
+    this.spinner.show();
     this.getGrnList();
   };
 

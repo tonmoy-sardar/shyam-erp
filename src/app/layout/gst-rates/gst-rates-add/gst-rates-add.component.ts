@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { GstRatesService } from '../../../core/services/gst-rates.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-gst-rates-add',
   templateUrl: './gst-rates-add.component.html',
@@ -13,16 +15,19 @@ export class GstRatesAddComponent implements OnInit {
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private gstRatesService: GstRatesService
+    private gstRatesService: GstRatesService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = new FormGroup({
       gst_pattern: new FormControl('', Validators.required),
       igst: new FormControl(0, Validators.required),
       cgst: new FormControl('', Validators.required),
       sgst: new FormControl('', Validators.required)
     });
+    this.spinner.hide();
   }
 
   btnClickNav(toNav) {
@@ -42,12 +47,14 @@ export class GstRatesAddComponent implements OnInit {
   }
   addNewGstRate() {
     if (this.form.valid) {
+      this.spinner.show();
       this.gstRatesService.addNewGST(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('GST rates added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('gst-rates');
         },
         error => {

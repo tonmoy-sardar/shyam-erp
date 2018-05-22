@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-states-add',
@@ -15,15 +16,18 @@ export class StatesAddComponent implements OnInit {
     private statesService: StatesService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       state_name: [null, Validators.required],
       tin_number: [null, Validators.required],
       state_code: [null, Validators.required]
     });
+    this.spinner.hide();
   }
 
   goToList = function (toNav) {
@@ -32,11 +36,13 @@ export class StatesAddComponent implements OnInit {
 
   addState = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.statesService.addNewState(this.form.value).subscribe(
         response => {
           this.toastr.success('State added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('states');          
         },
         error => {

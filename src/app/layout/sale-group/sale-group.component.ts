@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaleGroupService } from '../../core/services/sale-group.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sale-group',
@@ -16,14 +17,17 @@ export class SaleGroupComponent implements OnInit {
   constructor(
     private saleGroupService: SaleGroupService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getSaleGroupList();
   }
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getSaleGroupList();
   }
@@ -39,11 +43,13 @@ export class SaleGroupComponent implements OnInit {
       (data: any[]) =>{
         this.totalsaleGroupList = data['count'];   
         this.saleGroupList = data['results'];
+        this.spinner.hide();
       }
      );
   };
 
   activeSaleGroup = function(id){
+    this.spinner.show();
     let saleGroup;
 
     saleGroup = {
@@ -67,6 +73,7 @@ export class SaleGroupComponent implements OnInit {
   };
 
   inactiveSaleGroup = function(id){
+    this.spinner.show();
     let saleGroup;
 
     saleGroup = {
@@ -91,6 +98,7 @@ export class SaleGroupComponent implements OnInit {
   };
 
   pagination = function () {
+    this.spinner.show();
     this.getSaleGroupList();
   };
 }

@@ -59,9 +59,9 @@
                   <td><span *ngIf="material.is_sales==true && material.is_taxable==true">{{material.material_tax[1]['igst']}} - {{material.material_tax[1]['cgst']}} - {{material.material_tax[1]['sgst']}} - {{material.material_tax[1]['hsn']}}</span></td>
                   <td>
                     <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/material/edit', material.id]"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteMaterial(material.id)">
+                    <!-- <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteMaterial(material.id)">
                         <i class="fa fa-trash-o"></i>
-                      </a>
+                      </a> -->
                   </td>
               </tr>
               <tr *ngIf="materialList.length == 0">
@@ -78,6 +78,6 @@
         <ngb-pagination [collectionSize]="totalMaterialList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>
-  </div>
-  
+  </div>  
 </div>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>

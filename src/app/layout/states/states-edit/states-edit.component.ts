@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-states-edit',
@@ -18,10 +19,12 @@ export class StatesEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.states = {
       id: '',
       state_name: '',
@@ -40,6 +43,7 @@ export class StatesEditComponent implements OnInit {
     this.statesService.getStateDetails(id).subscribe(
       (data: any[]) => {
         this.states = data;
+        this.spinner.hide();
       }
     );
   }
@@ -50,12 +54,14 @@ export class StatesEditComponent implements OnInit {
 
 
   updateState = function () {
-    if (this.form.valid) {      
+    if (this.form.valid) {
+      this.spinner.show();      
       this.statesService.updateState(this.states).subscribe(
         response => {
           this.toastr.success('State updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('states');
         },
         error => {

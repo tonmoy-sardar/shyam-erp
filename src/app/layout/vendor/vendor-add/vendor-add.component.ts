@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
 import { VendorService } from '../../../core/services/vendor.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-vendor-add',
@@ -21,10 +22,12 @@ export class VendorAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private statesService: StatesService,
-    private vendorService: VendorService
+    private vendorService: VendorService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       vendor_fullname: ['', Validators.required],
       vendor_type: ['', Validators.required],
@@ -42,6 +45,7 @@ export class VendorAddComponent implements OnInit {
   getVendorTypeList(){
     this.vendorService.getVendorTypeList().subscribe(res => {
       this.vendorTypeList = res.results;
+      this.spinner.hide();
     })
   }
   getStateList() {
@@ -105,12 +109,14 @@ export class VendorAddComponent implements OnInit {
   };
   addVendor () {
     if (this.form.valid) {
+      this.spinner.show();
       this.vendorService.addNewVendor(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Vendor added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('vendor');
         },
         error => {

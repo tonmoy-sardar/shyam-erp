@@ -8,6 +8,7 @@ import { PurchaseOrganizationService} from '../../../core/services/purchase-orga
 import { PurchaseGroupService} from '../../../core/services/purchase-group.service';
 import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-requisition-add',
@@ -36,10 +37,12 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
+    private spinner: NgxSpinnerService
   ) { }
 
 
   ngOnInit() {
+    this.spinner.show();
     this.purchaseRequisition = {
       purchase_organization:'',
       company:''
@@ -90,15 +93,16 @@ export class PurchaseRequisitionAddComponent implements OnInit {
   };
 
   addPurchaseRequisition () {
-    console.log(this.form.valid)
+    // console.log(this.form.valid)
     
     if (this.form.valid) {
-      
+      this.spinner.show();
       this.purchaseRequisitionService.addNewPurchaseRequisition(this.form.value).subscribe(
         response => {
           this.toastr.success('Material added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('purchase-requisition');          
         },
         error => {
@@ -182,7 +186,7 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     this.purchaseOrganizationService.getPurchaseOrganizationActiveList().subscribe(
       (data: any[]) =>{   
         this.purchaseOrganizationList = data;
-        
+        this.spinner.hide();
       }
      );
   }

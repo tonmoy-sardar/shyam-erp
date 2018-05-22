@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatesService } from '../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-states',
@@ -18,16 +19,19 @@ export class StatesComponent implements OnInit {
   constructor(
     private statesService: StatesService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getStateList();
   }
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getStateList();
   }
@@ -44,11 +48,13 @@ export class StatesComponent implements OnInit {
       (data: any[]) => {
         this.totalstateList = data['count'];
         this.stateList = data['results'];
+        this.spinner.hide();
       }
     );
   };
 
   activeState = function (id) {
+    this.spinner.show();
     let state;
 
     state = {
@@ -72,6 +78,7 @@ export class StatesComponent implements OnInit {
   };
 
   inactiveState = function (id) {
+    this.spinner.show();
     let state;
 
     state = {
@@ -96,6 +103,7 @@ export class StatesComponent implements OnInit {
   };
 
   deleteState = function (id) {
+    this.spinner.show();
     let state;
 
     state = {
@@ -119,6 +127,7 @@ export class StatesComponent implements OnInit {
   };
 
   pagination = function () {
+    this.spinner.show();
     this.getStateList();
   };
 

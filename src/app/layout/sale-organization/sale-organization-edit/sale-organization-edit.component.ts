@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SaleOrganizationService } from '../../../core/services/sale-organization.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sale-organization-edit',
@@ -17,10 +18,12 @@ export class SaleOrganizationEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       description: [null, Validators.required]
@@ -34,10 +37,10 @@ export class SaleOrganizationEditComponent implements OnInit {
   }
 
   getSaleOrganizationDetails = function (id) {
-
     this.saleOrganizationService.getSaleOrganizationDetails(id).subscribe(
       (data: any[]) => {
         this.saleOrganization = data;
+        this.spinner.hide();
       }
     );
   }
@@ -49,11 +52,13 @@ export class SaleOrganizationEditComponent implements OnInit {
 
   updateSaleOrganization = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.saleOrganizationService.updateSaleOrganization(this.saleOrganization).subscribe(
         response => {
           this.toastr.success('Sale organization updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('sale-organization');
         },
         error => {

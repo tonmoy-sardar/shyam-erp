@@ -1,5 +1,4 @@
 <div>
-  <!-- <app-page-header [heading]="'Purchase Requisition List'" [icon]="'fa fa-university'"></app-page-header> -->
   <div class="row">
     <div class="col-md-6">
       <h4 class="page-header">Purchase Requisition List</h4>
@@ -82,11 +81,10 @@
                 </a>
               </td>
 
-            </tr>
-            
-            <!-- <tr *ngIf="purchaseRequisitionList.length == 0">
+            </tr>            
+            <tr *ngIf="purchaseRequisitionList.length == 0">
               <td colspan="12" class="text-center">No record found</td>
-            </tr> -->
+            </tr>
           </tbody>
         </table>
       </div>
@@ -101,3 +99,4 @@
     </div>
   </div>
 </div>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>

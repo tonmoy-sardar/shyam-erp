@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseRequisitionService } from '../../core/services/purchase-requisition.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-purchase-requisition',
@@ -16,10 +17,12 @@ export class PurchaseRequisitionComponent implements OnInit {
   constructor(
     private router: Router,
     private purchaseRequisitionService: PurchaseRequisitionService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseRequisitionList();
   }
@@ -36,13 +39,13 @@ export class PurchaseRequisitionComponent implements OnInit {
       (data: any[]) => {
         this.totalPurchaseRequisitionList = data['count'];
         this.purchaseRequisitionList = data['results'];
-        console.log(this.purchaseRequisitionList);
+        this.spinner.hide();
       }
     );
   }
 
-  changeStatus(value,id)
-  {
+  changeStatus(value,id){
+    this.spinner.show();
     let purchaseRequisition;
 
     purchaseRequisition = {
@@ -66,8 +69,8 @@ export class PurchaseRequisitionComponent implements OnInit {
     );
   }
 
-  changeApproveStatus(value,id)
-  {
+  changeApproveStatus(value,id){
+    this.spinner.show();
     let purchaseRequisition;
 
     purchaseRequisition = {
@@ -92,10 +95,12 @@ export class PurchaseRequisitionComponent implements OnInit {
   }
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseRequisitionList();
   }
   pagination() {
+    this.spinner.show();
     this.getPurchaseRequisitionList();
   };
 }

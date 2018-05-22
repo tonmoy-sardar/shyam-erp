@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseOrganizationService } from '../../core/services/purchase-organization.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-purchase-organization',
   templateUrl: './purchase-organization.component.html',
@@ -15,10 +17,12 @@ export class PurchaseOrganizationComponent implements OnInit {
   constructor(
     private purchaseOrganizationService: PurchaseOrganizationService,
      private router: Router,
-     private toastr: ToastrService
+     private toastr: ToastrService,
+     private spinner: NgxSpinnerService
     ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseOrganizationList();
   }
@@ -27,6 +31,7 @@ export class PurchaseOrganizationComponent implements OnInit {
     this.router.navigateByUrl('/'+toNav);
   };
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseOrganizationList();
   }
@@ -38,11 +43,13 @@ export class PurchaseOrganizationComponent implements OnInit {
       (data: any[]) =>{   
         this.purchaseOrganizationList = data['results'];
         this.totalPurchaseOrganizationList = data['count'];
+        this.spinner.hide();
       }
      );
   };
 
   activePurchaseOrganization = function(id){
+    this.spinner.show();
     let purchaseOrganization;
 
     purchaseOrganization = {
@@ -66,6 +73,7 @@ export class PurchaseOrganizationComponent implements OnInit {
   };
 
   inactivePurchaseOrganization = function(id){
+    this.spinner.show();
     let purchaseOrganization;
 
     purchaseOrganization = {
@@ -89,6 +97,7 @@ export class PurchaseOrganizationComponent implements OnInit {
     );
   };
   pagination = function () {
+    this.spinner.show();
     this.getPurchaseOrganizationList();
   };
 
