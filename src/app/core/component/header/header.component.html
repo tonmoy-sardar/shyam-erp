@@ -32,66 +32,69 @@
                     </a>
                 </div>
             </li>
-            <!--<li class="nav-item">         
-            <a routerLink="/company" [routerLinkActive]="['router-link-active']"  class="nav-link" >
-                <i class="fa fa-rupee"></i>&nbsp;Customer Invoice
-            </a>
-        </li>
-        <li class="nav-item dropdown" ngbDropdown>
-            <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
-                <i class="fa fa-briefcase"></i> Stocks<b class="caret"></b>
-            </a>
-            <div class="dropdown-menu-right" ngbDropdownMenu>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-list" aria-hidden="true"></i> Stock List
+            <!-- <li class="nav-item">
+                <a routerLink="/company" [routerLinkActive]="['router-link-active']" class="nav-link">
+                    <i class="fa fa-rupee"></i>&nbsp;Customer Invoice
                 </a>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-list" aria-hidden="true"></i> Stock Transfer
-                </a>   
-            </div>
-        </li>
-        <li class="nav-item dropdown" ngbDropdown>
-            <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
-                <i class="fa fa-list-alt"></i> Reports<b class="caret"></b>
-            </a>
-            <div class="dropdown-menu-right" ngbDropdownMenu>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-pencil" aria-hidden="true"></i> Purchase Requisition
+            </li> -->
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-briefcase"></i> Stocks
+                    <b class="caret"></b>
                 </a>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-shopping-basket" aria-hidden="true"></i> Purchase Orders
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/stocks']">
+                        <i class="fa fa-list" aria-hidden="true"></i> Stock List
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/stocks-transfer']">
+                        <i class="fa fa-list" aria-hidden="true"></i> Stock Transfer
+                    </a>
+                </div>
+            </li>
+            <!-- <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-list-alt"></i> Reports
+                    <b class="caret"></b>
                 </a>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-truck" aria-hidden="true"></i> GRN
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-pencil" aria-hidden="true"></i> Purchase Requisition
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-shopping-basket" aria-hidden="true"></i> Purchase Orders
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-truck" aria-hidden="true"></i> GRN
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-money" aria-hidden="true"></i> Transfer Material
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-list-alt"></i> Expenses
+                    <b class="caret"></b>
                 </a>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-money" aria-hidden="true"></i> Transfer Material
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i> Employee Expense
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i> My Expense
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a routerLink="/company" [routerLinkActive]="['router-link-active']" class="nav-link">
+                    <i class="fa fa-list-alt"></i>&nbsp;Transactions
                 </a>
-            </div>
-        </li>
-        <li class="nav-item dropdown" ngbDropdown>
-            <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
-                <i class="fa fa-list-alt"></i> Expenses<b class="caret"></b>
-            </a>
-            <div class="dropdown-menu-right" ngbDropdownMenu>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-list-alt" aria-hidden="true"></i> Employee Expense
+            </li> -->
+            <!-- <li class="nav-item">
+                <a routerLink="/company" [routerLinkActive]="['router-link-active']" class="nav-link">
+                    <i class="fa fa-list-alt"></i>&nbsp;Accounting
                 </a>
-                <a class="dropdown-item" href="javascript:void(0)" >
-                    <i class="fa fa-list-alt" aria-hidden="true"></i> My Expense
-                </a>   
-            </div>
-        </li>
-        <li class="nav-item">         
-            <a routerLink="/company" [routerLinkActive]="['router-link-active']"  class="nav-link" >
-                <i class="fa fa-list-alt"></i>&nbsp;Transactions
-            </a>
-        </li>
-        <li class="nav-item">         
-            <a routerLink="/company" [routerLinkActive]="['router-link-active']"  class="nav-link" >
-                <i class="fa fa-list-alt"></i>&nbsp;Accounting
-            </a>
-        </li>-->
+            </li> -->
             <li class="nav-item dropdown" ngbDropdown>
                 <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
                     <i class="fa fa-cog"></i> Setting

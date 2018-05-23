@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Material Code</label>
-                                    <input class="form-control" formControlName="material_code" [ngClass]="displayFieldCss('material_code')" placeholder="Material Name">
+                                    <input class="form-control" formControlName="material_code" [ngClass]="displayFieldCss('material_code')" placeholder="Material Code">
                                     <div class="invalid-feedback" *ngIf="form.controls['material_code'].hasError('required')">
                                         Please enter material cose
                                     </div>
@@ -65,7 +65,7 @@
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label>Unit Per UOM</label>
-                                                <input class="form-control" type="text" appOnlyNumber formControlName="unit_per_uom" placeholder="Material Name" [ngClass]="{
+                                                <input class="form-control" type="text" appOnlyNumber formControlName="unit_per_uom" placeholder="Unit Per UOM" [ngClass]="{
                                                     'is-invalid': material_uoms.get('unit_per_uom').invalid && (material_uoms.get('unit_per_uom').dirty || material_uoms.get('unit_per_uom').touched),
                                                     'is-valid': material_uoms.get('unit_per_uom').valid && (material_uoms.get('unit_per_uom').dirty || material_uoms.get('unit_per_uom').touched)
                                                   }">

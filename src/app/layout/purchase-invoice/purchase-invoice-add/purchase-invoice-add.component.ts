@@ -140,8 +140,7 @@ export class PurchaseInvoiceAddComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addPurchaseInvoice() {
-    this.spinner.show();
+  addPurchaseInvoice() {    
     var amount_sum = 0;
     var gst_sum = 0;    
     this.material_details_list.forEach(x => {
@@ -154,6 +153,7 @@ export class PurchaseInvoiceAddComponent implements OnInit {
       total_amount: amount_sum
     })
     if (this.form.valid) {
+      this.spinner.show();
       console.log(this.form.value)
       this.purchaseInvoiceService.addNewPurchaseInvoice(this.form.value).subscribe(
         response => {

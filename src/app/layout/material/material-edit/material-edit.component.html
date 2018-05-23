@@ -68,7 +68,7 @@
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label>Unit Per UOM</label>
-                                                <input class="form-control" type="text" appOnlyNumber formControlName="unit_per_uom" placeholder="Material Name" [ngClass]="{
+                                                <input class="form-control" type="text" appOnlyNumber formControlName="unit_per_uom" placeholder="Unit Per UOM" [ngClass]="{
                                                         'is-invalid': material_uoms.get('unit_per_uom').invalid && (material_uoms.get('unit_per_uom').dirty || material_uoms.get('unit_per_uom').touched),
                                                         'is-valid': material_uoms.get('unit_per_uom').valid && (material_uoms.get('unit_per_uom').dirty || material_uoms.get('unit_per_uom').touched)
                                                       }" [(ngModel)]="material.material_uom[i].unit_per_uom" name="unit_per_uom">

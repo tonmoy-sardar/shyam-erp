@@ -1,0 +1,85 @@
+<div>
+  <div class="row">
+    <div class="col-md-6">
+      <h4 class="page-header">Stocks Transfer List</h4>
+    </div>
+    <div class="col-md-6 pull-right" style="text-align: right">
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
+      <button type="button" class="btn btn-secondary">
+        <i class="fa fa-refresh"></i> Reload</button>
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('stocks-transfer/add')">
+        <i class="fa fa-plus"></i> New Stocks Transfer</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-9">
+              <h5>Stocks Transfer</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <table class="card-body table table-hover table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sl.No.</th>
+              <th>Item</th>
+              <th>Company/Unit To</th>
+              <th>Bin To</th>
+              <th>Storage To</th>
+              <th>Company/Unit From</th>
+              <th>Bin From</th>
+              <th>Storage From</th>
+              <th>Material</th>
+              <th>Qty</th>
+              <th>Transfer Item Qty</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>TMT rebar-RM004</td>
+              <td>abc, Pabc</td>
+              <td>N/A</td>
+              <td>test, , ANDHRA PRADESH, 500004</td>
+              <td>XYZ, XYZ-UNIT001</td>
+              <td>Kolkata, , WEST BENGAL, 7010001</td>
+              <td>N/A</td>
+              <td>100.00</td>
+              <td>KG</td>
+              <td>10.00</td>
+            </tr>
+            <!-- <tr *ngIf="stocksTransferList.length == 0">
+              <td colspan="11" class="text-center">No record found</td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="totalstocksTransferList > 10">
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totalstocksTransferList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
