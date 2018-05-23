@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-storage-bin-edit',
@@ -24,10 +25,12 @@ export class StorageBinEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       bin_no: [null, Validators.required],
       bin_volume: [null, Validators.required],
@@ -58,19 +61,21 @@ export class StorageBinEditComponent implements OnInit {
     this.companyService.getCompanyStorageBinDetails(id).subscribe(
       (data: any[]) => {
         this.companyStorageBin = data;
-        // console.log(this.companyStorageBin);
+        this.spinner.hide();
       }
     );
   }
 
   updateCompanyStorageBin = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.companyService.updateCompanyStorageBin(this.companyStorageBin).subscribe(
         response => {
           //this.goToList('states');
           this.toastr.success('Storeage bin updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.showStorageBinList.emit();
         },
         error => {

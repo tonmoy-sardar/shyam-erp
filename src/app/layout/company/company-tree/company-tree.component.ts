@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { CompanyService } from '../../../core/services/company.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-company-tree',
   templateUrl: './company-tree.component.html',
@@ -9,24 +10,29 @@ import { CompanyService } from '../../../core/services/company.service';
 })
 export class CompanyTreeComponent implements OnInit {
   companyList;
-  
-  constructor(private companyService: CompanyService, private router: Router) { }
+
+  constructor(
+    private companyService: CompanyService,
+    private router: Router,
+    private spinner: NgxSpinnerService
+  ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.getCompanyList();
   }
 
-  getCompanyList= function(){
+  getCompanyList = function () {
     this.companyService.getCompanyList().subscribe(
-      (data: any[]) =>{   
+      (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
+        this.spinner.hide();
       }
-     );
+    );
   };
 
-  btnClickNav= function (toNav) {
-    this.router.navigateByUrl('/'+toNav);
+  btnClickNav = function (toNav) {
+    this.router.navigateByUrl('/' + toNav);
   };
 
 }

@@ -4,6 +4,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-storage-location-edit',
@@ -25,10 +26,12 @@ export class StorageLocationEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       storage_email: [null, [Validators.required,Validators.email]],
       storage_contact_no: [null, Validators.required],
@@ -61,19 +64,20 @@ export class StorageLocationEditComponent implements OnInit {
     this.companyService.getCompanyStorageDetails(id).subscribe(
       (data: any[]) => {
         this.companyStorage = data;
-        // console.log(this.companyStorage);
+        this.spinner.hide();
       }
     );
   }
 
   updateCompanyStorage = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.companyService.updateCompanyStorage(this.companyStorage).subscribe(
         response => {
           this.toastr.success('Store updated successfully', '', {
             timeOut: 3000,
           });
-          //this.goToList('states');
+          this.spinner.hide();
           this.showStorageList.emit();
         },
         error => {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaymentService } from '../../core/services/payment.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-payment',
@@ -18,10 +19,12 @@ export class PaymentComponent implements OnInit {
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPaymentList();
   }
@@ -31,6 +34,7 @@ export class PaymentComponent implements OnInit {
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getPaymentList();
   }
@@ -43,13 +47,14 @@ export class PaymentComponent implements OnInit {
       (data: any[]) => {
         this.totalPaymentList = data['count'];
         this.paymentList = data['results'];
-        console.log(this.paymentList)
+        this.spinner.hide();
       }
     );
   }
 
 
   approvePayment(id) {
+    this.spinner.show();
     let grn;
 
     grn = {
@@ -73,6 +78,7 @@ export class PaymentComponent implements OnInit {
   };
 
   disApprovePayment(id) {
+    this.spinner.show();
     let grn;
 
     grn = {
@@ -97,6 +103,7 @@ export class PaymentComponent implements OnInit {
   };
 
   pagination() {
+    this.spinner.show();
     this.getPaymentList();
   };
 

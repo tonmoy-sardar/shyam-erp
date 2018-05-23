@@ -4,6 +4,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { PaymentService } from '../../../core/services/payment.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-payment-add',
@@ -23,11 +24,12 @@ export class PaymentAddComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
-
+    this.spinner.show();
     this.form = this.formBuilder.group({
       company: [null, Validators.required],
       pur_inv: [null, Validators.required],
@@ -60,7 +62,7 @@ export class PaymentAddComponent implements OnInit {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
+        this.spinner.hide();
       }
     );
   };
@@ -69,7 +71,7 @@ export class PaymentAddComponent implements OnInit {
     this.paymentService.getCompanyBankList(id).subscribe(
       (data: any[]) => {
         this.bankList = data;
-        console.log(this.bankList);
+        // console.log(this.bankList);
       }
     );
   };
@@ -78,13 +80,12 @@ export class PaymentAddComponent implements OnInit {
     this.paymentService.getCompanyInvoiceList(id).subscribe(
       (data: any[]) => {
         this.invoiceList = data;
-        console.log(this.invoiceList);
+        // console.log(this.invoiceList);
       }
     );
   };
 
-  changeCompany(id)
-  {
+  changeCompany(id){
     if(id>0)
     {
       this.getCompanyBankList(id);
@@ -92,8 +93,7 @@ export class PaymentAddComponent implements OnInit {
     }
   }
 
-  changeInv(id)
-  {
+  changeInv(id){
     if(id>0)
     {
       for(var i =0; i<this.invoiceList.length; i++)
@@ -116,14 +116,15 @@ export class PaymentAddComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addNewPayment()  
-  {
+  addNewPayment(){
     if (this.form.valid) {
+      this.spinner.show();
       this.paymentService.addNewPayment(this.payment).subscribe(
         response => {
           this.toastr.success('Payment added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('payment');          
         },
         error => {

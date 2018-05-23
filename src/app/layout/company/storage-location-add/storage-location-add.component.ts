@@ -4,6 +4,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-storage-location-add',
@@ -23,10 +24,12 @@ export class StorageLocationAddComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       storage_email: [null, [Validators.required,Validators.email]],
       storage_contact_no: [null, Validators.required],
@@ -52,12 +55,13 @@ export class StorageLocationAddComponent implements OnInit {
 
   addNewCompanyStorage = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.companyService.addNewCompanyStorage(this.companyStorage).subscribe(
         response => {
           this.toastr.success('Store added successfully', '', {
             timeOut: 3000,
           });
-          //this.goToList('states');
+          this.spinner.hide();
           this.showStorageList.emit();
         },
         error => {
@@ -92,7 +96,7 @@ export class StorageLocationAddComponent implements OnInit {
     this.companyService.getCompanyBranchList(id).subscribe(
       (data: any[]) => {
         this.companyBranchList = data['results'];
-        // console.log(this.companyBranchList);
+        this.spinner.hide();
       }
     );
   };

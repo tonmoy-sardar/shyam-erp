@@ -4,6 +4,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-branch-add',
@@ -23,10 +24,12 @@ export class BranchAddComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       branch_name: [null, Validators.required],
       branch_email: [null, [Validators.required,Validators.email]],
@@ -57,12 +60,13 @@ export class BranchAddComponent implements OnInit {
 
   addNewCompanyBranch = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.companyService.addNewCompanyBranch(this.companyBranch).subscribe(
         response => {
           this.toastr.success('Branch added successfully', '', {
             timeOut: 3000,
           });
-          //this.goToList('states');
+          this.spinner.hide();
           this.showBranchList.emit();
         },
         error => {
@@ -89,6 +93,7 @@ export class BranchAddComponent implements OnInit {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;
+        this.spinner.hide();
       }
     );
   };

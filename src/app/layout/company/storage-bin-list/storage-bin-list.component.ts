@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-storage-bin-list',
@@ -23,10 +23,12 @@ export class StorageBinListComponent implements OnInit {
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.companyStorageBinCompShow = {
       showList: true,
@@ -75,17 +77,19 @@ export class StorageBinListComponent implements OnInit {
     this.companyService.getCompanyStorageBinList(id,params).subscribe(
       (data: any[]) => {
         this.companyStorageBinList = data['results'];
-        // console.log(this.companyStorageBinList);
+        this.spinner.hide();
       }
     );
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getCompanyStorageBinList(this.route.snapshot.params['id']);
   }
 
   pagination = function () {
+    this.spinner.show();
     this.getCompanyStorageBinList(this.route.snapshot.params['id']);
   };
 

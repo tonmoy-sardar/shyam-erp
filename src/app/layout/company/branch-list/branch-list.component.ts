@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-branch-list',
@@ -23,10 +24,12 @@ export class BranchListComponent implements OnInit {
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.companyBranchCompShow = {
       showList: true,
@@ -76,17 +79,19 @@ export class BranchListComponent implements OnInit {
       (data: any[]) => {
         this.totalcompanyBranchList = data['count'];
         this.companyBranchList = data['results'];
-        // console.log(this.companyBranchList);
+        this.spinner.hide();
       }
     );
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   }
 
   pagination = function () {
+    this.spinner.show();
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   };
 

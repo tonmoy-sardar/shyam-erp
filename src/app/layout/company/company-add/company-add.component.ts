@@ -4,6 +4,8 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-company-add',
   templateUrl: './company-add.component.html',
@@ -17,10 +19,12 @@ export class CompanyAddComponent implements OnInit {
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = new FormGroup({
       parent: new FormControl('', Validators.required),
       company_name: new FormControl('', Validators.required),
@@ -56,12 +60,14 @@ export class CompanyAddComponent implements OnInit {
 
   addNewCompany = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.companyService.addNewCompany(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Company added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('company');
         },
         error => {
@@ -84,7 +90,7 @@ export class CompanyAddComponent implements OnInit {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;
-        // console.log(this.stateList);
+        this.spinner.hide();
       }
     );
   };

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-storage-location-list',
@@ -23,10 +23,12 @@ export class StorageLocationListComponent implements OnInit {
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.companyStorageCompShow = {
       showList: true,
@@ -76,17 +78,19 @@ export class StorageLocationListComponent implements OnInit {
       (data: any[]) => {
         this.totalcompanyStorageList = data['count'];
         this.companyStorageList = data['results'];
-        // console.log(this.companyStorageList);
+        this.spinner.hide();
       }
     );
   };
 
   dataSearch() {
+    this.spinner.show();
     this.defaultPagination = 1;
     this.getCompanyStorageList(this.route.snapshot.params['id']);
   }
 
   pagination = function () {
+    this.spinner.show();
     this.getCompanyStorageList(this.route.snapshot.params['id']);
   };
 

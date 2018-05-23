@@ -4,6 +4,7 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-company-edit',
@@ -19,10 +20,12 @@ export class CompanyEditComponent implements OnInit {
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = new FormGroup({
       company_name: new FormControl('', Validators.required),
       company_url: new FormControl('', [
@@ -68,7 +71,7 @@ export class CompanyEditComponent implements OnInit {
     this.companyService.getCompanyDetails(id).subscribe(
       (data: any[]) => {
         this.company = data;
-        // console.log(this.company);
+        this.spinner.hide();
       }
     );
   }
@@ -80,11 +83,13 @@ export class CompanyEditComponent implements OnInit {
 
   updateCompany = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.companyService.updateCompany(this.company).subscribe(
         response => {
           this.toastr.success('Company updated successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.goToList('company');
         },
         error => {

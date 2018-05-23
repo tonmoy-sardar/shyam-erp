@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-storage-bin-add',
@@ -22,10 +23,12 @@ export class StorageBinAddComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.form = this.formBuilder.group({
       bin_no: [null, Validators.required],
       bin_volume: [null, Validators.required],
@@ -48,11 +51,13 @@ export class StorageBinAddComponent implements OnInit {
 
   addNewCompanyStorageBin = function () {
     if (this.form.valid) {
+      this.spinner.show();
       this.companyService.addNewCompanyStorageBin(this.companyStorageBin).subscribe(
         response => {
           this.toastr.success('Storeage bin added successfully', '', {
             timeOut: 3000,
           });
+          this.spinner.hide();
           this.showStorageBinList.emit();
         },
         error => {
@@ -79,7 +84,7 @@ export class StorageBinAddComponent implements OnInit {
     this.companyService.getCompanyBranchList(id).subscribe(
       (data: any[]) => {
         this.companyBranchList = data['results'];
-        // console.log(this.companyBranchList);
+        this.spinner.hide();
       }
     );
   };
