@@ -117,16 +117,16 @@
                                                 <td>{{mat.material.material_tax[0].cgst}}</td>
                                                 <td>{{mat.material.material_tax[0].sgst}}</td>
                                                 <td width="80px">
-                                                    <input type="number" class="form-control" name="order_quantity" [(ngModel)]="material_details_list[k].order_quantity" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                    <input appOnlyNumber type="text" class="form-control" name="order_quantity" [(ngModel)]="material_details_list[k].order_quantity" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
                                                 </td>
                                                 <td width="80px">
-                                                    <input type="number" class="form-control" name="rate" [(ngModel)]="material_details_list[k].rate" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                    <input appOnlyNumber type="text" class="form-control" name="rate" [(ngModel)]="material_details_list[k].rate" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
                                                 </td>
                                                 <td width="80px">
-                                                    <input type="number" class="form-control" name="discount_percent" [(ngModel)]="material_details_list[k].discount_percent" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                    <input appOnlyNumber type="text" class="form-control" name="discount_percent" [(ngModel)]="material_details_list[k].discount_percent" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
                                                 </td>
                                                 <td width="80px">
-                                                    <input type="number" class="form-control" name="gst_amount" [(ngModel)]="material_details_list[k].gst_amount" [ngModelOptions]="{standalone: true}" readonly >
+                                                    <input appOnlyNumber type="text" class="form-control" name="gst_amount" [(ngModel)]="material_details_list[k].gst_amount" [ngModelOptions]="{standalone: true}" readonly >
                                                 </td>
                                                 <td width="150px">
                                                     <div class="input-group">
@@ -139,7 +139,7 @@
                                                     </div>
                                                 </td>
                                                 <td width="80px">
-                                                    <input type="number" class="form-control" name="sub_total" [(ngModel)]="material_details_list[k].sub_total" [ngModelOptions]="{standalone: true}" readonly>
+                                                    <input appOnlyNumber type="text" class="form-control" name="sub_total" [(ngModel)]="material_details_list[k].sub_total" [ngModelOptions]="{standalone: true}" readonly>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -183,7 +183,7 @@
                                                 </div> -->
                                                 <div class="form-group col-md-2">
                                                     <label>Freight Amount </label>
-                                                    <input type="number" class="form-control" name="freight_amount" formControlName="freight_amount" [ngClass]="{
+                                                    <input appOnlyNumber type="text" class="form-control" name="freight_amount" formControlName="freight_amount" [ngClass]="{
                                                         'is-invalid': freight.get('freight_amount').invalid && (freight.get('freight_amount').dirty || freight.get('freight_amount').touched),
                                                         'is-valid': freight.get('freight_amount').valid && (freight.get('freight_amount').dirty || freight.get('freight_amount').touched)
                                                       }" (keyup)="getFreightTotal(freight.get('freight_rate').value, freight.get('freight_amount').value, freight.get('freight_gst_rate').value, i)">
@@ -206,7 +206,7 @@
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label>Freight Total</label>
-                                                    <input type="number" class="form-control" name="freight_total" [(ngModel)]="form.value.purchase_order_freight[i].freight_total"
+                                                    <input appOnlyNumber type="text" class="form-control" name="freight_total" [(ngModel)]="form.value.purchase_order_freight[i].freight_total"
                                                         formControlName="freight_total" readonly>
                                                 </div>
                                             </div>

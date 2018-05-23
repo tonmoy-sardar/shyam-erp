@@ -51,7 +51,6 @@ export class TransportAddComponent implements OnInit {
       amount_debit: new FormControl('', Validators.required)
     });
     this.getCompanyList();
-    this.getStorageList();
     this.getStateList();
   }
 
@@ -69,11 +68,17 @@ export class TransportAddComponent implements OnInit {
       }
     );
   };
-  getStorageList(){
-    this.companyService.getStorageList().subscribe(res =>{
-      this.storageList = res.results;
-      // console.log(this.storageList)
-    })
+  getCompanyStorageDropdownList(id){
+    this.companyService.getCompanyStorageDropdownList(id).subscribe(
+      (data: any[]) =>{   
+        this.storageList = data;
+      }
+     );
+  };
+  companyChange(id){
+    if(id){
+      this.getCompanyStorageDropdownList(id)
+    }
   }
   getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(

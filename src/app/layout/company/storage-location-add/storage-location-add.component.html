@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>City</label>
-                                    <input type="text" appOnlyNumber class="form-control" placeholder="City Name" [(ngModel)]="companyStorage.storage_city" name="storage_city"
+                                    <input type="text" class="form-control" placeholder="City Name" [(ngModel)]="companyStorage.storage_city" name="storage_city"
                                         formControlName="storage_city" [ngClass]="displayFieldCss('storage_city')">
                                     <div class="invalid-feedback" *ngIf="isFieldValid('storage_city')">
                                         Please enter city

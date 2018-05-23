@@ -296,7 +296,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
       if (gst > 0) {
         this.gstRatesService.getGSTDetails(gst).subscribe(res => {
           this.get_gst_deatils = res;
-          this.form.value.purchase_order_freight[i].freight_total = Math.round(amount + Math.round(this.get_gst_deatils.igst));
+          this.form.value.purchase_order_freight[i].freight_total = Math.round(Math.round(amount) + Math.round(this.get_gst_deatils.igst));
         })
       }
     }

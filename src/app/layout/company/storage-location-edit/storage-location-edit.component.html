@@ -68,7 +68,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Pin</label>
-                                <input type="text" appOnlyNumber class="form-control" placeholder="Pin" [(ngModel)]="companyStorage.storage_pincode" name="storage_pincode" formControlName="storage_pincode" [ngClass]="displayFieldCss('storage_pincode')">
+                                <input type="text" class="form-control" placeholder="Pin" [(ngModel)]="companyStorage.storage_pincode" name="storage_pincode" formControlName="storage_pincode" [ngClass]="displayFieldCss('storage_pincode')">
                                 <div class="invalid-feedback" *ngIf="isFieldValid('storage_pincode')">
                                     Please enter city
                                 </div>

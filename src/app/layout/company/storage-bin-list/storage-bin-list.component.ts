@@ -77,6 +77,7 @@ export class StorageBinListComponent implements OnInit {
     this.companyService.getCompanyStorageBinList(id,params).subscribe(
       (data: any[]) => {
         this.companyStorageBinList = data['results'];
+        console.log(this.companyStorageBinList)
         this.spinner.hide();
       }
     );
