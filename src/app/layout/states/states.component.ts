@@ -11,6 +11,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class StatesComponent implements OnInit {
   stateList = [];
+  itemNo:number;
   defaultPagination: number;
   totalstateList: number;
   search_key = '';
@@ -26,6 +27,7 @@ export class StatesComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
     this.getStateList();
   }
@@ -127,6 +129,7 @@ export class StatesComponent implements OnInit {
   };
 
   pagination = function () {
+    this.itemNo = (this.defaultPagination - 1) * 10;
     this.spinner.show();
     this.getStateList();
   };
