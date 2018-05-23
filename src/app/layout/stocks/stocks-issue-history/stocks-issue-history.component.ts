@@ -2,18 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { StocksService } from '../../core/services/stocks.service';
+import { StocksService } from '../../../core/services/stocks.service';
 
 @Component({
-  selector: 'app-stocks',
-  templateUrl: './stocks.component.html',
-  styleUrls: ['./stocks.component.scss']
+  selector: 'app-stocks-issue-history',
+  templateUrl: './stocks-issue-history.component.html',
+  styleUrls: ['./stocks-issue-history.component.scss']
 })
-export class StocksComponent implements OnInit {
-  stockList = [];
+export class StocksIssueHistoryComponent implements OnInit {
+
+  stockIssueList = [];
   itemNo: number;
   defaultPagination: number;
-  totalstockList: number;
+  totalStockIssueList: number;
   search_key = '';
   constructor(
     private router: Router,
@@ -26,35 +27,35 @@ export class StocksComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
-    this.getStockList();
+    this.getStockIssueList();
   }
 
   dataSearch() {
     this.spinner.show();
     this.defaultPagination = 1;
-    this.getStockList();
+    this.getStockIssueList();
   }
 
   btnClickNav = function (toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  getStockList() {
+  getStockIssueList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
     this.stocksService.getStockList(params).subscribe(res => {      
-      this.totalstockList = res['count'];
-      this.stockList = res['results'];
+      this.totalStockIssueList = res['count'];
+      this.stockIssueList = res['results'];
       this.spinner.hide();
-      console.log(this.stockList)
+      console.log(this.stockIssueList)
     })
   }
 
   pagination() {
     this.itemNo = (this.defaultPagination - 1) * 10;
     this.spinner.show();
-    this.getStockList();
+    this.getStockIssueList();
   };
 
 }

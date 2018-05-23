@@ -48,7 +48,7 @@ import { StatesService } from './services/states.service';
 import { TermsConditionService } from './services/terms-condition.service';
 import { VendorService } from './services/vendor.service';
 import { TransportService } from './services/transport.service';
-
+import { StocksService } from './services/stocks.service';
 
 @NgModule({
   imports: [
@@ -131,7 +131,8 @@ export class CoreModule {
         StatesService,
         TermsConditionService,
         VendorService,
-        TransportService
+        TransportService,
+        StocksService
       ]
     };
   }

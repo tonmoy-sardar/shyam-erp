@@ -15,7 +15,13 @@ export class StocksService {
   }
 
   getStockList(params): Observable<any>{
-    return this.http.get(environment.apiEndpoint+'stocks/?'+params, {
+    return this.http.get(environment.apiEndpoint+'all_stock/?'+params, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
+  getStockDetails(id): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'all_stock/'+id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
