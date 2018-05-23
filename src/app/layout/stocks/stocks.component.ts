@@ -47,7 +47,7 @@ export class StocksComponent implements OnInit {
       this.totalstockList = res['count'];
       this.stockList = res['results'];
       this.spinner.hide();
-      console.log(this.stockList)
+      // console.log(this.stockList)
     })
   }
 

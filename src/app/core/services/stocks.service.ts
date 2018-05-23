@@ -14,8 +14,20 @@ export class StocksService {
     })
   }
 
+  addNewStockIssue(data): Observable<any>{
+    return this.http.post(environment.apiEndpoint+'stock_issue/', data, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
   getStockList(params): Observable<any>{
     return this.http.get(environment.apiEndpoint+'all_stock/?'+params, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
+  getStockIssueHistoryList(params,id): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'specific_stock_issue/'+id+'/?'+params, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

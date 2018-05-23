@@ -22,11 +22,12 @@ export class StocksIssueComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService
   ) { }
-
   ngOnInit() {
-    this.spinner.show();    
+    this.spinner.show();
     this.form = this.formBuilder.group({
-      
+      stock: ['', Validators.required],
+      quantity: ['', Validators.required],
+      note: ['', Validators.required],
     });
     this.getStockDetails(this.route.snapshot.params['id']);
   }
@@ -35,7 +36,7 @@ export class StocksIssueComponent implements OnInit {
     this.stocksService.getStockDetails(id).subscribe(
       (data: any[]) => {
         this.stockDetails = data;
-        this.visible_key = true
+        this.visible_key = true;        
         // console.log(this.stockDetails)
         this.spinner.hide();
       }
@@ -46,16 +47,43 @@ export class StocksIssueComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
 
+  getValueCheck(val) {
+    if (val > Math.round(this.stockDetails.quantity)) {
+      this.toastr.error('Quantity should not be more then available quantity', '', {
+        timeOut: 3000,
+      });
+      this.form.patchValue({
+        quantity: Math.round(this.stockDetails.quantity)
+      })
+      return;
+    }    
+  }
 
   stockIssue() {
+    this.form.patchValue({
+      stock: this.stockDetails.id
+    })
     if (this.form.valid) {
-      
+      this.spinner.show();
+      this.stocksService.addNewStockIssue(this.form.value).subscribe(res => {
+        this.toastr.success('Stock issued successfully', '', {
+          timeOut: 3000,
+        });
+        this.spinner.hide();
+        this.router.navigateByUrl('/stocks/issue-history/' + this.route.snapshot.params['id']);
+      },
+      error => {
+        console.log('error', error)
+        // this.toastr.error('everything is broken', '', {
+        //   timeOut: 3000,
+        // });
+      })
     } else {
       Object.keys(this.form.controls).forEach(field => {
         const control = this.form.get(field);
         control.markAsTouched({ onlySelf: true });
       });
-    }    
+    }
   }
 
   btnClickNav(toNav) {

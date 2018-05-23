@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { StocksService } from '../../../core/services/stocks.service';
@@ -18,6 +18,7 @@ export class StocksIssueHistoryComponent implements OnInit {
   search_key = '';
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
     private stocksService: StocksService
@@ -44,11 +45,11 @@ export class StocksIssueHistoryComponent implements OnInit {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
-    this.stocksService.getStockList(params).subscribe(res => {      
+    this.stocksService.getStockIssueHistoryList(params,this.route.snapshot.params['id']).subscribe(res => {      
       this.totalStockIssueList = res['count'];
       this.stockIssueList = res['results'];
       this.spinner.hide();
-      console.log(this.stockIssueList)
+      // console.log(this.stockIssueList)
     })
   }
 

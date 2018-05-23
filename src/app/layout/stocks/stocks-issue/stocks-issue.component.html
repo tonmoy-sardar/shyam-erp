@@ -17,7 +17,7 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <form role="form">
+        <form role="form" [formGroup]="form" novalidate>
           <div class="card bg-light mb-3">
             <div class="card-header" style="background-color:#868e96; color: #fff;">Stocks Issue Add</div>
             <div class="card-body" *ngIf="visible_key">
@@ -38,32 +38,33 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Shyam Futuretech</td>
-                        <td>MATLA BDS BRIDGE</td>
-                        <td>Kolkata, kolkata, WEST BENGAL, 741258</td>
-                        <td>N/A</td>
-                        <td>TMT rebar - RM004</td>
-                        <td>32.00 KG</td>
-                        <td width="80px">
-                          <input appOnlyNumber type="text" class="form-control">
+                        <td>{{stockDetails.company.company_name}}</td>
+                        <td>{{stockDetails.branch.branch_name}}</td>
+                        <td>{{stockDetails.storage_location.storage_address}}</td>
+                        <td>{{stockDetails.storage_bin.bin_no}}</td>
+                        <td>{{stockDetails.material.material_fullname}}</td>
+                        <td>{{stockDetails.quantity}}</td>
+                        <td width="150px">
+                          <div class="form-group">
+                            <input appOnlyNumber type="text" class="form-control" name="quantity" formControlName="quantity" [ngClass]="displayFieldCss('quantity')" (keyup)="getValueCheck($event.target.value)">
+                            <div class="invalid-feedback" *ngIf="form.controls['quantity'].hasError('required')">
+                              Please enter quantity
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
-              <div class="card bg-light mb-3" *ngIf="visible_key">
-                <div class="card-header">Purpose notes</div>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="form-group col-md-12">
-                      <label>Purpose notes</label>
-                      <textarea cols="5" class="form-control" placeholder="Purpose notes"></textarea>
-                    </div>
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label>Purpose notes</label>
+                  <textarea cols="5" class="form-control" placeholder="Purpose notes" name="note" formControlName="note" [ngClass]="displayFieldCss('note')"></textarea>
+                  <div class="invalid-feedback" *ngIf="form.controls['note'].hasError('required')">
+                    Please enter note
                   </div>
                 </div>
-              </div>
-              <div class="row">
                 <div class="form-group col-md-12" style="text-align: right">
                   <button type="submit" class="btn btn-primary" (click)="stockIssue()">Submit</button>
                   <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
