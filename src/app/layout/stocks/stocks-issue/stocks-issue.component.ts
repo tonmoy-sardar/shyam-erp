@@ -4,6 +4,7 @@ import { StocksService } from '../../../core/services/stocks.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-stocks-issue',
@@ -13,14 +14,17 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class StocksIssueComponent implements OnInit {
   stockDetails: any;
   form: FormGroup;
-  visible_key: boolean
+  visible_key: boolean;
+  help_heading = "";
+  help_description = "";
   constructor(
     private stocksService: StocksService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
   ngOnInit() {
     this.spinner.show();
@@ -30,6 +34,14 @@ export class StocksIssueComponent implements OnInit {
       note: ['', Validators.required],
     });
     this.getStockDetails(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp(){
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.stockIssue.heading;
+      this.help_description = res.data.stockIssue.desc;
+    })
   }
 
   getStockDetails(id) {

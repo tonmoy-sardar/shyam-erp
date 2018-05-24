@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { StatesService } from '../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
 
 @Component({
   selector: 'app-states',
@@ -11,17 +13,20 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class StatesComponent implements OnInit {
   stateList = [];
-  itemNo:number;
+  itemNo: number;
   defaultPagination: number;
   totalstateList: number;
   search_key = '';
-
-  
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
   constructor(
     private statesService: StatesService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
 
@@ -30,6 +35,14 @@ export class StatesComponent implements OnInit {
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.getStateList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.state.heading;
+      this.help_description = res.data.state.desc;
+    })
   }
 
   dataSearch() {
@@ -50,7 +63,16 @@ export class StatesComponent implements OnInit {
       (data: any[]) => {
         this.totalstateList = data['count'];
         this.stateList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalstateList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalstateList
+        }
         this.spinner.hide();
+        // console.log(data)
       }
     );
   };
@@ -129,7 +151,6 @@ export class StatesComponent implements OnInit {
   };
 
   pagination = function () {
-    this.itemNo = (this.defaultPagination - 1) * 10;
     this.spinner.show();
     this.getStateList();
   };

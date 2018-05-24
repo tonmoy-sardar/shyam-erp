@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { StocksService } from '../../../core/services/stocks.service';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-stocks-issue-history',
@@ -16,12 +17,15 @@ export class StocksIssueHistoryComponent implements OnInit {
   defaultPagination: number;
   totalStockIssueList: number;
   search_key = '';
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private stocksService: StocksService
+    private stocksService: StocksService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -29,6 +33,14 @@ export class StocksIssueHistoryComponent implements OnInit {
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.getStockIssueList();
+    this.getHelp();
+  }
+
+  getHelp(){
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.stockIssueHistory.heading;
+      this.help_description = res.data.stockIssueHistory.desc;
+    })
   }
 
   dataSearch() {

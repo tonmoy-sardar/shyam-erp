@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { StocksService } from '../../core/services/stocks.service';
+import { HelpService } from '../../core/services/help.service';
 
 @Component({
   selector: 'app-stocks',
@@ -15,11 +16,14 @@ export class StocksComponent implements OnInit {
   defaultPagination: number;
   totalstockList: number;
   search_key = '';
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private stocksService: StocksService
+    private stocksService: StocksService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -27,6 +31,14 @@ export class StocksComponent implements OnInit {
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.getStockList();
+    this.getHelp();
+  }
+
+  getHelp(){
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.stock.heading;
+      this.help_description = res.data.stock.desc;
+    })
   }
 
   dataSearch() {

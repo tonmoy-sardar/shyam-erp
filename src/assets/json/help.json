@@ -1,0 +1,28 @@
+{
+    "data": {
+        "stock": {
+            "heading": "Stocks",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "stockIssue": {
+            "heading": "Stocks Issue",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "stockIssueHistory": {
+            "heading": "Stocks Issue History",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "state": {
+            "heading": "States",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "stateAdd": {
+            "heading": "State Add",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "stateEdit": {
+            "heading": "State Edit",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        }
+    }
+}

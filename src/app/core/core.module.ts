@@ -24,6 +24,7 @@ import { RatingComponent } from './component/rating/rating.component';
 import { TabsComponent } from './component/tabs/tabs.component';
 import { TimepickerComponent } from './component/timepicker/timepicker.component';
 import { TooltipComponent } from './component/tooltip/tooltip.component';
+import { HelpComponent } from './component/help/help.component';
 
 //----------------Services----------------//
 import { LoginService } from './services/login.service';
@@ -49,6 +50,7 @@ import { TermsConditionService } from './services/terms-condition.service';
 import { VendorService } from './services/vendor.service';
 import { TransportService } from './services/transport.service';
 import { StocksService } from './services/stocks.service';
+import { HelpService } from './services/help.service'
 
 @NgModule({
   imports: [
@@ -76,7 +78,8 @@ import { StocksService } from './services/stocks.service';
     RatingComponent,
     TabsComponent,
     TimepickerComponent,
-    TooltipComponent
+    TooltipComponent,
+    HelpComponent
   ],
   providers: [],
   exports: [
@@ -98,7 +101,8 @@ import { StocksService } from './services/stocks.service';
     RatingComponent,
     TabsComponent,
     TimepickerComponent,
-    TooltipComponent
+    TooltipComponent,
+    HelpComponent
   ],
   entryComponents: [
 
@@ -132,7 +136,8 @@ export class CoreModule {
         TermsConditionService,
         VendorService,
         TransportService,
-        StocksService
+        StocksService,
+        HelpService
       ]
     };
   }

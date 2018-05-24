@@ -4,6 +4,7 @@ import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-states-edit',
@@ -14,13 +15,16 @@ export class StatesEditComponent implements OnInit {
   states;
   state;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -37,6 +41,14 @@ export class StatesEditComponent implements OnInit {
       state_code: [null, Validators.required]
     });
     this.getStateDetails(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp(){
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.stateEdit.heading;
+      this.help_description = res.data.stateEdit.desc;
+    })
   }
 
   getStateDetails = function (id) {

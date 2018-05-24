@@ -4,6 +4,7 @@ import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-states-add',
@@ -12,12 +13,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class StatesAddComponent implements OnInit {
   form: FormGroup;
+  help_heading = "";
+  help_description = ""; 
   constructor(
     private statesService: StatesService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -28,6 +32,14 @@ export class StatesAddComponent implements OnInit {
       state_code: [null, Validators.required]
     });
     this.spinner.hide();
+    this.getHelp();
+  }
+
+  getHelp(){
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.stateAdd.heading;
+      this.help_description = res.data.stateAdd.desc;
+    })
   }
 
   goToList = function (toNav) {
