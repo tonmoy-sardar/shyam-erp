@@ -27,11 +27,11 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.getPurchaseRequisitionList();
   }
 
-  btnClickNav= function (toNav) {
-    this.router.navigateByUrl('/'+toNav);
+  btnClickNav = function (toNav) {
+    this.router.navigateByUrl('/' + toNav);
   };
 
-  getPurchaseRequisitionList(){
+  getPurchaseRequisitionList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
@@ -40,58 +40,70 @@ export class PurchaseRequisitionComponent implements OnInit {
         this.totalPurchaseRequisitionList = data['count'];
         this.purchaseRequisitionList = data['results'];
         this.spinner.hide();
+        // console.log(this.purchaseRequisitionList)
       }
     );
   }
 
-  changeStatus(value,id){
+  changeStatus(value, id) {
     this.spinner.show();
     let purchaseRequisition;
-
-    purchaseRequisition = {
-      id: id,
-      is_finalised: value
-    };
-
-    this.purchaseRequisitionService.changeStatusPurchaseRequisition(purchaseRequisition).subscribe(
-      response => {
-        this.toastr.success('Purchase Requisition status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getPurchaseRequisitionList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+    if (value != "") {
+      if (value == 0) {
+        purchaseRequisition = {
+          id: id,
+          status: false
+        };
       }
-    );
+      else if (value == 1) {
+        purchaseRequisition = {
+          id: id,
+          status: true
+        };
+      }
+      this.purchaseRequisitionService.changeStatusPurchaseRequisition(purchaseRequisition).subscribe(
+        response => {
+          this.toastr.success('Status changed successfully', '', {
+            timeOut: 3000,
+          });
+          this.getPurchaseRequisitionList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
   }
 
-  changeApproveStatus(value,id){
-    this.spinner.show();
-    let purchaseRequisition;
+  changeApproveStatus(value, id) {
+    if (value > 0) {
+      this.spinner.show();
+      let purchaseRequisition;
 
-    purchaseRequisition = {
-      id: id,
-      is_approve: value
-    };
+      purchaseRequisition = {
+        id: id,
+        is_approve: value
+      };
 
-    this.purchaseRequisitionService.changeApproveStatusPurchaseRequisition(purchaseRequisition).subscribe(
-      response => {
-        this.toastr.success('Purchase Requisition approve status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getPurchaseRequisitionList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
-      }
-    );
+      this.purchaseRequisitionService.changeApproveStatusPurchaseRequisition(purchaseRequisition).subscribe(
+        response => {
+          this.toastr.success('Purchase Requisition approve status changed successfully', '', {
+            timeOut: 3000,
+          });
+          this.getPurchaseRequisitionList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
+
   }
 
   dataSearch() {

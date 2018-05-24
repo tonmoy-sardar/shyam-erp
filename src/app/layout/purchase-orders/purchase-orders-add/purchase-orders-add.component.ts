@@ -35,7 +35,8 @@ export class PurchaseOrdersAddComponent implements OnInit {
   get_gst_deatils: any;
   material_details_list: any[] = [];
   sum: number = 0;
- 
+  previous_purchase_list: any[] = [];
+  total_rest_quantity: number = 0;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -72,6 +73,20 @@ export class PurchaseOrdersAddComponent implements OnInit {
     this.getTermsConditionList();
     this.getGstRatesList();
   }
+
+  getRequisitionPurchaseOrderList(id) {
+    this.purchaseRequisitionService.getPurchaseRequisitionOrderList(id).subscribe(res => {
+      this.previous_purchase_list = res;
+      var sum = 0
+      this.previous_purchase_list.forEach(x => {
+        sum += Math.round(x.purchase_order_detail[0].order_quantity)
+      })
+      this.total_rest_quantity = Math.round(this.requisition_details.requisition_detail[0].quantity) - sum
+      // console.log(this.total_rest_quantity)
+      // console.log(res)
+    })
+  }
+  
   getGstRatesList() {
     this.gstRatesService.getGSTListWithoutPagination().subscribe(res => {
       this.gst_rates_list = res;
@@ -107,7 +122,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
     const order_freight_control = <FormArray>this.form.controls['purchase_order_freight'];
     const order_detail_control = <FormArray>this.form.controls['purchase_order_detail'];
     const order_terms_control = <FormArray>this.form.controls['purchase_order_terms'];
-    if (id) {
+    if (id) {      
       this.clearFormArray(order_freight_control)
       this.requisition_details = '';
       this.material_details_list = [];
@@ -117,6 +132,8 @@ export class PurchaseOrdersAddComponent implements OnInit {
       })
       this.purchaseRequisitionService.getPurchaseRequisitionDetails(id).subscribe(res => {
         this.requisition_details = res;
+        this.getRequisitionPurchaseOrderList(id);
+        // console.log(this.requisition_details)
         this.requisition_details.requisition_detail.forEach(x => {
           var Mdtl = {
             material: x.material.id,
@@ -204,28 +221,29 @@ export class PurchaseOrdersAddComponent implements OnInit {
         this.sum += Math.round(x.sub_total)
       }
     })
+    this.sum += this.form.value.purchase_order_freight[0].freight_total
     this.form.patchValue({
       grand_total: this.sum,
       grand_total_words: converter.toWords(this.sum)
     })
   }
   getSubTotal(quantity, rate, discount, i) {
-    if (Math.round(quantity) > Math.round(this.requisition_details.requisition_detail[i].quantity)) {
-      this.material_details_list[i].order_quantity = Math.round(this.requisition_details.requisition_detail[i].quantity)
-      this.toastr.error('Please enter less then PR quantity', '', {
+    if (Math.round(quantity) > Math.round(this.total_rest_quantity)) {
+      this.material_details_list[i].order_quantity = Math.round(this.total_rest_quantity)
+      this.toastr.error('Quantity should not be more than PR Quantity', '', {
         timeOut: 3000,
       });
     }
     var igst = Math.round(this.requisition_details.requisition_detail[i].material.material_tax[0].igst)
     if (quantity != "" && rate != "" && discount != "") {
       var val = Math.round((rate * quantity) - ((rate * quantity * discount) / 100))
-      var gst_amount = Math.round((val * igst)/100)
+      var gst_amount = Math.round((val * igst) / 100)
       this.material_details_list[i].gst_amount = gst_amount
       this.material_details_list[i].sub_total = Math.round(val + gst_amount)
     }
     else if (quantity != "" && rate != "") {
       var val = Math.round((rate * quantity))
-      var gst_amount = Math.round((val * igst)/100)
+      var gst_amount = Math.round((val * igst) / 100)
       this.material_details_list[i].gst_amount = gst_amount
       this.material_details_list[i].sub_total = Math.round(val + gst_amount)
     }
@@ -236,6 +254,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
         this.sum += Math.round(x.sub_total)
       }
     })
+    this.sum += this.form.value.purchase_order_freight[0].freight_total
     this.form.patchValue({
       grand_total: this.sum,
       grand_total_words: converter.toWords(this.sum)
@@ -254,7 +273,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
     });
   }
 
-  getPurchaseOrderFreight(form){
+  getPurchaseOrderFreight(form) {
     return form.get('purchase_order_freight').controls
   }
   add_purchase_order_freight() {
@@ -296,8 +315,22 @@ export class PurchaseOrdersAddComponent implements OnInit {
       if (gst > 0) {
         this.gstRatesService.getGSTDetails(gst).subscribe(res => {
           this.get_gst_deatils = res;
-          this.form.value.purchase_order_freight[i].freight_total = Math.round(Math.round(amount) + Math.round(this.get_gst_deatils.igst));
+          var total = Math.round(Math.round(amount) + Math.round(this.get_gst_deatils.igst));
+          this.form.value.purchase_order_freight[i].freight_total = total
+          this.sum = 0;
+          this.material_details_list.forEach(x => {
+            var Mindex = this.form.value.purchase_order_detail.findIndex(p => p.material == x.material)
+            if (Mindex > -1) {
+              this.sum += Math.round(x.sub_total)
+            }
+          })
+          this.sum += this.form.value.purchase_order_freight[i].freight_total
+          this.form.patchValue({
+            grand_total: this.sum,
+            grand_total_words: converter.toWords(this.sum)
+          })
         })
+
       }
     }
   }
@@ -313,13 +346,13 @@ export class PurchaseOrdersAddComponent implements OnInit {
     }
     const order_detail_control = <FormArray>this.form.controls['purchase_order_detail'];
     this.material_details_list.forEach(x => {
-      if(x.gst_amount == "" || x.rate == "" || x.discount_percent == "" || x.delivery_date == ""){
+      if (x.gst_amount == "" || x.rate == "" || x.discount_percent == "" || x.delivery_date == "") {
         this.toastr.error('All fields are required in every row ', '', {
           timeOut: 3000,
         });
         return;
       }
-      var  myDate = new Date(x.delivery_date.year, x.delivery_date.month-1, x.delivery_date.day)
+      var myDate = new Date(x.delivery_date.year, x.delivery_date.month - 1, x.delivery_date.day)
       var Mindex = this.form.value.purchase_order_detail.findIndex(p => p.material == x.material)
       if (Mindex > -1) {
         order_detail_control.at(Mindex).patchValue({
@@ -335,8 +368,11 @@ export class PurchaseOrdersAddComponent implements OnInit {
       }
     })
     if (this.form.valid) {
+      if(Math.round(this.form.value.purchase_order_detail[0].order_quantity) == this.total_rest_quantity){
+        this.requisitionFinalize()
+      }
       this.spinner.show();
-      var QtnDate = new Date(this.form.value.quotation_date.year,this.form.value.quotation_date.month-1,this.form.value.quotation_date.day)
+      var QtnDate = new Date(this.form.value.quotation_date.year, this.form.value.quotation_date.month - 1, this.form.value.quotation_date.day)
       this.form.patchValue({
         quotation_date: QtnDate.toISOString()
       })
@@ -357,8 +393,27 @@ export class PurchaseOrdersAddComponent implements OnInit {
         }
       );
     } else {
-      this.markFormGroupTouched(this.form)      
+      this.markFormGroupTouched(this.form)
     }
+  }
+
+  requisitionFinalize(){
+    let d;
+    d = {
+      id: this.requisition_details.id,
+      is_finalised: 1
+    };
+    this.purchaseRequisitionService.finalizePurchaseRequisition(d).subscribe(
+      response => {
+        console.log(response)
+      },
+      error => {
+        console.log('error', error)
+        // this.toastr.error('everything is broken', '', {
+        //   timeOut: 3000,
+        // });
+      }
+    );
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
@@ -382,5 +437,5 @@ export class PurchaseOrdersAddComponent implements OnInit {
   }
 
 
-  
+
 }

@@ -77,6 +77,60 @@
                                 </div>
                             </div>
                             <div class="card bg-light mb-3" *ngIf="visible_key">
+                                <div class="card-header">Header Line</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <table class="card-body table table-sm ">
+                                            <thead>
+                                                <tr>
+                                                    <th>Purchase Organization</th>
+                                                    <th>Purchase Group</th>
+                                                    <th>Company</th>
+                                                    <th>PR Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{requisition_details.purchase_org.name}}</td>
+                                                    <td>{{requisition_details.purchase_grp.name}}</td>
+                                                    <td>{{requisition_details.company.company_name}}</td>
+                                                    <td>{{requisition_details.created_at | date:'dd-MM-yyyy'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-light mb-3" *ngIf="visible_key && previous_purchase_list.length > 0">
+                                    <div class="card-header">Previous Purchase</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <table class="card-body table table-sm ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Material</th>
+                                                        <th>PR. Qty.</th>
+                                                        <th>Qty. Taken</th>
+                                                        <th>Qty. Rest</th>
+                                                        <th>UOM</th>
+                                                        <th>Average Rate</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let prevOrder of previous_purchase_list">
+                                                        <td>{{prevOrder.purchase_order_detail[0].material.material_code}}</td>
+                                                        <td>{{prevOrder.purchase_order_detail[0].requisition_quantity}}</td>
+                                                        <td>{{prevOrder.purchase_order_detail[0].order_quantity}}</td>
+                                                        <td>{{total_rest_quantity}}</td>
+                                                        <td>{{prevOrder.purchase_order_detail[0].uom}}</td>
+                                                        <td>{{prevOrder.purchase_order_detail[0].rate}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="card bg-light mb-3" *ngIf="visible_key">
                                 <div class="card-header">Material Details</div>
                                 <div class="card-body">
                                     <table class="card-body table table-sm table-bordered">
@@ -117,20 +171,27 @@
                                                 <td>{{mat.material.material_tax[0].cgst}}</td>
                                                 <td>{{mat.material.material_tax[0].sgst}}</td>
                                                 <td width="80px">
-                                                    <input appOnlyNumber type="text" class="form-control" name="order_quantity" [(ngModel)]="material_details_list[k].order_quantity" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                    <input appOnlyNumber type="text" class="form-control" name="order_quantity" [(ngModel)]="material_details_list[k].order_quantity"
+                                                        (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)"
+                                                        [ngModelOptions]="{standalone: true}">
                                                 </td>
                                                 <td width="80px">
-                                                    <input appOnlyNumber type="text" class="form-control" name="rate" [(ngModel)]="material_details_list[k].rate" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                    <input appOnlyNumber type="text" class="form-control" name="rate" [(ngModel)]="material_details_list[k].rate" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)"
+                                                        [ngModelOptions]="{standalone: true}">
                                                 </td>
                                                 <td width="80px">
-                                                    <input appOnlyNumber type="text" class="form-control" name="discount_percent" [(ngModel)]="material_details_list[k].discount_percent" (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)" [ngModelOptions]="{standalone: true}">
+                                                    <input appOnlyNumber type="text" class="form-control" name="discount_percent" [(ngModel)]="material_details_list[k].discount_percent"
+                                                        (keyup)="getSubTotal(material_details_list[k].order_quantity,material_details_list[k].rate,material_details_list[k].discount_percent, k)"
+                                                        [ngModelOptions]="{standalone: true}">
                                                 </td>
                                                 <td width="80px">
-                                                    <input appOnlyNumber type="text" class="form-control" name="gst_amount" [(ngModel)]="material_details_list[k].gst_amount" [ngModelOptions]="{standalone: true}" readonly >
+                                                    <input appOnlyNumber type="text" class="form-control" name="gst_amount" [(ngModel)]="material_details_list[k].gst_amount"
+                                                        [ngModelOptions]="{standalone: true}" readonly>
                                                 </td>
                                                 <td width="150px">
                                                     <div class="input-group">
-                                                        <input class="form-control" placeholder="yyyy-mm-dd" name="delivery_date" ngbDatepicker #i="ngbDatepicker" [(ngModel)]="material_details_list[k].delivery_date"  [ngModelOptions]="{standalone: true}">
+                                                        <input class="form-control" placeholder="yyyy-mm-dd" name="delivery_date" ngbDatepicker #i="ngbDatepicker" [(ngModel)]="material_details_list[k].delivery_date"
+                                                            [ngModelOptions]="{standalone: true}">
                                                         <div class="input-group-append">
                                                             <button class="btn btn-outline-secondary" (click)="i.toggle()" type="button">
                                                                 <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -139,7 +200,8 @@
                                                     </div>
                                                 </td>
                                                 <td width="80px">
-                                                    <input appOnlyNumber type="text" class="form-control" name="sub_total" [(ngModel)]="material_details_list[k].sub_total" [ngModelOptions]="{standalone: true}" readonly>
+                                                    <input appOnlyNumber type="text" class="form-control" name="sub_total" [(ngModel)]="material_details_list[k].sub_total" [ngModelOptions]="{standalone: true}"
+                                                        readonly>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -233,7 +295,8 @@
                                     <div class="row">
                                         <div class="form-group col-md-2">
                                             <label>Total Amount(GST included)</label>
-                                            <input class="form-control" placeholder="Quotation No." name="grand_total" formControlName="grand_total"  [(ngModel)]="form.value.grand_total" readonly>
+                                            <input class="form-control" placeholder="Quotation No." name="grand_total" formControlName="grand_total" [(ngModel)]="form.value.grand_total"
+                                                readonly>
                                         </div>
                                     </div>
                                 </div>

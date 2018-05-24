@@ -62,14 +62,20 @@
               <td>{{purchaseRequisition.created_at | date: 'dd-MM-yyyy'}}</td>
               <td>{{purchaseRequisition.created_by.first_name}}</td>
               <td>
-                <select class="form-control" [(ngModel)]="purchaseRequisition.is_finalised" name="is_finalised"  (ngModelChange)="changeStatus(purchaseRequisition.is_finalised,purchaseRequisition.id)">
-                  <option value='0'>Change Status</option>
-                  <option value='2'>Cancel</option>
+                <label *ngIf="purchaseRequisition.is_finalised == 1">Finalised</label>
+                <label *ngIf="purchaseRequisition.status && purchaseRequisition.is_finalised == 0">Active</label>
+                <label *ngIf="!purchaseRequisition.status && purchaseRequisition.is_finalised == 0">Inactive</label>
+                <select *ngIf="purchaseRequisition.is_finalised == 0" class="form-control" name="is_finalised" (change)="changeStatus($event.target.value,purchaseRequisition.id)">
+                  <option value=''>Change Status</option>
+                  <option value='0'>Cancel</option>
                   <option value='1'>Active</option>
                 </select>
               </td>
               <td>
-                <select class="form-control" [(ngModel)]="purchaseRequisition.is_approve" name="is_approve"  (ngModelChange)="changeApproveStatus(purchaseRequisition.is_approve,purchaseRequisition.id)">
+                <label *ngIf="purchaseRequisition.is_finalised == 1">Finalised</label>
+                <label *ngIf="purchaseRequisition.is_approve == 1 && purchaseRequisition.is_finalised == 0">Yes</label>
+                <label *ngIf="purchaseRequisition.is_approve == 0 && purchaseRequisition.is_finalised == 0">No</label>
+                <select *ngIf="purchaseRequisition.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,purchaseRequisition.id)">
                   <option value='0'>Change Approve</option>
                   <option value='1'>Approve</option>
                   <option value='2'>Dis-Approve</option>
@@ -81,7 +87,7 @@
                 </a>
               </td>
 
-            </tr>            
+            </tr>
             <tr *ngIf="purchaseRequisitionList.length == 0">
               <td colspan="12" class="text-center">No record found</td>
             </tr>

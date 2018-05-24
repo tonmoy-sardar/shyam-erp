@@ -33,6 +33,12 @@ export class PurchaseRequisitionService {
     })
   }
 
+  getPurchaseRequisitionOrderList(id): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'requisition_purchase_order/'+id+'/', {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
   updatePurchaseRequisition(data): Observable<any>{
     return this.http.put(environment.apiEndpoint+'purchase_requistion/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
@@ -46,6 +52,12 @@ export class PurchaseRequisitionService {
   }
 
   changeApproveStatusPurchaseRequisition(data): Observable<any>{
+    return this.http.patch(environment.apiEndpoint+'purchase_requistion/'+data.id+'/',data, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
+  finalizePurchaseRequisition(data): Observable<any>{
     return this.http.patch(environment.apiEndpoint+'purchase_requistion/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
