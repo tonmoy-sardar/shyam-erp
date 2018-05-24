@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { VendorService } from '../../core/services/vendor.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
 
 @Component({
   selector: 'app-vendor',
@@ -14,17 +16,31 @@ export class VendorComponent implements OnInit {
   defaultPagination: number;
   totalvendorList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
   constructor(
     private router: Router,
     private vendorService: VendorService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
     this.getVendorList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.vendor.heading;
+      this.help_description = res.data.vendor.desc;
+    })
   }
 
   btnClickNav= function (toNav) {
@@ -45,6 +61,14 @@ export class VendorComponent implements OnInit {
       (data: any[]) => {
         this.totalvendorList = data['count'];
         this.vendorList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalvendorList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalvendorList
+        }
         this.spinner.hide();
       }
     );

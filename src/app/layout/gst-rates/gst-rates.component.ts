@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { GstRatesService } from '../../core/services/gst-rates.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
 
 @Component({
   selector: 'app-gst-rates',
@@ -14,11 +16,17 @@ export class GstRatesComponent implements OnInit {
   defaultPagination: number;
   totalgstRatesList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
   constructor(
     private router: Router,
     private gstRatesService: GstRatesService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
 
@@ -26,6 +34,14 @@ export class GstRatesComponent implements OnInit {
     this.spinner.show();
     this.defaultPagination = 1;
     this.getGstList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.gst.heading;
+      this.help_description = res.data.gst.desc;
+    })
   }
 
   dataSearch() {
@@ -46,6 +62,14 @@ export class GstRatesComponent implements OnInit {
       (data: any[]) => {
         this.totalgstRatesList = data['count'];
         this.gstRatesList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalgstRatesList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalgstRatesList
+        }
         this.spinner.hide();
       }
     );

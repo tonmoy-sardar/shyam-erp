@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
 import { VendorService } from '../../../core/services/vendor.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-vendor-edit',
@@ -19,6 +20,8 @@ export class VendorEditComponent implements OnInit {
   stateList = [];
   vendorTypeList = [];
   vendor_details;
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -26,7 +29,8 @@ export class VendorEditComponent implements OnInit {
     private toastr: ToastrService,
     private statesService: StatesService,
     private vendorService: VendorService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -74,8 +78,16 @@ export class VendorEditComponent implements OnInit {
     this.getVendorTypeList()
     this.getStateList()
     this.getVendorDetails(this.route.snapshot.params['id']);
+    this.getHelp();
   }
-  
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.vendorEdit.heading;
+      this.help_description = res.data.vendorEdit.desc;
+    })
+  }
+
   getVendorTypeList() {
     this.vendorService.getVendorTypeList().subscribe(res => {
       this.vendorTypeList = res.results;

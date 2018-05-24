@@ -4,10 +4,7 @@
             <h4 class="page-header">GST Rate Edit</h4>
         </div>
         <div class="col-md-6 pull-right" style="text-align: right">
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-refresh"></i> Reload</button>
+            <app-help [heading]="help_heading" [description]="help_description"></app-help>
             <button type="button" class="btn btn-primary" (click)="btnClickNav('gst-rates')">
                 <i class="fa fa-arrow-left"></i> Back</button>
         </div>
@@ -30,17 +27,19 @@
                                         Please enter identifiable name
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group col-md-3">
                                     <label>CGST(%)</label>
-                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="gstRates.cgst" name="cgst" placeholder="CGST" formControlName="cgst" [ngClass]="displayFieldCss('cgst')" (keyup)="GetIgst(form.value.cgst,form.value.sgst)">
+                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="gstRates.cgst" name="cgst" placeholder="CGST" formControlName="cgst"
+                                        [ngClass]="displayFieldCss('cgst')" (keyup)="GetIgst(form.value.cgst,form.value.sgst)">
                                     <div class="invalid-feedback" *ngIf="form.controls['cgst'].hasError('required')">
                                         Please enter CGST
                                     </div>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>SGST(%)</label>
-                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="gstRates.sgst" name="sgst" placeholder="SGST" formControlName="sgst" [ngClass]="displayFieldCss('sgst')" (keyup)="GetIgst(form.value.cgst,form.value.sgst)">
+                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="gstRates.sgst" name="sgst" placeholder="SGST" formControlName="sgst"
+                                        [ngClass]="displayFieldCss('sgst')" (keyup)="GetIgst(form.value.cgst,form.value.sgst)">
                                     <div class="invalid-feedback" *ngIf="form.controls['sgst'].hasError('required')">
                                         Please enter SGST
                                     </div>
@@ -48,7 +47,8 @@
 
                                 <div class="form-group col-md-3">
                                     <label>IGST(%)</label>
-                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="gstRates.igst" name="igst" placeholder="IGST" formControlName="igst" [ngClass]="displayFieldCss('igst')" readonly>
+                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="gstRates.igst" name="igst" placeholder="IGST" formControlName="igst"
+                                        [ngClass]="displayFieldCss('igst')" readonly>
                                     <div class="invalid-feedback" *ngIf="form.controls['igst'].hasError('required')">
                                         Please enter IGST
                                     </div>

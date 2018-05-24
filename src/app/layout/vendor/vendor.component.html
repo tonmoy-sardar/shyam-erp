@@ -4,10 +4,7 @@
       <h4 class="page-header">Vendor List</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-refresh"></i> Reload</button>
+        <app-help [heading]="help_heading" [description]="help_description"></app-help>
       <button type="button" class="btn btn-primary" (click)="btnClickNav('vendor/add')">
         <i class="fa fa-plus"></i> New Vendor</button>
     </div>
@@ -82,9 +79,12 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalvendorList > 10">
+  <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right">
+        <div class="card-body pull-left" *ngIf="totalvendorList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalvendorList}} entries</p>
+          </div>
+      <div class="card-body pull-right" *ngIf="totalvendorList > 10">
         <ngb-pagination [collectionSize]="totalvendorList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>

@@ -4,10 +4,7 @@
       <h4 class="page-header">Vendor Add</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-refresh"></i> Reload</button>
+      <app-help [heading]="help_heading" [description]="help_description"></app-help>
       <button type="button" class="btn btn-primary" (click)="btnClickNav('vendor')">
         <i class="fa fa-arrow-left"></i> Back</button>
     </div>
@@ -235,7 +232,8 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label>Amount Debit</label>
-                  <input appOnlyNumber type="text" class="form-control" placeholder="Amount Debit" name="amount_debit" formControlName="amount_debit" [ngClass]="displayFieldCss('amount_debit')">
+                  <input appOnlyNumber type="text" class="form-control" placeholder="Amount Debit" name="amount_debit" formControlName="amount_debit"
+                    [ngClass]="displayFieldCss('amount_debit')">
                   <div class="invalid-feedback" *ngIf="form.controls['amount_debit'].hasError('required')">
                     Please enter Amount Debit
                   </div>

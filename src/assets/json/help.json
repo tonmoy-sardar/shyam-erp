@@ -23,6 +23,30 @@
         "stateEdit": {
             "heading": "State Edit",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "gst": {
+            "heading": "GST Rates",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "gstAdd": {
+            "heading": "GST Rate Add",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "gstEdit": {
+            "heading": "GST Rate Edit",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "vendor": {
+            "heading": "Vendors",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "vendorAdd": {
+            "heading": "Vendor Add",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "vendorEdit": {
+            "heading": "Vendor Edit",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
         }
     }
 }

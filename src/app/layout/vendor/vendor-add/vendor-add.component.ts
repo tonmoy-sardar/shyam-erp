@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
 import { VendorService } from '../../../core/services/vendor.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-vendor-add',
@@ -17,13 +18,16 @@ export class VendorAddComponent implements OnInit {
   vendor_account: any[] = [];
   stateList = [];
   vendorTypeList = [];
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private statesService: StatesService,
     private vendorService: VendorService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -36,13 +40,22 @@ export class VendorAddComponent implements OnInit {
       gst_no: ['', Validators.required],
       amount_credit: ['', Validators.required],
       amount_debit: ['', Validators.required],
-      vendor_address: this.formBuilder.array([ this.createContactInfo() ]),
-      vendor_account: this.formBuilder.array([ this.createBankInfo() ])
+      vendor_address: this.formBuilder.array([this.createContactInfo()]),
+      vendor_account: this.formBuilder.array([this.createBankInfo()])
     });
-   this.getVendorTypeList()
+    this.getVendorTypeList()
     this.getStateList()
+    this.getHelp();
   }
-  getVendorTypeList(){
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.vendorAdd.heading;
+      this.help_description = res.data.vendorAdd.desc;
+    })
+  }
+
+  getVendorTypeList() {
     this.vendorService.getVendorTypeList().subscribe(res => {
       this.vendorTypeList = res.results;
       this.spinner.hide();
@@ -77,37 +90,37 @@ export class VendorAddComponent implements OnInit {
     });
   }
 
-  getContact(form){
+  getContact(form) {
     return form.get('vendor_address').controls
   }
-  addContact(){
+  addContact() {
     const control = <FormArray>this.form.controls['vendor_address'];
     control.push(this.createContactInfo());
   }
 
-  deleteContact(index: number){
+  deleteContact(index: number) {
     const control = <FormArray>this.form.controls['vendor_address'];
     control.removeAt(index);
   }
 
-  getBank(form){
+  getBank(form) {
     return form.get('vendor_account').controls
   }
-  addBank(){
+  addBank() {
     const control = <FormArray>this.form.controls['vendor_account'];
     control.push(this.createBankInfo());
   }
-  deleteBank(index: number){
+  deleteBank(index: number) {
     const control = <FormArray>this.form.controls['vendor_account'];
     control.removeAt(index);
-  } 
+  }
   btnClickNav(toNav) {
-    this.router.navigateByUrl('/'+toNav);
+    this.router.navigateByUrl('/' + toNav);
   };
   goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
-  addVendor () {
+  addVendor() {
     if (this.form.valid) {
       this.spinner.show();
       this.vendorService.addNewVendor(this.form.value).subscribe(
@@ -144,11 +157,11 @@ export class VendorAddComponent implements OnInit {
   reSet() {
     this.form.reset();
   }
-  
+
   displayFieldCss(field: string) {
     return {
       'is-invalid': this.form.get(field).invalid && (this.form.get(field).dirty || this.form.get(field).touched),
-      'is-valid': this.form.get(field).valid && (this.form.get(field).dirty ||this.form.get(field).touched)
+      'is-valid': this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched)
     };
   }
 

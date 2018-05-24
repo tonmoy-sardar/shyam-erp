@@ -4,10 +4,7 @@
       <h4 class="page-header">GST Rates List</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-refresh"></i> Reload</button>
+      <app-help [heading]="help_heading" [description]="help_description"></app-help>
       <button type="button" class="btn btn-primary" (click)="btnClickNav('gst-rates/add')">
         <i class="fa fa-plus"></i> New GST Rate</button>
     </div>
@@ -59,10 +56,11 @@
               <td>{{gst.igst}}</td>
               <td>{{gst.sgst | date:"dd-MM-yyyy"}}</td>
               <td>
-                  <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveGst(gst.id)" *ngIf="gst.status==true">
-                      <i class="fa fa-thumbs-up"></i> Active</a>
-                    <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeGst(gst.id)" *ngIf="gst.status==false">
-                      <i class="fa fa-thumbs-down"></i> Inactive</a></td>
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveGst(gst.id)" *ngIf="gst.status==true">
+                  <i class="fa fa-thumbs-up"></i> Active</a>
+                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeGst(gst.id)" *ngIf="gst.status==false">
+                  <i class="fa fa-thumbs-down"></i> Inactive</a>
+              </td>
               <td>
                 <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/gst-rates/edit', gst.id]">
                   <i class="fa fa-edit"></i>
@@ -71,7 +69,7 @@
                   <i class="fa fa-trash-o"></i>
                 </a>
               </td>
-            </tr>            
+            </tr>
             <tr *ngIf="gstRatesList.length == 0">
               <td colspan="8" class="text-center">No record found</td>
             </tr>
@@ -80,9 +78,12 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalgstRatesList > 10">
+  <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right">
+      <div class="card-body pull-left" *ngIf="totalgstRatesList > 0">
+        <p>Showing {{lower_count}} to {{upper_count}} of {{totalgstRatesList}} entries</p>
+      </div>
+      <div class="card-body pull-right" *ngIf="totalgstRatesList > 10">
         <ngb-pagination [collectionSize]="totalgstRatesList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>

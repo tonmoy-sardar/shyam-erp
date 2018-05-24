@@ -4,6 +4,7 @@ import { GstRatesService } from '../../../core/services/gst-rates.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-gst-rates-edit',
@@ -11,7 +12,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./gst-rates-edit.component.scss']
 })
 export class GstRatesEditComponent implements OnInit {
-
+  help_heading = "";
+  help_description = "";
   gstRates;
   form: FormGroup;
   constructor(
@@ -19,7 +21,8 @@ export class GstRatesEditComponent implements OnInit {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private gstRatesService: GstRatesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -37,6 +40,14 @@ export class GstRatesEditComponent implements OnInit {
       sgst: ''
     };
     this.getGSTRates(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.gstEdit.heading;
+      this.help_description = res.data.gstEdit.desc;
+    })
   }
 
   getGSTRates(id) {
