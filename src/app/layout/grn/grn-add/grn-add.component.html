@@ -67,6 +67,35 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card bg-light mb-3" *ngIf="visible_key && previous_grn_list.length > 0">
+                                 <div class="card-header">Previous GRN</div>
+                                 <div class="card-body">
+                                     <div class="row">
+                                         <table class="card-body table table-sm ">
+                                             <thead>
+                                                 <tr>
+                                                     <th>Material</th>
+                                                     <th>PO. Qty.</th>
+                                                     <th>Qty. Taken</th>
+                                                     <th>Qty. Rest</th>
+                                                     <th>UOM</th>
+                                                     <th>Recieved At</th>
+                                                 </tr>
+                                             </thead>
+                                             <tbody>
+                                                 <tr *ngFor="let grn of previous_grn_list">
+                                                     <td>{{grn.grn_detail[0].material.material_code}}</td>
+                                                     <td>{{grn.grn_detail[0].order_quantity}}</td>
+                                                     <td>{{grn.grn_detail[0].receive_quantity}}</td>
+                                                     <td>{{total_rest_quantity}}</td>
+                                                     <td>{{grn.grn_detail[0].uom.name}}</td>
+                                                     <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
+                                                 </tr>
+                                             </tbody>
+                                         </table>
+                                     </div>
+                                 </div>
+                             </div>
                             <div class="card bg-light mb-3" *ngIf="visible_key">
                                 <div class="card-header">Material Line</div>
                                 <div class="card-body">
@@ -100,7 +129,8 @@
                                                     <td>{{mat.storage_location.storage_address}}</td>
                                                     <td>{{mat.storage_bin.bin_no}}</td>
                                                     <td>
-                                                        <input class="form-control" placeholder="GRN Quantity" [(ngModel)]="material_details_list[k].receive_quantity" [ngModelOptions]="{standalone: true}" (keyup)="GnrQuantity(material_details_list[k].order_quantity,material_details_list[k].receive_quantity, k)">
+                                                        <input appOnlyNumber type="text" class="form-control" placeholder="GRN Quantity" [(ngModel)]="material_details_list[k].receive_quantity"
+                                                            [ngModelOptions]="{standalone: true}" (keyup)="GnrQuantity(material_details_list[k].receive_quantity, k)">
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -142,12 +172,14 @@
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label>Challan Date</label>
-                                            <div class="input-group datepicker-input">
+                                            <div class="input-group">
                                                 <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="model" ngbDatepicker #c="ngbDatepicker" name="challan_date"
                                                     formControlName="challan_date" [ngClass]="displayFieldCss('challan_date')">
-                                                <button class="input-group-addon" (click)="c.toggle()" type="button">
-                                                    <span class="fa fa-calendar"></span>
-                                                </button>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="c.toggle()" type="button">
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
                                                 <div class="invalid-feedback" *ngIf="form.controls['challan_date'].hasError('required')">
                                                     Please enter challan date
                                                 </div>

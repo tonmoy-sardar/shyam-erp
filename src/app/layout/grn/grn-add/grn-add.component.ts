@@ -18,7 +18,9 @@ export class GrnAddComponent implements OnInit {
   purchaseOrderList: any[] = [];
   visible_key: boolean;
   material_details_list: any[] = [];
-  purchase_order_details: any
+  purchase_order_details: any;
+  previous_grn_list: any[] = [];
+  total_rest_quantity: number = 0;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -47,6 +49,19 @@ export class GrnAddComponent implements OnInit {
     this.getPurchaseOrderList()
   }
 
+  getPrevGrnList(id) {
+    this.grnService.getPrevGrnList(id).subscribe(res => {
+      this.previous_grn_list = res;
+      var sum = 0
+      this.previous_grn_list.forEach(x => {
+        sum += Math.round(x.grn_detail[0].receive_quantity)
+      })
+      this.total_rest_quantity = Math.round(this.purchase_order_details.purchase_order_detail[0].order_quantity) - sum
+      // console.log(this.total_rest_quantity)
+      // console.log(res)
+    })
+  }
+
   getPurchaseOrderList() {
     this.purchaseOrdersService.getPurchaseOrderListWithoutPagination().subscribe(res => {
       this.purchaseOrderList = res;
@@ -64,6 +79,8 @@ export class GrnAddComponent implements OnInit {
       this.visible_key = false;
       this.purchaseOrdersService.getPurchaseOrderDetails(id).subscribe(res => {
         this.purchase_order_details = res;
+        // console.log(res)
+        this.getPrevGrnList(id)
         this.purchase_order_details.purchase_order_detail.forEach(x => {
           var Mdtl = {
             material: x.material.id,
@@ -134,10 +151,10 @@ export class GrnAddComponent implements OnInit {
     }
   }
 
-  GnrQuantity(order_quantity, receive_quantity, i){
-    if (Math.round(receive_quantity) > Math.round(order_quantity)) {
-      this.material_details_list[i].receive_quantity = Math.round(order_quantity)
-      this.toastr.error('Please enter less then PO quantity', '', {
+  GnrQuantity(receive_quantity, i){
+    if (Math.round(receive_quantity) > Math.round(this.total_rest_quantity)) {
+      this.material_details_list[i].receive_quantity = Math.round(this.total_rest_quantity)
+      this.toastr.error('Quantity should not be more than PO quantity', '', {
         timeOut: 3000,
       });
     }
@@ -170,6 +187,9 @@ export class GrnAddComponent implements OnInit {
       }
     })
     if (this.form.valid) {
+      if(Math.round(this.form.value.grn_detail[0].receive_quantity) == this.total_rest_quantity){
+        this.orderFinalize()
+      }
       this.spinner.show();
       var challanDate = new Date(this.form.value.challan_date.year,this.form.value.challan_date.month-1,this.form.value.challan_date.day)
       this.form.patchValue({
@@ -196,6 +216,26 @@ export class GrnAddComponent implements OnInit {
       this.markFormGroupTouched(this.form)      
     }
   }
+
+  orderFinalize(){
+    let d;
+    d = {
+      id: this.purchase_order_details.id,
+      is_finalised: 1
+    };
+    this.purchaseOrdersService.finalizePurchaseOrder(d).subscribe(
+      response => {
+        console.log(response)
+      },
+      error => {
+        console.log('error', error)
+        // this.toastr.error('everything is broken', '', {
+        //   timeOut: 3000,
+        // });
+      }
+    );
+  }
+
   btnClickNav = function (toNav) {
     this.router.navigateByUrl('/' + toNav);
   };

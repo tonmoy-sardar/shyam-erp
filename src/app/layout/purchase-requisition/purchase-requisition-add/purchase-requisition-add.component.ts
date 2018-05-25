@@ -104,12 +104,18 @@ export class PurchaseRequisitionAddComponent implements OnInit {
       }
 
     } else {
-      Object.keys(this.form.controls).forEach(field => {
-        const control = this.form.get(field);
-        control.markAsTouched({ onlySelf: true });
-      });
+      this.markFormGroupTouched(this.form)
     }
 
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    (<any>Object).values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control.controls) {
+        control.controls.forEach(c => this.markFormGroupTouched(c));
+      }
+    });
   }
 
   insertRequisition(obj, i, n) {

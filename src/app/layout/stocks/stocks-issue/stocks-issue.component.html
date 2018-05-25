@@ -30,7 +30,7 @@
                         <th>Bin</th>
                         <th>Item</th>
                         <th>Available Quantity</th>
-                        <th>Issuing Quantity</th>
+                        <th *ngIf="getAvlChek(this.stockDetails.quantity)">Issuing Quantity</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -41,7 +41,7 @@
                         <td>{{stockDetails.storage_bin.bin_no}}</td>
                         <td>{{stockDetails.material.material_fullname}}</td>
                         <td>{{stockDetails.quantity}}</td>
-                        <td width="150px">
+                        <td width="150px" *ngIf="getAvlChek(this.stockDetails.quantity)">
                           <div class="form-group">
                             <input appOnlyNumber type="text" class="form-control" name="quantity" formControlName="quantity" [ngClass]="displayFieldCss('quantity')" (keyup)="getValueCheck($event.target.value)">
                             <div class="invalid-feedback" *ngIf="form.controls['quantity'].hasError('required')">
@@ -54,7 +54,7 @@
                   </table>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" *ngIf="getAvlChek(this.stockDetails.quantity)">
                 <div class="form-group col-md-12">
                   <label>Purpose notes</label>
                   <textarea cols="5" class="form-control" placeholder="Purpose notes" name="note" formControlName="note" [ngClass]="displayFieldCss('note')"></textarea>

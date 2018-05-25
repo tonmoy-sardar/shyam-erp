@@ -9,7 +9,7 @@ export class StocksService {
   constructor(private http: HttpClient) { }
 
   addNewStock(data): Observable<any>{
-    return this.http.post(environment.apiEndpoint+'stocks/', data, {
+    return this.http.post(environment.apiEndpoint+'stock/', data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
@@ -34,6 +34,12 @@ export class StocksService {
 
   getStockDetails(id): Observable<any>{
     return this.http.get(environment.apiEndpoint+'all_stock/'+id+'/', {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
+  updateStock(data): Observable<any>{
+    return this.http.patch(environment.apiEndpoint+'stock/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

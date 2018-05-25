@@ -31,8 +31,8 @@ export class PurchaseOrdersComponent implements OnInit {
     this.getCompanyList()
   }
 
-  btnClickNav= function (toNav) {
-    this.router.navigateByUrl('/'+toNav);
+  btnClickNav = function (toNav) {
+    this.router.navigateByUrl('/' + toNav);
   };
 
   dataSearch() {
@@ -47,8 +47,8 @@ export class PurchaseOrdersComponent implements OnInit {
       }
     );
   };
-  
-  getPurchaseOrderList(){
+
+  getPurchaseOrderList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
@@ -57,107 +57,72 @@ export class PurchaseOrdersComponent implements OnInit {
         this.totalpurchaseOrderList = data['count'];
         this.purchaseOrderList = data['results'];
         this.spinner.hide();
+        // console.log(this.purchaseOrderList)
       }
     );
   }
-
-  activeState(id) {
+  
+  changeStatus(value, id) {
     this.spinner.show();
     let PurchaseOrder;
-
-    PurchaseOrder = {
-      id: id,
-      status: true
-    };
-    this.purchaseOrdersService.activeInactivePurchaseOrder(PurchaseOrder).subscribe(
-      response => {
-        this.toastr.success('Status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getPurchaseOrderList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+    if (value != "") {
+      if (value == 0) {
+        PurchaseOrder = {
+          id: id,
+          status: false
+        };
       }
-    );
-  };
-
-  inactiveState(id) {
-    this.spinner.show();
-    let PurchaseOrder;
-
-    PurchaseOrder = {
-      id: id,
-      status: false
-    };
-
-    this.purchaseOrdersService.activeInactivePurchaseOrder(PurchaseOrder).subscribe(
-      response => {
-        this.toastr.success('Status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getPurchaseOrderList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+      else if (value == 1) {
+        PurchaseOrder = {
+          id: id,
+          status: true
+        };
       }
-    );
-  };
+      this.purchaseOrdersService.activeInactivePurchaseOrder(PurchaseOrder).subscribe(
+        response => {
+          this.toastr.success('Status changed successfully', '', {
+            timeOut: 3000,
+          });
+          this.getPurchaseOrderList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
+  }
 
-  approvePurchaseOrder(id) {
-    this.spinner.show();
-    let PurchaseOrder;
+  changeApproveStatus(value, id) {
+    if (value > 0) {
+      this.spinner.show();
+      let PurchaseOrder;
 
-    PurchaseOrder = {
-      id: id,
-      is_approve: 1
-    };
-    this.purchaseOrdersService.approveDisapprovePurchaseOrder(PurchaseOrder).subscribe(
-      response => {
-        this.toastr.success('Purchase order approved successfully', '', {
-          timeOut: 3000,
-        });
-        this.getPurchaseOrderList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
-      }
-    );
-  };
+      PurchaseOrder = {
+        id: id,
+        is_approve: value
+      };
 
-  disApprovePurchaseOrder(id) {
-    this.spinner.show();
-    let PurchaseOrder;
+      this.purchaseOrdersService.approveDisapprovePurchaseOrder(PurchaseOrder).subscribe(
+        response => {
+          this.toastr.success('Purchase order approve status changed successfully', '', {
+            timeOut: 3000,
+          });
+          this.getPurchaseOrderList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
 
-    PurchaseOrder = {
-      id: id,
-      is_approve: 0
-    };
+  }
 
-    this.purchaseOrdersService.approveDisapprovePurchaseOrder(PurchaseOrder).subscribe(
-      response => {
-        this.toastr.success('Purchase order disapproved successfully', '', {
-          timeOut: 3000,
-        });
-        this.getPurchaseOrderList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
-      }
-    );
-  };
 
   pagination() {
     this.spinner.show();

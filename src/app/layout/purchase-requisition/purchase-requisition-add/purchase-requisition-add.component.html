@@ -27,12 +27,13 @@
                                     <div class="row">
                                         <div class="form-group col-md-3">
                                             <label>Purchase Organization</label>
-                                            <select class="form-control" formControlName="purchase_org" [ngClass]="displayFieldCss('purchase_org')" [(ngModel)]="purchaseRequisition.purchase_organization" name="purchase_organization" (ngModelChange)="changePurchaseOrganization(purchaseRequisition.purchase_organization)">
+                                            <select class="form-control" formControlName="purchase_org" [ngClass]="displayFieldCss('purchase_org')" [(ngModel)]="purchaseRequisition.purchase_organization"
+                                                name="purchase_organization" (ngModelChange)="changePurchaseOrganization(purchaseRequisition.purchase_organization)">
                                                 <option value="">Select Purchase Organization</option>
                                                 <option *ngFor="let purchaseOrganization of purchaseOrganizationList" value={{purchaseOrganization.id}}>{{purchaseOrganization.name}} </option>
                                             </select>
                                             <div class="invalid-feedback" *ngIf="form.controls['purchase_org'].hasError('required')">
-                                                    Please select purchase organization
+                                                Please select purchase organization
                                             </div>
                                         </div>
                                         <div class="form-group col-md-3">
@@ -42,89 +43,125 @@
                                                 <option *ngFor="let purchaseGroup of purchaseGroupList;" value={{purchaseGroup.id}}>{{purchaseGroup.name}} </option>
                                             </select>
                                             <div class="invalid-feedback" *ngIf="isFieldValid('purchase_grp')">
-                                                    Please select purchase group
+                                                Please select purchase group
                                             </div>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label>Company</label>
-                                            <select class="form-control" name="company" formControlName="company" [ngClass]="displayFieldCss('company')" [(ngModel)]="purchaseRequisition.company" name="company" (ngModelChange)="changeCompany(purchaseRequisition.company)">
+                                            <select class="form-control" name="company" formControlName="company" [ngClass]="displayFieldCss('company')" [(ngModel)]="purchaseRequisition.company"
+                                                name="company" (ngModelChange)="changeCompany(purchaseRequisition.company)">
                                                 <option value="">Select Company</option>
                                                 <option *ngFor="let purchaseOrganizationCompany of purchaseOrganizationCompanyList;" value={{purchaseOrganizationCompany.id}}>{{purchaseOrganizationCompany.company_name}} </option>
                                             </select>
                                             <div class="invalid-feedback" *ngIf="isFieldValid('company')">
-                                                    Please select company
+                                                Please select company
                                             </div>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label>PR Date</label>
                                             <div class="input-group">
-                                                <input class="form-control" placeholder="yyyy-mm-dd" name="created_at" formControlName="created_at" [ngClass]="displayFieldCss('created_at')"  ngbDatepicker #d="ngbDatepicker">
+                                                <input class="form-control" placeholder="yyyy-mm-dd" name="created_at" formControlName="created_at" [ngClass]="displayFieldCss('created_at')"
+                                                    ngbDatepicker #d="ngbDatepicker">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
                                                         <i class="fa fa-calendar" aria-hidden="true"></i>
                                                     </button>
                                                 </div>
                                                 <div class="invalid-feedback" *ngIf="isFieldValid('created_at')">
-                                                        Please enter date
+                                                    Please enter date
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                             <div class="card bg-light mb-3">
+                            <div class="card bg-light mb-3">
                                 <div class="card-header">Material Line</div>
                                 <div class="card-body">
-                                    <div class="row" formArrayName="requisition_detail"  *ngFor="let requisition of getRequisitionDetail(form); let i = index;">
+                                    <div class="row" formArrayName="requisition_detail" *ngFor="let requisition of getRequisitionDetail(form); let i = index;">
                                         <div [formGroupName]="i" class="col-md-12">
                                             <div class="row">
                                                 <div class="form-group col-md-2">
                                                     <label>Material</label>
-                                                    <select class="form-control" name="material" formControlName="material">
+                                                    <select class="form-control" name="material" formControlName="material" [ngClass]="{
+                                                        'is-invalid': requisition.get('material').invalid && (requisition.get('material').dirty || requisition.get('material').touched),
+                                                        'is-valid': requisition.get('material').valid && (requisition.get('material').dirty || requisition.get('material').touched)
+                                                      }">
                                                         <option value="">Select Material</option>
                                                         <option *ngFor="let purchaseOrganizationMaterial of purchaseOrganizationMaterialList;" value="{{purchaseOrganizationMaterial.id}}">{{purchaseOrganizationMaterial.material_fullname}}</option>
-                                                        
                                                     </select>
+                                                    <div class="invalid-feedback" *ngIf="requisition.get('material').touched && requisition.get('material').hasError('required')">
+                                                        Please select material
+                                                    </div>
                                                 </div>
                                                 <div class="form-group col-md-1">
                                                     <label>Quantity</label>
-                                                    <input appOnlyNumber class="form-control" placeholder="Quantity" name="quantity" formControlName="quantity">
+                                                    <input appOnlyNumber class="form-control" placeholder="Quantity" name="quantity" formControlName="quantity" [ngClass]="{
+                                                        'is-invalid': requisition.get('quantity').invalid && (requisition.get('quantity').dirty || requisition.get('quantity').touched),
+                                                        'is-valid': requisition.get('quantity').valid && (requisition.get('quantity').dirty || requisition.get('quantity').touched)
+                                                      }">
+                                                    <div class="invalid-feedback" *ngIf="requisition.get('quantity').touched && requisition.get('quantity').hasError('required')">
+                                                        Please enter quantity
+                                                    </div>
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label>UOM</label>
-                                                    <select class="form-control"  name="uom" formControlName="uom">
+                                                    <select class="form-control" name="uom" formControlName="uom" [ngClass]="{
+                                                        'is-invalid': requisition.get('uom').invalid && (requisition.get('uom').dirty || requisition.get('uom').touched),
+                                                        'is-valid': requisition.get('uom').valid && (requisition.get('uom').dirty || requisition.get('uom').touched)
+                                                      }">
                                                         <option value="">Select UOM</option>
                                                         <option *ngFor="let uom of UOMList;" value="{{uom.id}}">{{uom.name}}</option>
                                                     </select>
+                                                    <div class="invalid-feedback" *ngIf="requisition.get('uom').touched && requisition.get('uom').hasError('required')">
+                                                        Please select UMO
+                                                    </div>
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label>Branch</label>
-                                                    <select class="form-control"  name="branch" formControlName="branch">
+                                                    <select class="form-control" name="branch" formControlName="branch" [ngClass]="{
+                                                        'is-invalid': requisition.get('branch').invalid && (requisition.get('branch').dirty || requisition.get('branch').touched),
+                                                        'is-valid': requisition.get('branch').valid && (requisition.get('branch').dirty || requisition.get('branch').touched)
+                                                      }">
                                                         <option value="">Select Branch</option>
-                                                       
                                                         <option *ngFor="let companyBranch of companyBranchDropdownList;" value="{{companyBranch.id}}">{{companyBranch.branch_name}}</option>
                                                     </select>
+                                                    <div class="invalid-feedback" *ngIf="requisition.get('branch').touched && requisition.get('branch').hasError('required')">
+                                                        Please select branch
+                                                    </div>
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label>Storage</label>
-                                                    <select class="form-control"  name="storage_location" formControlName="storage_location">
+                                                    <select class="form-control" name="storage_location" formControlName="storage_location" [ngClass]="{
+                                                        'is-invalid': requisition.get('storage_location').invalid && (requisition.get('storage_location').dirty || requisition.get('storage_location').touched),
+                                                        'is-valid': requisition.get('storage_location').valid && (requisition.get('storage_location').dirty || requisition.get('storage_location').touched)
+                                                      }">
                                                         <option value="">Select Storage</option>
                                                         <option *ngFor="let companyStorage of companyStorageDropdownList;" value="{{companyStorage.id}}">{{companyStorage.storage_address}}</option>
                                                     </select>
+                                                    <div class="invalid-feedback" *ngIf="requisition.get('storage_location').touched && requisition.get('storage_location').hasError('required')">
+                                                        Please select storage
+                                                    </div>
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label>Bin</label>
-                                                    <select class="form-control"  name="storage_bin" formControlName="storage_bin">
+                                                    <select class="form-control" name="storage_bin" formControlName="storage_bin" [ngClass]="{
+                                                        'is-invalid': requisition.get('storage_bin').invalid && (requisition.get('storage_bin').dirty || requisition.get('storage_bin').touched),
+                                                        'is-valid': requisition.get('storage_bin').valid && (requisition.get('storage_bin').dirty || requisition.get('storage_bin').touched)
+                                                      }">
                                                         <option value="">Select Bin</option>
                                                         <option *ngFor="let companyStoragebin of companyStoragebinDropdownList;" value="{{companyStoragebin.id}}">{{companyStoragebin.bin_no}}</option>
                                                     </select>
+                                                    <div class="invalid-feedback" *ngIf="requisition.get('storage_bin').touched && requisition.get('storage_bin').hasError('required')">
+                                                        Please select bin
+                                                    </div>
                                                 </div>
-                                                
+
                                                 <div class="form-group col-md-1" style="padding-top:30px;">
                                                     <a routerLink="." (click)="addRequisitionDetail()" title="Add More" name="Add More" *ngIf="i == 0">
                                                         <i class="fa fa-plus"></i> Add More</a>
-                                                    <a href="javascript:void(0);" title="Delete" name="Delete" *ngIf="i > 0"  (click)="deleteRequisitionDetail(i)">
-                                                        <i class="fa fa-times-circle fa-2" ></i> Delete</a>
+                                                    <a href="javascript:void(0);" title="Delete" name="Delete" *ngIf="i > 0" (click)="deleteRequisitionDetail(i)">
+                                                        <i class="fa fa-times-circle fa-2"></i> Delete</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -136,7 +173,7 @@
                                     <label>Special Note</label>
                                     <textarea class="form-control" rows="3" placeholder="Special Note" name="note" formControlName="special_note" [ngClass]="displayFieldCss('special_note')"></textarea>
                                     <div class="invalid-feedback" *ngIf="isFieldValid('special_note')">
-                                            Please enter special note
+                                        Please enter special note
                                     </div>
                                 </div>
                             </div>

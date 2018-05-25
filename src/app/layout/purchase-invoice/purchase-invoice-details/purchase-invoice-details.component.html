@@ -1,14 +1,14 @@
 <div>
   <div class="row">
     <div class="col-md-6">
-      <h4 class="page-header">Purchase Order Details</h4>
+      <h4 class="page-header">Purchase Invoice Details</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
       <button type="button" class="btn btn-secondary">
         <i class="fa fa-question" aria-hidden="true"></i> Help</button>
       <button type="button" class="btn btn-secondary">
         <i class="fa fa-refresh"></i> Reload</button>
-      <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-orders')">
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-invoice')">
         <i class="fa fa-arrow-left"></i> Back</button>
     </div>
     <div class="clearfix"></div>
@@ -19,7 +19,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card bg-light mb-3">
-          <div class="card-header" style="background-color:#868e96; color: #fff;">Purchase Order Number : {{purchaseOrder.purchase_order_map[0].purchase_order_no}} </div>
+          <div class="card-header" style="background-color:#868e96; color: #fff;">Purchase Invoice Number : {{purchaseInvoice.pur_invoice_map[0].purchase_inv_no}} </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-12">
@@ -28,69 +28,54 @@
                   <tbody>
                     <tr>
                       <td>
+                        <label>Invoice Number : </label>
+                      </td>
+                      <td>
+                        <label>{{purchaseInvoice.pur_invoice_map[0].purchase_inv_no}}</label>
+                      </td>
+                      <td>
                         <label>PO Number : </label>
                       </td>
                       <td>
-                        <label>{{purchaseOrder.purchase_order_map[0].purchase_order_no}}</label>
-                      </td>
-                      <td>
-                        <label>PR Number : </label>
-                      </td>
-                      <td>
-                        <label>{{purchaseOrder.requisition_no[0].requisition_no}}</label>
+                        <label>{{purchaseInvoice.po_order_no[0].purchase_order_no}}</label>
                       </td>
 
                     </tr>
                     <tr>
+                      <td>
+                        <label>GRN Number : </label>
+                      </td>
+                      <td>
+                        <label>{{purchaseInvoice.grn_number[0].grn_no}}</label>
+                      </td>
                       <td>
                         <label>Purchase Org : </label>
                       </td>
                       <td>
-                        <label>{{purchaseOrder.pur_org.name}}</label>
+                        <label>{{purchaseInvoice.pur_org.name}}</label>
                       </td>
+                    </tr>
+                    <tr>
                       <td>
                         <label>Purchase Group : </label>
                       </td>
                       <td>
-                        <label>{{purchaseOrder.pur_grp.name}}</label>
+                        <label>{{purchaseInvoice.pur_grp.name}}</label>
                       </td>
-                    </tr>
-                    <tr>
                       <td>
                         <label>Vendor Name : </label>
                       </td>
                       <td>
-                        <label>{{purchaseOrder.vendor.vendor_fullname}}</label>
+                        <label>{{purchaseInvoice.vendor.vendor_fullname}}</label>
                       </td>
+                    </tr>
+                    <tr>
                       <td>
                         <label>Vendor Address : </label>
                       </td>
                       <td>
-                        <label>{{purchaseOrder.vendor_address.address}}</label>
+                        <label>{{purchaseInvoice.vendor_address.address}}</label>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label>PO Date : </label>
-                      </td>
-                      <td>
-                        <label>{{purchaseOrder.quotation_date | date:'yyy-MM-dd'}}</label>
-                      </td>
-                      <td>
-                        <label>PR Raised Date : </label>
-                      </td>
-                      <td>
-                        <label>{{getRequisitionDate(purchaseOrder.requisition_no[0].requisition_no)}}</label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label>Indent Raised By :</label>
-                      </td>
-                      <td colspan="3">
-                        <label>{{purchaseOrder.created_by.first_name}}</label>
-                      </td>
-
                     </tr>
                   </tbody>
 
@@ -140,12 +125,12 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let item of purchaseOrder.purchase_order_detail">
+                    <tr *ngFor="let item of purchaseInvoice.pur_invoice_detail">
                       <td>
                         <label>{{item.material.material_fullname}}</label>
                       </td>
                       <td>
-                        <label>{{item.order_quantity}}</label>
+                        <label>{{item.quantity}}</label>
                       </td>
                       <td>
                         <label>{{item.rate}}</label>
@@ -154,10 +139,10 @@
                         <label>{{item.material_value}}</label>
                       </td>
                       <td>
-                        <label>{{item.discount_percent}}</label>
+                        <label>{{item.discount_per}}</label>
                       </td>
                       <td>
-                        <label>{{item.discount_value}}</label>
+                        <label>{{item.discount_amount}}</label>
                       </td>
                       <td>
                         <label>{{item.igst}}</label>
@@ -169,41 +154,16 @@
                         <label>{{item.cgst}}</label>
                       </td>
                       <td>
-                        <label>{{item.gst_amount}}</label>
+                        <label>{{item.total_gst}}</label>
                       </td>
                       <td>
-                        <label>{{item.sub_total}}</label>
+                        <label>{{item.material_amount_pay}}</label>
                       </td>
                     </tr>
-                    <tr><td colspan="9"></td><td>Grand Total</td><td>{{purchaseOrder.grand_total}}</td></tr>
-                    <tr><td colspan="11">Amount in words : <strong>{{purchaseOrder.grand_total_words}}</strong></td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="col-md-12">
-                <h4>Terms and Conditions</h4>
-                <hr/>
-              </div>
-              <div class="col-md-12">
-                <table class="card-body table table-hover table-sm table-bordered">                 
-                  <thead>
                     <tr>
-                      <th>
-                        <label>Sl.No.</label>
-                      </th>
-                      <th>
-                        <label>Description</label>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let term of purchaseOrder.purchase_order_terms; let i= index">
-                      <td>
-                        <label>{{i + 1}}</label>
-                      </td>
-                      <td>
-                        <label>{{term.po_terms.term_text}}</label>
-                      </td>
+                      <td colspan="9"></td>
+                      <td>Grand Total</td>
+                      <td>{{purchaseInvoice.total_amount}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -214,6 +174,5 @@
       </div>
     </div>
   </div>
-
 </div>
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>

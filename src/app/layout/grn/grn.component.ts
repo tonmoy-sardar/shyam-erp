@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GrnService } from '../../core/services/grn.service';
+import { StocksService } from '../../core/services/stocks.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -14,11 +15,23 @@ export class GrnComponent implements OnInit {
   defaultPagination: number;
   totalgrnList: number;
   search_key = '';
+  stock = {
+    grn: '',
+    company: '',
+    branch: '',
+    storage_location: '',
+    storage_bin: '',
+    material: '',
+    rate: '',
+    quantity: ''
+  }
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private grnService: GrnService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private stocksService: StocksService
   ) { }
 
   ngOnInit() {
@@ -50,103 +63,101 @@ export class GrnComponent implements OnInit {
     );
   }
 
-  activeState(id) {
+  changeStatus(value, id) {
     this.spinner.show();
     let grn;
-
-    grn = {
-      id: id,
-      status: true
-    };
-    this.grnService.activeInactiveGrn(grn).subscribe(
-      response => {
-        this.toastr.success('Status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getGrnList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+    if (value != "") {
+      if (value == 0) {
+        grn = {
+          id: id,
+          status: false
+        };
       }
-    );
-  };
-
-  inactiveState(id) {
-    this.spinner.show();
-    let grn;
-
-    grn = {
-      id: id,
-      status: false
-    };
-
-    this.grnService.activeInactiveGrn(grn).subscribe(
-      response => {
-        this.toastr.success('Status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getGrnList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+      else if (value == 1) {
+        grn = {
+          id: id,
+          status: true
+        };
       }
-    );
-  };
+      this.grnService.activeInactiveGrn(grn).subscribe(
+        response => {
+          this.toastr.success('Status changed successfully', '', {
+            timeOut: 3000,
+          });
+          this.getGrnList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
+  }
 
-  approveGrn(id) {
-    this.spinner.show();
-    let grn;
+  changeApproveStatus(value, id) {    
+    if (value > 0) {
 
-    grn = {
-      id: id,
-      is_approve: 1
-    };
-    this.grnService.approveDisapproveGrn(grn).subscribe(
-      response => {
-        this.toastr.success('GRN approved successfully', '', {
-          timeOut: 3000,
-        });
-        this.getGrnList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+      this.spinner.show();
+      let grn;
+      grn = {
+        id: id,
+        is_approve: value
+      };
+
+      this.grnService.approveDisapproveGrn(grn).subscribe(
+        response => {
+          if(value == 1){
+            this.addNewStock(id)
+          }
+          else{
+            this.toastr.success('GRN dis-approved successfully', '', {
+              timeOut: 3000,
+            });
+            this.getGrnList();
+          }          
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
+
+  }
+
+  addNewStock(id){
+    this.grnService.getGrnDetails(id).subscribe(res => {
+      this.stock = {
+        grn: res.id,
+        company: res.company.id,
+        branch: res.grn_detail[0].company_branch.id,
+        storage_location: res.grn_detail[0].storage_location.id,
+        storage_bin: res.grn_detail[0].storage_bin.id,
+        material: res.grn_detail[0].material.id,
+        rate: res.po_order.purchase_order_detail[0].rate,
+        quantity: res.grn_detail[0].receive_quantity
       }
-    );
-  };
-
-  disApproveGrn(id) {
-    this.spinner.show();
-    let grn;
-
-    grn = {
-      id: id,
-      is_approve: 0
-    };
-
-    this.grnService.approveDisapproveGrn(grn).subscribe(
-      response => {
-        this.toastr.success('GRN disapproved successfully', '', {
-          timeOut: 3000,
-        });
-        this.getGrnList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
-      }
-    );
-  };
+      this.stocksService.addNewStock(this.stock).subscribe(
+        response => {
+          this.spinner.hide();
+          this.toastr.success('GRN approved successfully', '', {
+            timeOut: 3000,
+          });
+          this.getGrnList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    })
+  }
 
   pagination() {
     this.spinner.show();

@@ -53,7 +53,7 @@ export class PurchaseInvoiceAddComponent implements OnInit {
   grnChange(id) {
     this.spinner.show();
     const pur_invoice_detail_control = <FormArray>this.form.controls['pur_invoice_detail'];
-    if (id) {      
+    if (id) {
       this.clearFormArray(pur_invoice_detail_control)
       this.grn_details = '';
       this.material_details_list = [];
@@ -140,13 +140,13 @@ export class PurchaseInvoiceAddComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addPurchaseInvoice() {    
+  addPurchaseInvoice() {
     var amount_sum = 0;
-    var gst_sum = 0;    
+    var gst_sum = 0;
     this.material_details_list.forEach(x => {
       this.add_pur_invoice_detail(x)
       amount_sum += x.material_amount_pay
-      gst_sum += x.total_gst      
+      gst_sum += x.total_gst
     })
     this.form.patchValue({
       total_gst: gst_sum,
@@ -158,11 +158,7 @@ export class PurchaseInvoiceAddComponent implements OnInit {
       this.purchaseInvoiceService.addNewPurchaseInvoice(this.form.value).subscribe(
         response => {
           // console.log(response)
-          this.spinner.hide();
-          this.toastr.success('Purchase invoice added successfully', '', {
-            timeOut: 3000,
-          });
-          this.goToList('purchase-invoice');
+          this.grnFinalize();
         },
         error => {
           console.log('error', error)
@@ -174,6 +170,30 @@ export class PurchaseInvoiceAddComponent implements OnInit {
     } else {
       this.markFormGroupTouched(this.form)
     }
+  }
+
+  grnFinalize() {
+    let d;
+    d = {
+      id: this.grn_details.id,
+      is_finalised: 1
+    };
+    this.grnService.FinalizeGrn(d).subscribe(
+      response => {
+        // console.log(response)
+        this.spinner.hide();
+        this.toastr.success('Purchase invoice added successfully', '', {
+          timeOut: 3000,
+        });
+        this.goToList('purchase-invoice');
+      },
+      error => {
+        console.log('error', error)
+        // this.toastr.error('everything is broken', '', {
+        //   timeOut: 3000,
+        // });
+      }
+    );
   }
 
   goToList(toNav) {

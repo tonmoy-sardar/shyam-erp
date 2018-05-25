@@ -1,5 +1,4 @@
 <div>
-  <!-- <app-page-header [heading]="'Purchase Invoice List'" [icon]="'fa fa-university'"></app-page-header> -->
   <div class="row">
     <div class="col-md-6">
       <h4 class="page-header">Purchase Invoice List</h4>
@@ -20,23 +19,23 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-md-9">
-                  <h5>Purchase Invoice</h5>
+          <div class="row">
+            <div class="col-md-9">
+              <h5>Purchase Invoice</h5>
+            </div>
+            <div class="col-md-3">
+              <form role="form" (ngSubmit)="dataSearch()">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
                 </div>
-                <div class="col-md-3">
-                  <form role="form" (ngSubmit)="dataSearch()">
-                    <div class="input-group">
-                      <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
-                      <div class="input-group-append">
-                        <button class="btn btn-secondary" type="submit">
-                          <i class="fa fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
+              </form>
+            </div>
+          </div>
         </div>
         <table class="card-body table table-hover table-sm table-bordered">
           <thead>
@@ -63,42 +62,45 @@
               <td>{{pInvoice.grn.created_at | date:'dd-MM-yyyy'}}</td>
               <td>{{pInvoice.grn.created_by.first_name}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(pInvoice.id)" *ngIf="pInvoice.status==true">
-                    <i class="fa fa-thumbs-up"></i> Active</a>
-                  <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(pInvoice.id)" *ngIf="pInvoice.status==false">
-                    <i class="fa fa-thumbs-down"></i> Inactive</a>
+                <label *ngIf="pInvoice.is_finalised == 1">Finalised</label>
+                <label *ngIf="pInvoice.status && pInvoice.is_finalised == 0">Active</label>
+                <label *ngIf="!pInvoice.status && pInvoice.is_finalised == 0">Inactive</label>
+                <select *ngIf="pInvoice.is_finalised == 0" class="form-control" name="status" (change)="changeStatus($event.target.value,pInvoice.id)">
+                  <option value=''>Change Status</option>
+                  <option value='0'>Cancel</option>
+                  <option value='1'>Active</option>
+                </select>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="disApprovePurchaseInvoice(pInvoice.id)" *ngIf="pInvoice.is_approve==1">
-                    <i class="fa fa-thumbs-up"></i> Approve</a>
-                  <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="approvePurchaseInvoice(pInvoice.id)" *ngIf="pInvoice.is_approve==0">
-                    <i class="fa fa-thumbs-down"></i> Dis-approve</a>
+                <label *ngIf="pInvoice.is_finalised == 1">Finalised</label>
+                <label *ngIf="pInvoice.is_approve == 1 && pInvoice.is_finalised == 0">Yes</label>
+                <label *ngIf="pInvoice.is_approve == 0 && pInvoice.is_finalised == 0">No</label>
+                <select *ngIf="pInvoice.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,pInvoice.id)">
+                  <option value='0'>Change Approve</option>
+                  <option value='1'>Approve</option>
+                  <option value='2'>Dis-Approve</option>
+                </select>
               </td>
               <td>
-                <a href="javascript:void(0);" title="View" name="View">
+                <a href="javascript:void(0);" title="View" name="View" [routerLink]="['/purchase-invoice/details', pInvoice.id]">
                   <i class="fa fa-eye"></i>
                 </a>
               </td>
             </tr>
             <tr *ngIf="purchaseInvoiceList.length == 0">
-                <td colspan="12" class="text-center">No record found</td>
-              </tr>
+              <td colspan="12" class="text-center">No record found</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
   <div class="row" *ngIf="totalurchaseInvoiceList > 10">
-      <div class="col-md-12">
-        <div class="card-body pull-right">
-          <ngb-pagination [collectionSize]="totalurchaseInvoiceList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
-        </div>
+    <div class="col-md-12">
+      <div class="card-body pull-right">
+        <ngb-pagination [collectionSize]="totalurchaseInvoiceList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>
+  </div>
 </div>
-<ngx-spinner
-bdColor = "rgba(0, 0, 0, 0.8)"
-size = "default"
-color = "#fff"
-type = "ball-spin"
-></ngx-spinner>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>

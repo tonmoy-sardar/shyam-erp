@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { PaymentService } from '../../../core/services/payment.service';
+import { PurchaseInvoiceService } from '../../../core/services/purchase-invoice.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -13,10 +14,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class PaymentAddComponent implements OnInit {
   payment;
-  companyList=[];
-  bankList=[];
-  invoiceList=[];
-
+  companyList = [];
+  bankList = [];
+  invoiceList = [];
+  purchaseInvoiceId: number;
   form: FormGroup;
   constructor(
     private companyService: CompanyService,
@@ -25,7 +26,8 @@ export class PaymentAddComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private purchaseInvoiceService: PurchaseInvoiceService
   ) { }
 
   ngOnInit() {
@@ -37,22 +39,22 @@ export class PaymentAddComponent implements OnInit {
       bank: [null, Validators.required],
       created_at: [null, Validators.required],
       payment_mode: [null, Validators.required],
-      payment_refrence:[null, Validators.required],
-      special_note:[null, Validators.required],
+      payment_refrence: [null, Validators.required],
+      special_note: [null, Validators.required],
     });
     this.payment = {
       company: '',
-      pur_inv:'',
-      total_amount:'',
-      bank:'',
-      created_at:'',
-      payment_mode:'',
-      payment_refrence:'',
-      special_note:'',
-      po_order:'',
-      po_order_no:'',
-      purchase_inv_date:'',
-      purchase_inv_no:''
+      pur_inv: '',
+      total_amount: '',
+      bank: '',
+      created_at: '',
+      payment_mode: '',
+      payment_refrence: '',
+      special_note: '',
+      po_order: '',
+      po_order_no: '',
+      purchase_inv_date: '',
+      purchase_inv_no: ''
     };
 
     this.getCompanyDropdownList();
@@ -85,47 +87,39 @@ export class PaymentAddComponent implements OnInit {
     );
   };
 
-  changeCompany(id){
-    if(id>0)
-    {
+  changeCompany(id) {
+    if (id > 0) {
       this.getCompanyBankList(id);
       this.getCompanyInvoiceList(id);
     }
   }
 
-  changeInv(id){
-    if(id>0)
-    {
-      for(var i =0; i<this.invoiceList.length; i++)
-      {
-        if(this.invoiceList[i].id==id)
-        {
+  changeInv(id) {
+    if (id > 0) {
+      for (var i = 0; i < this.invoiceList.length; i++) {
+        if (this.invoiceList[i].id == id) {
           this.payment.total_amount = this.invoiceList[i].total_amount;
           this.payment.po_order = this.invoiceList[i].po_order;
           this.payment.po_order_no = this.invoiceList[i].po_order_no[0].purchase_order_no;
           this.payment.purchase_inv_date = this.invoiceList[i].created_at;
           this.payment.purchase_inv_no = this.invoiceList[i].pur_invoice_map[0].purchase_inv_no;
-          console.log(this.invoiceList);
+          // console.log(this.invoiceList);
         }
       }
-      
+      this.purchaseInvoiceId = id;
     }
   }
- 
+
   goToList = function (toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addNewPayment(){
+  addNewPayment() {
     if (this.form.valid) {
       this.spinner.show();
       this.paymentService.addNewPayment(this.payment).subscribe(
         response => {
-          this.toastr.success('Payment added successfully', '', {
-            timeOut: 3000,
-          });
-          this.spinner.hide();
-          this.goToList('payment');          
+          this.purchaseInvoiceFinalize()
         },
         error => {
           console.log('error', error)
@@ -141,8 +135,32 @@ export class PaymentAddComponent implements OnInit {
       });
     }
   }
+
+  purchaseInvoiceFinalize() {
+    let d;
+    d = {
+      id: this.purchaseInvoiceId,
+      is_finalised: 1
+    };
+    this.purchaseInvoiceService.finalizePurchaseInvoice(d).subscribe(
+      response => {
+        this.toastr.success('Payment added successfully', '', {
+          timeOut: 3000,
+        });
+        this.spinner.hide();
+        this.goToList('payment');
+      },
+      error => {
+        console.log('error', error)
+        // this.toastr.error('everything is broken', '', {
+        //   timeOut: 3000,
+        // });
+      }
+    );
+  }
+
   btnClickNav(toNav) {
-    this.router.navigateByUrl('/'+toNav);
+    this.router.navigateByUrl('/' + toNav);
   };
 
   reSet() {

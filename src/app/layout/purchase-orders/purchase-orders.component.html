@@ -66,16 +66,24 @@
               <td>{{purchaseOrder.purchase_order_detail[0].storage_bin.bin_no}}</td>
               <td>{{purchaseOrder.quotation_date | date:'dd-MM-yyyy'}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(purchaseOrder.id)" *ngIf="purchaseOrder.status==true">
-                    <i class="fa fa-thumbs-up"></i> Active</a>
-                  <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(purchaseOrder.id)" *ngIf="purchaseOrder.status==false">
-                    <i class="fa fa-thumbs-down"></i> Inactive</a>
+                <label *ngIf="purchaseOrder.is_finalised == 1">Finalised</label>
+                <label *ngIf="purchaseOrder.status && purchaseOrder.is_finalised == 0">Active</label>
+                <label *ngIf="!purchaseOrder.status && purchaseOrder.is_finalised == 0">Inactive</label>
+                <select *ngIf="purchaseOrder.is_finalised == 0" class="form-control" name="status" (change)="changeStatus($event.target.value,purchaseOrder.id)">
+                  <option value=''>Change Status</option>
+                  <option value='0'>Cancel</option>
+                  <option value='1'>Active</option>
+                </select>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="disApprovePurchaseOrder(purchaseOrder.id)" *ngIf="purchaseOrder.is_approve==1">
-                    <i class="fa fa-thumbs-up"></i> Approve</a>
-                  <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="approvePurchaseOrder(purchaseOrder.id)" *ngIf="purchaseOrder.is_approve==0">
-                    <i class="fa fa-thumbs-down"></i> Dis-approve</a>
+                <label *ngIf="purchaseOrder.is_finalised == 1">Finalised</label>
+                <label *ngIf="purchaseOrder.is_approve == 1 && purchaseOrder.is_finalised == 0">Yes</label>
+                <label *ngIf="purchaseOrder.is_approve == 0 && purchaseOrder.is_finalised == 0">No</label>
+                <select *ngIf="purchaseOrder.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,purchaseOrder.id)">
+                  <option value='0'>Change Approve</option>
+                  <option value='1'>Approve</option>
+                  <option value='2'>Dis-Approve</option>
+                </select>
               </td>
               <td>
                 <a href="javascript:void(0);" title="Details" name="Details" [routerLink]="['/purchase-orders/details', purchaseOrder.id]">

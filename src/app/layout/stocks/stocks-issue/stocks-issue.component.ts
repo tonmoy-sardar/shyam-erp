@@ -37,7 +37,7 @@ export class StocksIssueComponent implements OnInit {
     this.getHelp();
   }
 
-  getHelp(){
+  getHelp() {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.stockIssue.heading;
       this.help_description = res.data.stockIssue.desc;
@@ -48,8 +48,8 @@ export class StocksIssueComponent implements OnInit {
     this.stocksService.getStockDetails(id).subscribe(
       (data: any[]) => {
         this.stockDetails = data;
-        this.visible_key = true;        
-        // console.log(this.stockDetails)
+        this.visible_key = true;
+        console.log(this.stockDetails)
         this.spinner.hide();
       }
     );
@@ -68,16 +68,43 @@ export class StocksIssueComponent implements OnInit {
         quantity: Math.round(this.stockDetails.quantity)
       })
       return;
-    }    
+    }
   }
 
   stockIssue() {
     this.form.patchValue({
       stock: this.stockDetails.id
     })
-    if (this.form.valid) {
+    if (this.form.valid) {      
       this.spinner.show();
       this.stocksService.addNewStockIssue(this.form.value).subscribe(res => {
+        this.stockUpdate();
+      },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      )
+    } else {
+      Object.keys(this.form.controls).forEach(field => {
+        const control = this.form.get(field);
+        control.markAsTouched({ onlySelf: true });
+      });
+    }
+  }
+
+  stockUpdate() {
+    let stock;
+
+    stock = {
+      id: this.stockDetails.id,
+      quantity: Math.round(this.stockDetails.quantity) - Math.round(this.form.value.quantity)
+    };
+    // console.log(stock)
+    this.stocksService.updateStock(stock).subscribe(
+      response => {
         this.toastr.success('Stock issued successfully', '', {
           timeOut: 3000,
         });
@@ -89,13 +116,8 @@ export class StocksIssueComponent implements OnInit {
         // this.toastr.error('everything is broken', '', {
         //   timeOut: 3000,
         // });
-      })
-    } else {
-      Object.keys(this.form.controls).forEach(field => {
-        const control = this.form.get(field);
-        control.markAsTouched({ onlySelf: true });
-      });
-    }
+      }
+    );
   }
 
   btnClickNav(toNav) {
@@ -115,6 +137,15 @@ export class StocksIssueComponent implements OnInit {
       'is-invalid': !this.form.get(field).valid && this.form.get(field).touched,
       'is-valid': this.form.get(field).valid
     };
+  }
+
+  getAvlChek(val){
+    if(Math.round(val) > 0){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
 }

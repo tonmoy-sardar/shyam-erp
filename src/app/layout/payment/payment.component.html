@@ -49,7 +49,8 @@
                             <th>Created At</th>
                             <th>Created By</th>
                             <th>Amount</th>
-                            <th>Action</th>
+                            <th>Status</th>
+                            <th>Apporve</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,13 +58,30 @@
                             <th scope="row">{{i +1}}</th>
                             <td>{{payment.company.company_name}}</td>
                             <td>{{payment.payment_map[0].payment_no}}</td>
-                            <td>{{payment.purchase_inv_no}}</td>          
+                            <td>{{payment.purchase_inv_no}}</td>
                             <td>{{payment.po_order_no}}</td>
-                            <td>Shyam FT</td>
+                            <td>{{payment.company.company_name}}</td>
                             <td>{{payment.created_at | date: 'dd-MM-yyyy'}}</td>
                             <td>{{payment.created_by.first_name}}</td>
                             <td>{{payment.total_amount}}</td>
-                            <td><span *ngIf="payment.status==true">Approved</span></td>
+                            <td>
+                                <label *ngIf="payment.status">Active</label>
+                                <label *ngIf="!payment.status">Inactive</label>
+                                <select class="form-control" name="status" (change)="changeStatus($event.target.value,payment.id)">
+                                    <option value=''>Change Status</option>
+                                    <option value='0'>Cancel</option>
+                                    <option value='1'>Active</option>
+                                </select>
+                            </td>
+                            <td>
+                                <label *ngIf="payment.is_approve == 1">Yes</label>
+                                <label *ngIf="payment.is_approve == 0">No</label>
+                                <select class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,payment.id)">
+                                    <option value='0'>Change Approve</option>
+                                    <option value='1'>Approve</option>
+                                    <option value='2'>Dis-Approve</option>
+                                </select>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

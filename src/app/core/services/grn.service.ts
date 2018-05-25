@@ -27,6 +27,12 @@ export class GrnService {
     })
   }
 
+  getPrevGrnList(id): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'purchase_order_grn/'+id+'/', {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
   getGrnDetails(id): Observable<any>{
     return this.http.get(environment.apiEndpoint+'all_grn/'+id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
@@ -46,6 +52,12 @@ export class GrnService {
   }
 
   approveDisapproveGrn(data): Observable<any>{
+    return this.http.patch(environment.apiEndpoint+'grn/'+data.id+'/',data, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
+  FinalizeGrn(data): Observable<any>{
     return this.http.patch(environment.apiEndpoint+'grn/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })

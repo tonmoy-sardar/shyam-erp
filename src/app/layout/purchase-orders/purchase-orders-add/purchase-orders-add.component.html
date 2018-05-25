@@ -102,34 +102,34 @@
                                 </div>
                             </div>
                             <div class="card bg-light mb-3" *ngIf="visible_key && previous_purchase_list.length > 0">
-                                    <div class="card-header">Previous Purchase</div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <table class="card-body table table-sm ">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Material</th>
-                                                        <th>PR. Qty.</th>
-                                                        <th>Qty. Taken</th>
-                                                        <th>Qty. Rest</th>
-                                                        <th>UOM</th>
-                                                        <th>Average Rate</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let prevOrder of previous_purchase_list">
-                                                        <td>{{prevOrder.purchase_order_detail[0].material.material_code}}</td>
-                                                        <td>{{prevOrder.purchase_order_detail[0].requisition_quantity}}</td>
-                                                        <td>{{prevOrder.purchase_order_detail[0].order_quantity}}</td>
-                                                        <td>{{total_rest_quantity}}</td>
-                                                        <td>{{prevOrder.purchase_order_detail[0].uom}}</td>
-                                                        <td>{{prevOrder.purchase_order_detail[0].rate}}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                <div class="card-header">Previous Purchase</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <table class="card-body table table-sm ">
+                                            <thead>
+                                                <tr>
+                                                    <th>Material</th>
+                                                    <th>PR. Qty.</th>
+                                                    <th>Qty. Taken</th>
+                                                    <th>Qty. Rest</th>
+                                                    <th>UOM</th>
+                                                    <th>Average Rate</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let prevOrder of previous_purchase_list">
+                                                    <td>{{prevOrder.purchase_order_detail[0].material.material_code}}</td>
+                                                    <td>{{prevOrder.purchase_order_detail[0].requisition_quantity}}</td>
+                                                    <td>{{prevOrder.purchase_order_detail[0].order_quantity}}</td>
+                                                    <td>{{total_rest_quantity}}</td>
+                                                    <td>{{prevOrder.purchase_order_detail[0].uom}}</td>
+                                                    <td>{{prevOrder.purchase_order_detail[0].rate}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
+                            </div>
                             <div class="card bg-light mb-3" *ngIf="visible_key">
                                 <div class="card-header">Material Details</div>
                                 <div class="card-body">

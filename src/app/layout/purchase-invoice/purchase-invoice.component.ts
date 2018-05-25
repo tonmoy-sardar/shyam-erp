@@ -50,99 +50,66 @@ export class PurchaseInvoiceComponent implements OnInit {
     );
   }
 
-  activeState(id) {
+  changeStatus(value, id) {
+    this.spinner.show();
     let PurchaseInvoice;
-
-    PurchaseInvoice = {
-      id: id,
-      status: true
-    };
-    this.purchaseInvoiceService.activeInactivePurchaseInvoice(PurchaseInvoice).subscribe(
-      response => {
-        this.toastr.success('Status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getpurchaseInvoiceList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+    if (value != "") {
+      if (value == 0) {
+        PurchaseInvoice = {
+          id: id,
+          status: false
+        };
       }
-    );
-  };
-
-  inactiveState(id) {
-    let PurchaseInvoice;
-
-    PurchaseInvoice = {
-      id: id,
-      status: false
-    };
-
-    this.purchaseInvoiceService.activeInactivePurchaseInvoice(PurchaseInvoice).subscribe(
-      response => {
-        this.toastr.success('Status changed successfully', '', {
-          timeOut: 3000,
-        });
-        this.getpurchaseInvoiceList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+      else if (value == 1) {
+        PurchaseInvoice = {
+          id: id,
+          status: true
+        };
       }
-    );
-  };
+      this.purchaseInvoiceService.activeInactivePurchaseInvoice(PurchaseInvoice).subscribe(
+        response => {
+          this.toastr.success('Status changed successfully', '', {
+            timeOut: 3000,
+          });
+          this.getpurchaseInvoiceList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
+  }
 
-  approvePurchaseInvoice(id) {
-    let PurchaseInvoice;
+  changeApproveStatus(value, id) {
+    if (value > 0) {
+      this.spinner.show();
+      let PurchaseInvoice;
 
-    PurchaseInvoice = {
-      id: id,
-      is_approve: 1
-    };
-    this.purchaseInvoiceService.approveDisapprovePurchaseInvoice(PurchaseInvoice).subscribe(
-      response => {
-        this.toastr.success('Purchase invoice approved successfully', '', {
-          timeOut: 3000,
-        });
-        this.getpurchaseInvoiceList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
-      }
-    );
-  };
+      PurchaseInvoice = {
+        id: id,
+        is_approve: value
+      };
 
-  disApprovePurchaseInvoice(id) {
-    let PurchaseInvoice;
+      this.purchaseInvoiceService.approveDisapprovePurchaseInvoice(PurchaseInvoice).subscribe(
+        response => {
+          this.toastr.success('Purchase invoice approve status changed successfully', '', {
+            timeOut: 3000,
+          });
+          this.getpurchaseInvoiceList();
+        },
+        error => {
+          console.log('error', error)
+          // this.toastr.error('everything is broken', '', {
+          //   timeOut: 3000,
+          // });
+        }
+      );
+    }
 
-    PurchaseInvoice = {
-      id: id,
-      is_approve: 0
-    };
-
-    this.purchaseInvoiceService.approveDisapprovePurchaseInvoice(PurchaseInvoice).subscribe(
-      response => {
-        this.toastr.success('Purchase invoice disapproved successfully', '', {
-          timeOut: 3000,
-        });
-        this.getpurchaseInvoiceList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
-      }
-    );
-  };
+  }
 
   pagination() {
     this.getpurchaseInvoiceList();

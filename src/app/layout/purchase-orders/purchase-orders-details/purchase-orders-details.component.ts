@@ -5,11 +5,12 @@ import { PurchaseOrdersService } from '../../../core/services/purchase-orders.se
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
-  selector: 'app-purchase-details',
-  templateUrl: './purchase-details.component.html',
-  styleUrls: ['./purchase-details.component.scss']
+  selector: 'app-purchase-orders-details',
+  templateUrl: './purchase-orders-details.component.html',
+  styleUrls: ['./purchase-orders-details.component.scss']
 })
-export class PurchaseDetailsComponent implements OnInit {
+export class PurchaseOrdersDetailsComponent implements OnInit {
+
   purchaseOrder;
   visible_key: boolean
   constructor(
@@ -42,4 +43,5 @@ export class PurchaseDetailsComponent implements OnInit {
     var PrDate = date.split('/')
     return PrDate[0]
   }
+
 }

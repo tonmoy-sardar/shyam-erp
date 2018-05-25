@@ -65,7 +65,7 @@
                 <label *ngIf="purchaseRequisition.is_finalised == 1">Finalised</label>
                 <label *ngIf="purchaseRequisition.status && purchaseRequisition.is_finalised == 0">Active</label>
                 <label *ngIf="!purchaseRequisition.status && purchaseRequisition.is_finalised == 0">Inactive</label>
-                <select *ngIf="purchaseRequisition.is_finalised == 0" class="form-control" name="is_finalised" (change)="changeStatus($event.target.value,purchaseRequisition.id)">
+                <select *ngIf="purchaseRequisition.is_finalised == 0" class="form-control" name="status" (change)="changeStatus($event.target.value,purchaseRequisition.id)">
                   <option value=''>Change Status</option>
                   <option value='0'>Cancel</option>
                   <option value='1'>Active</option>
