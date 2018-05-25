@@ -105,3 +105,28 @@
 .cata-gory {
     margin-top: 28px;
 }
+.pagination-msg p { 
+    color: #212529;
+    font-weight: 600;
+    font-size: 13px;
+}
+.help .modal-content { margin-top:50%;  }
+.help .modal-content .modal-header {
+    background: #1976d2;
+    color: #fff;
+    padding: 5px 10px; 
+}
+.help .modal-content .modal-header .close {
+    background: #fff;
+    opacity: 1;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    padding: 12px;
+    line-height: 1px;
+    text-align: center;
+}
+.help .modal-content .modal-header .close span {
+    margin-left: -6px;
+    font-size: 21px;
+}

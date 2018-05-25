@@ -13,7 +13,9 @@ export class HelpComponent {
   constructor(private modalService: NgbModal) {}
 
   open(content) {
-    this.modalService.open(content).result.then((result) => {
+    this.modalService.open(content,{
+      windowClass: "help"
+    }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
