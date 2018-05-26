@@ -5,6 +5,7 @@ import { TermsConditionService } from '../../../core/services/terms-condition.se
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
 
 @Component({
   selector: 'app-terms-condition-add',
@@ -14,12 +15,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class TermsConditionAddComponent implements OnInit {
   form: FormGroup;
   companyList = [];
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private termsConditionService: TermsConditionService,
     private companyService: CompanyService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -29,7 +33,15 @@ export class TermsConditionAddComponent implements OnInit {
       company: new FormControl('', Validators.required),
       term_text: new FormControl('', Validators.required)
     });
-    this.getCompanyDropdownList()
+    this.getCompanyDropdownList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.termsAdd.heading;
+      this.help_description = res.data.termsAdd.desc;
+    })
   }
 
   btnClickNav(toNav) {

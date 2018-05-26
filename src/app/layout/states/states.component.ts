@@ -12,11 +12,11 @@ import * as Globals from '../../core/globals';
   styleUrls: ['./states.component.scss']
 })
 export class StatesComponent implements OnInit {
-  stateList = [];
-  itemNo: number;
+  stateList = [];  
   defaultPagination: number;
   totalstateList: number;
   search_key = '';
+  itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;

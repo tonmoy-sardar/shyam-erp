@@ -4,6 +4,8 @@ import { TermsConditionService } from '../../core/services/terms-condition.servi
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../../core/services/company.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
 
 @Component({
   selector: 'app-terms-condition',
@@ -16,19 +18,33 @@ export class TermsConditionComponent implements OnInit {
   totaltermsList: number;
   search_key = '';
   companyList = [];
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private termsConditionService: TermsConditionService,
     private companyService: CompanyService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
     this.getTermsList();
-    this.getCompanyDropdownList()
+    this.getCompanyDropdownList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.terms.heading;
+      this.help_description = res.data.terms.desc;
+    })
   }
 
   dataSearch() {
@@ -57,6 +73,14 @@ export class TermsConditionComponent implements OnInit {
       (data: any[]) => {
         this.totaltermsList = data['count'];
         this.termsList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+        if(this.totaltermsList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totaltermsList
+        }
         this.spinner.hide();
       }
     );
