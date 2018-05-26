@@ -30,9 +30,6 @@ import { HelpComponent } from './component/help/help.component';
 import { LoginService } from './services/login.service';
 import { BanksService } from './services/banks.service';
 import { CompanyService } from './services/company.service';
-import { DepartmentService } from './services/department.service';
-import { DesignationService } from './services/designation.service';
-import { EmployeesService } from './services/employees.service';
 import { GrnService } from './services/grn.service';
 import { GrnReverseService } from './services/grn-reverse.service';
 import { GstRatesService } from './services/gst-rates.service';
@@ -50,7 +47,10 @@ import { TermsConditionService } from './services/terms-condition.service';
 import { VendorService } from './services/vendor.service';
 import { TransportService } from './services/transport.service';
 import { StocksService } from './services/stocks.service';
-import { HelpService } from './services/help.service'
+import { HelpService } from './services/help.service';
+import { DepartmentsService } from './services/departments.service';
+import { DesignationsService } from './services/designations.service';
+import { EmployeesService } from './services/employees.service'
 
 @NgModule({
   imports: [
@@ -117,9 +117,6 @@ export class CoreModule {
         LoginService,
         BanksService,
         CompanyService,
-        DepartmentService,
-        DesignationService,
-        EmployeesService,
         GrnService,
         GrnReverseService,
         GstRatesService,
@@ -137,7 +134,10 @@ export class CoreModule {
         VendorService,
         TransportService,
         StocksService,
-        HelpService
+        HelpService,
+        DepartmentsService,
+        DesignationsService,
+        EmployeesService
       ]
     };
   }

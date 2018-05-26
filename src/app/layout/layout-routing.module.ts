@@ -27,9 +27,9 @@ const routes: Routes = [
       { path: 'purchase-invoice', loadChildren: './purchase-invoice/purchase-invoice.module#PurchaseInvoiceModule' },
       { path: 'stocks', loadChildren: './stocks/stocks.module#StocksModule' },
       { path: 'stocks-transfer', loadChildren: './stocks-transfer/stocks-transfer.module#StocksTransferModule' },
-      //{ path: 'department', loadChildren: './department/department.module#DepartmentModule' },
-      //{ path: 'designation', loadChildren: './designation/designation.module#DesignationModule' },
-      // { path: 'employees', loadChildren: './employees/employees.module#EmployeesModule' },
+      { path: 'departments', loadChildren: './departments/departments.module#DepartmentsModule' },
+      { path: 'designations', loadChildren: './designations/designations.module#DesignationsModule' },
+      { path: 'employees', loadChildren: './employees/employees.module#EmployeesModule' },
       // { path: 'grn-reverse', loadChildren: './grn-reverse/grn-reverse.module#GrnReverseModule' },
 
     ]
