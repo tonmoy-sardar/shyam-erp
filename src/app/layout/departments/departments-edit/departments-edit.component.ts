@@ -32,6 +32,10 @@ export class DepartmentsEditComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
+    this.department_deatils ={
+      company:'',
+      department_name:'',
+    }
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
       department_name: ['', Validators.required]
@@ -45,7 +49,7 @@ export class DepartmentsEditComponent implements OnInit {
     this.departmentsService.getDepartmentDetails(id).subscribe(res => {
       this.department_deatils = res;
       this.visible_key = true;
-      // console.log(res)
+      console.log(this.department_deatils)
       this.spinner.hide();
     })
   }

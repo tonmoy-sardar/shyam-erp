@@ -35,6 +35,11 @@ export class DesignationsEditComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
+    this.designationDetails = {
+      company: '',
+      departments: '',
+      designation_name: ''
+    }
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
       departments: ['',Validators.required],
@@ -48,9 +53,9 @@ export class DesignationsEditComponent implements OnInit {
   getDesignationDetails(id){
     this.designationsService.getDesignationDetails(id).subscribe(res => {
       this.designationDetails = res;
-      // console.log(this.designationDetails)
+      console.log(this.designationDetails)
       this.visible_key = true;
-      this.getDepartmentList(this.designationDetails.company.id);
+      this.getDepartmentList(this.designationDetails.company);
       this.spinner.hide();
     })
   }

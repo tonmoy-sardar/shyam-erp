@@ -21,9 +21,9 @@
                           <div class="row">
                               <div class="form-group col-md-4">
                                   <label>Company</label>
-                                  <select class="form-control" name="company" formControlName="company" [ngClass]="displayFieldCss('company')" [(ngModel)]="department_deatils.company.id">
+                                  <select class="form-control"  [(ngModel)]="department_deatils.company" name="company" formControlName="company" [ngClass]="displayFieldCss('company')">
                                     <option value="">Select Company</option>
-                                    <option *ngFor="let company of company_list" value="{{company.id}}">{{company.company_name}}</option>
+                                    <option *ngFor="let companyObj of company_list" value="{{companyObj.id}}">{{companyObj.company_name}}</option>
                                   </select>
                                   <div class="invalid-feedback" *ngIf="isFieldValid('company')">
                                     Please select company
@@ -31,7 +31,7 @@
                               </div>
                               <div class="form-group col-md-4">
                                   <label>Department name</label>
-                                  <input type="text" class="form-control" name="department_name" placeholder="Department name" formControlName="department_name" [ngClass]="displayFieldCss('department_name')" [(ngModel)]="department_deatils.department_name">
+                                  <input type="text" class="form-control" [(ngModel)]="department_deatils.department_name" name="department_name" placeholder="Department name" formControlName="department_name" [ngClass]="displayFieldCss('department_name')">
                                   <div class="invalid-feedback" *ngIf="isFieldValid('department_name')">
                                       Please enter department name
                                   </div>
