@@ -4,6 +4,9 @@ import { SaleGroupService } from '../../../core/services/sale-group.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 
 @Component({
   selector: 'app-sale-group-edit',
@@ -13,13 +16,16 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class SaleGroupEditComponent implements OnInit {
   saleGroup;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private saleGroupService: SaleGroupService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -34,6 +40,14 @@ export class SaleGroupEditComponent implements OnInit {
       description: ''
     };
     this.getSaleGroupDetails(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.saleGroupEdit.heading;
+      this.help_description = res.data.saleGroupEdit.desc;
+    })
   }
 
   getSaleGroupDetails(id) {

@@ -2,10 +2,7 @@
   <div *ngIf="companyBranchCompShow.showList==true">
     <div style="padding-top: 20px;">
       <div class="col-md-6 offset-md-6 pull-right" style="text-align: right">
-        <button type="button" class="btn btn-secondary">
-          <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-        <button type="button" class="btn btn-secondary">
-          <i class="fa fa-refresh"></i> Reload</button>
+        <app-help [heading]="help_heading" [description]="help_description"></app-help>
         <button type="button" class="btn btn-primary" (click)="showBranchAdd()">
           <i class="fa fa-plus"></i> New Branch</button>
       </div>
@@ -51,7 +48,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let companyBranch of companyBranchList ; let i = index">
-                <th scope="row">{{i +1}}</th>
+                <th scope="row">{{itemNo +i +1}}</th>
                 <td>{{companyBranch.branch_name}}</td>
                 <td>{{companyBranch.branch_address}}</td>
                 <td>{{companyBranch.branch_contact_no}}</td>

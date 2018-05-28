@@ -5,6 +5,9 @@ import { StatesService } from '../../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-storage-bin-list',
   templateUrl: './storage-bin-list.component.html',
@@ -18,13 +21,20 @@ export class StorageBinListComponent implements OnInit {
   defaultPagination: number;
   totalcompanyStorageBinList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -37,6 +47,14 @@ export class StorageBinListComponent implements OnInit {
     };
 
     this.getCompanyStorageBinList(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.storageBin.heading;
+      this.help_description = res.data.storageBin.desc;
+    })
   }
 
   btnClickNav = function (toNav) {
@@ -77,7 +95,16 @@ export class StorageBinListComponent implements OnInit {
     this.companyService.getCompanyStorageBinList(id,params).subscribe(
       (data: any[]) => {
         this.companyStorageBinList = data['results'];
-        console.log(this.companyStorageBinList)
+        this.totalcompanyStorageBinList = data['count'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+
+        if(this.totalcompanyStorageBinList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalcompanyStorageBinList
+        }
         this.spinner.hide();
       }
     );

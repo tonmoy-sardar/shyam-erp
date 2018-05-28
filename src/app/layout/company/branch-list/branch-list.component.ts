@@ -6,6 +6,9 @@ import { StatesService } from '../../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-branch-list',
   templateUrl: './branch-list.component.html',
@@ -19,13 +22,20 @@ export class BranchListComponent implements OnInit {
   defaultPagination: number;
   totalcompanyBranchList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -38,6 +48,14 @@ export class BranchListComponent implements OnInit {
     };
 
     this.getCompanyBranchList(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.branch.heading;
+      this.help_description = res.data.branch.desc;
+    })
   }
 
   btnClickNav = function (toNav) {
@@ -79,6 +97,17 @@ export class BranchListComponent implements OnInit {
       (data: any[]) => {
         this.totalcompanyBranchList = data['count'];
         this.companyBranchList = data['results'];
+
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+
+        if(this.totalcompanyBranchList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalcompanyBranchList
+        }
+
         this.spinner.hide();
       }
     );

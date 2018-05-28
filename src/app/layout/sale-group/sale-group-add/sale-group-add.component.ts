@@ -4,7 +4,8 @@ import { SaleGroupService } from '../../../core/services/sale-group.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 @Component({
   selector: 'app-sale-group-add',
   templateUrl: './sale-group-add.component.html',
@@ -12,12 +13,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class SaleGroupAddComponent implements OnInit {
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private saleGroupService: SaleGroupService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -27,6 +31,14 @@ export class SaleGroupAddComponent implements OnInit {
       description: [null, Validators.required]
     });
     this.spinner.hide();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.saleGroupAdd.heading;
+      this.help_description = res.data.saleGroupAdd.desc;
+    })
   }
   
   goToList= function (toNav) {

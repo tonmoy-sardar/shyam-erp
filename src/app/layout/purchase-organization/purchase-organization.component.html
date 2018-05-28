@@ -4,10 +4,7 @@
       <h4 class="page-header">Purchase Organization List</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-refresh"></i> Reload</button>
+      <app-help [heading]="help_heading" [description]="help_description"></app-help>
       <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-organization/add')">
         <i class="fa fa-plus"></i> New Purchase Organization</button>
     </div>
@@ -49,7 +46,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let purchaseOrganization of purchaseOrganizationList ; let i = index">
-              <th scope="row">{{i +1}}</th>
+              <th scope="row">{{itemNo + i +1}}</th>
               <td>{{purchaseOrganization.name}}</td>
               <td>{{purchaseOrganization.description}}</td>
               <td>
