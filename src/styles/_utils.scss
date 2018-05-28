@@ -3,18 +3,18 @@
 }
 
 .main-body .navbar {
-    background-color: #1976d2 !important;
+    background-color: #284c6f !important;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
 }
 
 .main-body .navbar a {
     color: #fff !important;
-    padding: 15px 0;
+    padding: 0;
     font-size: 14px;
 }
 
 .main-body .dropdown-menu a {
-    background-color: #1976d2 !important;
+    background-color: #284c6f !important;
     padding: 10px;
 }
 
@@ -33,7 +33,7 @@
 
 .main-body .login-page .login-form {
     // background: #499bea;
-    background: #1976d2;
+    background: #284c6f;
     padding: 20px;
     border-radius: 14px;
     margin-top: 12%;
@@ -105,17 +105,23 @@
 .cata-gory {
     margin-top: 28px;
 }
-.pagination-msg p { 
+
+.pagination-msg p {
     color: #212529;
     font-weight: 600;
     font-size: 13px;
 }
-.help .modal-content { margin-top:50%;  }
+
+.help .modal-content {
+    margin-top: 50%;
+}
+
 .help .modal-content .modal-header {
     background: #1976d2;
     color: #fff;
-    padding: 5px 10px; 
+    padding: 5px 10px;
 }
+
 .help .modal-content .modal-header .close {
     background: #fff;
     opacity: 1;
@@ -126,7 +132,18 @@
     line-height: 1px;
     text-align: center;
 }
+
 .help .modal-content .modal-header .close span {
     margin-left: -6px;
     font-size: 21px;
+}
+
+.btn-primary {
+    background-color: #284c6f !important;
+    border-color: #284c6f !important;
+}
+
+.btn-primary:hover {
+    background-color: #1a3650 !important;
+    border-color: #1a3650 !important;
 }
