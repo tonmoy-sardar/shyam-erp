@@ -22,7 +22,7 @@ export class DepartmentsService {
     })
   }
 
-  getDepartmentListByDept(id): Observable<any>{
+  getDepartmentListByCompany(id): Observable<any>{
     return this.http.get(environment.apiEndpoint+'company_departments/'+id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })

@@ -6,10 +6,14 @@ import { EmployeesComponent } from './employees.component';
 import { EmployeesAddComponent } from './employees-add/employees-add.component';
 import { EmployeesEditComponent } from './employees-edit/employees-edit.component';
 
+// core
+import {CoreModule} from "../../core/core.module";
+
 @NgModule({
   imports: [
     CommonModule,
-    EmployeesRoutingModule
+    EmployeesRoutingModule,
+    CoreModule
   ],
   declarations: [EmployeesComponent, EmployeesAddComponent, EmployeesEditComponent]
 })
