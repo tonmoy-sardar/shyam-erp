@@ -74,8 +74,9 @@
                                 </select>
                             </td>
                             <td>
+                                <label *ngIf="payment.is_approve == 0">None</label>
                                 <label *ngIf="payment.is_approve == 1">Yes</label>
-                                <label *ngIf="payment.is_approve == 0">No</label>
+                                <label *ngIf="payment.is_approve == 2">No</label>
                                 <select class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,payment.id)">
                                     <option value='0'>Change Approve</option>
                                     <option value='1'>Approve</option>

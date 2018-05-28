@@ -41,12 +41,12 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>PR No</th>
+              <th>PR No <span class="info" ngbTooltip="Purchase Requisition Number">i</span></th>
               <th>Company</th>
-              <th>P. Org.</th>
-              <th>P. Group</th>
-              <th>PR Raised Date</th>
-              <th>PR Raised By</th>
+              <th>P. Org. <span class="info" ngbTooltip="Purchase Organisation">i</span></th>
+              <th>P. Group <span class="info" ngbTooltip="Purchase Group">i</span></th>
+              <th>PR Raised Date <span class="info" ngbTooltip="Purchase Requisition Raised Date">i</span></th>
+              <th>PR Raised By <span class="info" ngbTooltip="Purchase Requisition Raised By">i</span></th>
               <th>Status</th>
               <th>Is approved</th>
               <th>Action</th>
@@ -73,8 +73,9 @@
               </td>
               <td>
                 <label *ngIf="purchaseRequisition.is_finalised == 1">Finalised</label>
+                <label *ngIf="purchaseRequisition.is_approve == 0 && purchaseRequisition.is_finalised == 0">None</label>
                 <label *ngIf="purchaseRequisition.is_approve == 1 && purchaseRequisition.is_finalised == 0">Yes</label>
-                <label *ngIf="purchaseRequisition.is_approve == 0 && purchaseRequisition.is_finalised == 0">No</label>
+                <label *ngIf="purchaseRequisition.is_approve == 2 && purchaseRequisition.is_finalised == 0">No</label>
                 <select *ngIf="purchaseRequisition.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,purchaseRequisition.id)">
                   <option value='0'>Change Approve</option>
                   <option value='1'>Approve</option>

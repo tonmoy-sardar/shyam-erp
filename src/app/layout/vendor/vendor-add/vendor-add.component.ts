@@ -38,8 +38,8 @@ export class VendorAddComponent implements OnInit {
       pan_no: ['', Validators.required],
       cin_no: ['', Validators.required],
       gst_no: ['', Validators.required],
-      amount_credit: ['', Validators.required],
-      amount_debit: ['', Validators.required],
+      // amount_credit: ['', Validators.required],
+      // amount_debit: ['', Validators.required],
       vendor_address: this.formBuilder.array([this.createContactInfo()]),
       vendor_account: this.formBuilder.array([this.createBankInfo()])
     });
