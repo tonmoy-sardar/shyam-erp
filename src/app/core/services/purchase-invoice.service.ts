@@ -35,19 +35,19 @@ export class PurchaseInvoiceService {
   }
 
   activeInactivePurchaseInvoice(data): Observable<any> {
-    return this.http.patch(environment.apiEndpoint + 'purchase_invoice/' + data.id + '/', data, {
+    return this.http.patch(environment.apiEndpoint + 'purchase_invoice_status/' + data.id + '/', data, {
       headers: new HttpHeaders().set('Authorization', 'Token ' + localStorage.getItem('logedUserToken'))
     })
   }
 
   approveDisapprovePurchaseInvoice(data): Observable<any> {
-    return this.http.patch(environment.apiEndpoint + 'purchase_invoice/' + data.id + '/', data, {
+    return this.http.patch(environment.apiEndpoint + 'purchase_invoice_status/' + data.id + '/', data, {
       headers: new HttpHeaders().set('Authorization', 'Token ' + localStorage.getItem('logedUserToken'))
     })
   }
 
   finalizePurchaseInvoice(data): Observable<any> {
-    return this.http.patch(environment.apiEndpoint + 'purchase_invoice/' + data.id + '/', data, {
+    return this.http.patch(environment.apiEndpoint + 'purchase_invoice_status/' + data.id + '/', data, {
       headers: new HttpHeaders().set('Authorization', 'Token ' + localStorage.getItem('logedUserToken'))
     })
   }

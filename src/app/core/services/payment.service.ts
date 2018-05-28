@@ -22,13 +22,13 @@ export class PaymentService {
   } 
 
   activeInactivePayment(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'payment/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'payment_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   approveDisapprovePayment(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'payment/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'payment_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

@@ -43,8 +43,8 @@
                             <th>Sl.No.</th>
                             <th>Company</th>
                             <th>Payment No</th>
-                            <th>PO INV No</th>
-                            <th>PO No</th>
+                            <th>PO INV No <span class="info" ngbTooltip="Purchase Order Invoice Number">i</span></th>
+                            <th>PO No <span class="info" ngbTooltip="Purchase Order Number">i</span></th>
                             <th>Party Name</th>
                             <th>Created At</th>
                             <th>Created By</th>
@@ -74,8 +74,9 @@
                                 </select>
                             </td>
                             <td>
+                                <label *ngIf="payment.is_approve == 0">None</label>
                                 <label *ngIf="payment.is_approve == 1">Yes</label>
-                                <label *ngIf="payment.is_approve == 0">No</label>
+                                <label *ngIf="payment.is_approve == 2">No</label>
                                 <select class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,payment.id)">
                                     <option value='0'>Change Approve</option>
                                     <option value='1'>Approve</option>

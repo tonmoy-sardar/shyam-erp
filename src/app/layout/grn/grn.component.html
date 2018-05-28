@@ -42,10 +42,10 @@
             <tr>
               <th>Sl.No.</th>
               <th>Grn No</th>
-              <th>Po No</th>
+              <th>Po No <span class="info" ngbTooltip="Purchase Order Number">i</span></th>
               <th>Company</th>
-              <th>P Org</th>
-              <th>P Group</th>
+              <th>P Org <span class="info" ngbTooltip="Purchase Organisation">i</span></th>
+              <th>P Group <span class="info" ngbTooltip="Purchase Group">i</span></th>
               <th>Vendor</th>
               <th>Vendor Address</th>
               <th>GRN Raised Date</th>
@@ -76,8 +76,9 @@
               </td>
               <td>
                 <label *ngIf="grn.is_finalised == 1">Finalised</label>
+                <label *ngIf="grn.is_approve == 0 && grn.is_finalised == 0">None</label>
                 <label *ngIf="grn.is_approve == 1 && grn.is_finalised == 0">Yes</label>
-                <label *ngIf="grn.is_approve == 0 && grn.is_finalised == 0">No</label>
+                <label *ngIf="grn.is_approve == 2 && grn.is_finalised == 0">No</label>
                 <select *ngIf="grn.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,grn.id)">
                   <option value='0'>Change Approve</option>
                   <option value='1'>Approve</option>
