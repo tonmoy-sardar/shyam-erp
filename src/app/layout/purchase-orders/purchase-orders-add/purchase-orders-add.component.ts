@@ -54,7 +54,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.form = this.formBuilder.group({
-      requisition: ['', Validators.required],
+      requisition: [null, Validators.required],
       quotation_no: ['', Validators.required],
       quotation_date: ['', Validators.required],
       pur_org: ['', Validators.required],

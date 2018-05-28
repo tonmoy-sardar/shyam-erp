@@ -24,11 +24,15 @@
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label>Requisition No.</label>
-                                    <select class="form-control" (change)="requisitionChange($event.target.value)" name="requisition" formControlName="requisition"
+                                    <!-- <select class="form-control" (change)="requisitionChange($event.target.value)" name="requisition" formControlName="requisition"
                                         [ngClass]="displayFieldCss('requisition')">
                                         <option value="">Select Requisition</option>
                                         <option value="{{requisition.id}}" *ngFor="let requisition of requisition_list">{{requisition.requisition_map[0].requisition_no}}</option>
-                                    </select>
+                                    </select> -->
+                                    <ng-select class="form-control" placeholder="Select Requisition" (change)="requisitionChange($event)" [clearable]="false" name="requisition" formControlName="requisition"
+                                        [ngClass]="displayFieldCss('requisition')">
+                                        <ng-option *ngFor="let requisition of requisition_list" [value]="requisition.id">{{requisition.requisition_map[0].requisition_no}}</ng-option>
+                                    </ng-select>
                                     <div class="invalid-feedback" *ngIf="form.controls['requisition'].hasError('required')">
                                         Please select requisition
                                     </div>
