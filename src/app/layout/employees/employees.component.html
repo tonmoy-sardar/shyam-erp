@@ -44,8 +44,8 @@
               <th>Company</th>
               <th>Department</th>
               <th>Designation</th>
-              <!-- <th>Status</th>
-              <th>Action</th> -->
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -58,7 +58,7 @@
               <td>{{employee.company.company_name}}</td>
               <td>{{employee.departments.department_name}}</td>
               <td>{{employee.designation.designation_name}}</td>
-              <!-- <td>
+              <td>
                 <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(employee.id)" *ngIf="employee.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
                 <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(employee.id)" *ngIf="employee.status==false">
@@ -71,10 +71,10 @@
                 <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteEmployee(employee.id)">
                   <i class="fa fa-trash-o"></i>
                 </a>
-              </td> -->
+              </td>
             </tr>
             <tr *ngIf="employeeList.length == 0">
-              <td colspan="8" class="text-center">No record found</td>
+              <td colspan="10" class="text-center">No record found</td>
             </tr>
           </tbody>
         </table>
