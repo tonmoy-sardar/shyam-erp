@@ -41,19 +41,19 @@ export class PurchaseOrdersService {
   }
 
   activeInactivePurchaseOrder(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'purchase_order/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'purchase_order_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   approveDisapprovePurchaseOrder(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'purchase_order/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'purchase_order_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   finalizePurchaseOrder(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'purchase_order/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'purchase_order_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
