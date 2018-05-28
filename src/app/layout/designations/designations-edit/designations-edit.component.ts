@@ -74,11 +74,13 @@ export class DesignationsEditComponent implements OnInit {
   }
 
   companyChange(val){
-    this.getDepartmentList(val);
+    if(val != ""){
+      this.getDepartmentList(val);
+    }    
   }
 
   getDepartmentList(id){
-    this.departmentsService.getDepartmentListByDept(id).subscribe(res => {
+    this.departmentsService.getDepartmentListByCompany(id).subscribe(res => {
       this.department_list = res;
     })
   }

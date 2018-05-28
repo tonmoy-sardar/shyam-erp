@@ -27,6 +27,12 @@ export class DesignationsService {
     })
   }
 
+  getDesignationListByDept(id): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'designation_dropdown/'+id+'/', {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
   updateDesignation(data): Observable<any>{
     return this.http.put(environment.apiEndpoint+'designation/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
