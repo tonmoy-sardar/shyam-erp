@@ -5,6 +5,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-storage-bin-edit',
   templateUrl: './storage-bin-edit.component.html',
@@ -20,13 +23,17 @@ export class StorageBinEditComponent implements OnInit {
   companyStorageList;
   UOMList;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
+
   constructor(
     private companyService: CompanyService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -54,8 +61,15 @@ export class StorageBinEditComponent implements OnInit {
     this.getCompanyBranchList(this.route.snapshot.params['id']);
     this.getCompanyStorageList(this.route.snapshot.params['id']);
     this.getUOMList();
+    this.getHelp();
   }
 
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.storageBinEdit.heading;
+      this.help_description = res.data.storageBinEdit.desc;
+    })
+  }
   getCompanyStorageBinDetails = function (id) {
 
     this.companyService.getCompanyStorageBinDetails(id).subscribe(

@@ -4,6 +4,8 @@ import { PurchaseOrganizationService } from '../../../core/services/purchase-org
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-purchase-organization-edit',
@@ -13,13 +15,16 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class PurchaseOrganizationEditComponent implements OnInit {
   purchaseOrganization;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private purchaseOrganizationService: PurchaseOrganizationService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -34,6 +39,14 @@ export class PurchaseOrganizationEditComponent implements OnInit {
       description: ''
     };
     this.getPurchaseOrganizationDetails(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseOrganizationEdit.heading;
+      this.help_description = res.data.purchaseOrganizationEdit.desc;
+    })
   }
 
   getPurchaseOrganizationDetails = function (id) {

@@ -23,7 +23,8 @@
                                   <label>Company</label>
                                   <select class="form-control" name="company" formControlName="company" [ngClass]="displayFieldCss('company')" (change)="companyChange($event.target.value)" [(ngModel)]="designationDetails.company">
                                     <option value="">Select Company</option>
-                                    <option *ngFor="let companyObj of company_list" value="{{companyObj.id}}">{{companyObj.company_name}}</option>
+                                    <option *ngFor="let companyObj of company_list" value="{{companyObj.id}}">{{companyObj
+                                        .company_name}}</option>
                                   </select>
                                   <div class="invalid-feedback" *ngIf="isFieldValid('company')">
                                     Please select company

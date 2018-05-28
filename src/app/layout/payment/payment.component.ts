@@ -88,7 +88,7 @@ export class PaymentComponent implements OnInit {
 
   changeApproveStatus(value, id) {    
     if (value > 0) {
-
+            
       this.spinner.show();
       let payment;
       payment = {

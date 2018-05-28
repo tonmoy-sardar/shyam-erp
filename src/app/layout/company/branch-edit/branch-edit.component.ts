@@ -5,6 +5,8 @@ import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-branch-edit',
@@ -20,6 +22,8 @@ export class BranchEditComponent implements OnInit {
   companyBranch;
   stateList;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
@@ -27,7 +31,8 @@ export class BranchEditComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -62,7 +67,16 @@ export class BranchEditComponent implements OnInit {
 
     this.getCompanyBranchDetails(this.companyBranchId);
     this.getStateList();
+    this.getHelp();
   }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.branchEdit.heading;
+      this.help_description = res.data.branchEdit.desc;
+    })
+  }
+
 
   getCompanyBranchDetails = function (id) {
     this.companyService.getCompanyBranchDetails(id).subscribe(

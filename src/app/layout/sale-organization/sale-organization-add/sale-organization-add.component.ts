@@ -4,6 +4,8 @@ import { SaleOrganizationService } from '../../../core/services/sale-organizatio
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-sale-organization-add',
@@ -12,12 +14,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class SaleOrganizationAddComponent implements OnInit {
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private saleOrganizationService: SaleOrganizationService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -27,6 +32,14 @@ export class SaleOrganizationAddComponent implements OnInit {
       description: [null, Validators.required]
     });
     this.spinner.hide();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.saleOrganizationAdd.heading;
+      this.help_description = res.data.saleOrganizationAdd.desc;
+    })
   }
 
   goToList = function (toNav) {

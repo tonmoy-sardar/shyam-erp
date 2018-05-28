@@ -4,6 +4,8 @@ import { PurchaseGroupService } from '../../../core/services/purchase-group.serv
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-purchase-group-add',
@@ -12,12 +14,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class PurchaseGroupAddComponent implements OnInit {
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private purchaseGroupService: PurchaseGroupService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -27,8 +32,16 @@ export class PurchaseGroupAddComponent implements OnInit {
       description: [null, Validators.required]
     });
     this.spinner.hide();
+    this.getHelp();
   }
 
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseGroupAdd.heading;
+      this.help_description = res.data.purchaseGroupAdd.desc;
+    })
+  }
+  
   goToList = function (toNav) {
     this.router.navigateByUrl('/' + toNav);
   };

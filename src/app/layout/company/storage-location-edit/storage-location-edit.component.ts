@@ -6,6 +6,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-storage-location-edit',
   templateUrl: './storage-location-edit.component.html',
@@ -19,6 +22,9 @@ export class StorageLocationEditComponent implements OnInit {
   companyStorage;
   stateList;
   companyBranchList;
+  help_heading = "";
+  help_description = "";
+  
   form: FormGroup;
   constructor(
     private companyService: CompanyService,
@@ -27,7 +33,8 @@ export class StorageLocationEditComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -57,6 +64,14 @@ export class StorageLocationEditComponent implements OnInit {
     this.getCompanyStorageDetails(this.companyStorageId);
     this.getStateList();
     this.getCompanyBranchList(this.route.snapshot.params['id'])
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+    this.help_heading = res.data.storageLocationEdit.heading;
+    this.help_description = res.data.storageLocationEdit.desc;
+    })
   }
 
   getCompanyStorageDetails = function (id) {

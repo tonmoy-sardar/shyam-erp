@@ -2,10 +2,7 @@
   <div *ngIf="companyStorageCompShow.showList==true">
     <div style="padding-top: 20px;">
       <div class="col-md-6 offset-md-6 pull-right" style="text-align: right">
-        <button type="button" class="btn btn-secondary">
-          <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-        <button type="button" class="btn btn-secondary">
-          <i class="fa fa-refresh"></i> Reload</button>
+        <app-help [heading]="help_heading" [description]="help_description"></app-help>
         <button type="button" class="btn btn-primary" (click)="showStorageAdd()">
           <i class="fa fa-plus"></i> New Storage Location</button>
       </div>
@@ -47,7 +44,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let companyStorage of companyStorageList ; let i = index">
-                <th scope="row">{{i +1}}</th>
+                <th scope="row">{{itemNo + i +1}}</th>
                 <td>{{companyStorage.storage_address}}</td>
                 <td>{{companyStorage.storage_contact_no}}</td>
                 <td>{{companyStorage.storage_email}}</td>

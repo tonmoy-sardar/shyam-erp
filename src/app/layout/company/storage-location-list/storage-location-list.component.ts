@@ -5,6 +5,9 @@ import { StatesService } from '../../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-storage-location-list',
   templateUrl: './storage-location-list.component.html',
@@ -18,17 +21,25 @@ export class StorageLocationListComponent implements OnInit {
   defaultPagination: number;
   totalcompanyStorageList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
     this.companyStorageCompShow = {
       showList: true,
@@ -37,6 +48,14 @@ export class StorageLocationListComponent implements OnInit {
     };
 
     this.getCompanyStorageList(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.storageLocation.heading;
+      this.help_description = res.data.storageLocation.desc;
+    })
   }
 
   btnClickNav = function (toNav) {
@@ -78,6 +97,16 @@ export class StorageLocationListComponent implements OnInit {
       (data: any[]) => {
         this.totalcompanyStorageList = data['count'];
         this.companyStorageList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+
+        if(this.totalcompanyStorageList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalcompanyStorageList
+        }
+
         this.spinner.hide();
       }
     );
