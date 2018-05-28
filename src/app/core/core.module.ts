@@ -9,6 +9,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { AuthGuard } from './guard/auth.guard';
 import { OnlyNumberDirective } from './directive/only-number.directive';
 import { AlertComponent } from './component/alert/alert.component';
@@ -61,7 +62,8 @@ import { EmployeesService } from './services/employees.service'
     RouterModule,
     NgxSpinnerModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule
   ],
   declarations: [
     HeaderComponent,
@@ -88,6 +90,7 @@ import { EmployeesService } from './services/employees.service'
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
+    NgSelectModule,
     OnlyNumberDirective,
     AlertComponent,
     ButtonsComponent,

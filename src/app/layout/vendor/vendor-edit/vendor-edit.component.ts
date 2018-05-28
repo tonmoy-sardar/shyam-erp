@@ -41,8 +41,8 @@ export class VendorEditComponent implements OnInit {
       pan_no: ['', Validators.required],
       cin_no: ['', Validators.required],
       gst_no: ['', Validators.required],
-      amount_credit: ['', Validators.required],
-      amount_debit: ['', Validators.required],
+      // amount_credit: ['', Validators.required],
+      // amount_debit: ['', Validators.required],
       vendor_address: this.formBuilder.array([]),
       vendor_account: this.formBuilder.array([])
     });
@@ -52,8 +52,8 @@ export class VendorEditComponent implements OnInit {
       vendor_type: '',
       pan_no: '',
       cin_no: '',
-      amount_credit: '',
-      amount_debit: '',
+      // amount_credit: '',
+      // amount_debit: '',
       vendor_address: [
         {
           email: '',
