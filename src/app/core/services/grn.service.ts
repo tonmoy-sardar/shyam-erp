@@ -46,19 +46,19 @@ export class GrnService {
   }
 
   activeInactiveGrn(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'grn/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'grn_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   approveDisapproveGrn(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'grn/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'grn_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   FinalizeGrn(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'grn/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'grn_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
