@@ -1,4 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import { PurchaseOrdersService } from '../../../core/services/purchase-orders.service';
+import { CompanyService } from '../../../core/services/company.service';
+import { VendorService } from '../../../core/services/vendor.service';
+import { ReportsService } from '../../../core/services/reports.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-reports-purchase-order',
@@ -7,9 +17,165 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportsPurchaseOrderComponent implements OnInit {
 
-  constructor() { }
+  form: FormGroup;
+  help_heading = "";
+  help_description = "";
+  order_list: any[] = [];
+  company_list: any[] = [];
+  vendor_list: any[] = [];
+  defaultPagination: number;
+  SearchOrderList: any[] = [];
+  totalSearchOrderList: number;
+  Search_order_list_key: boolean;
+  itemNo: number;
+  lower_count: number;
+  upper_count: number;
+  orderDetails: any;
+  order_details_key: boolean;
+  company: number;
+  vendor: number;
+  status = '';
+  approve = '';
+  order_date: any;
+  from_date: any;
+  to_date: any;
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService,
+    private purchaseOrdersService: PurchaseOrdersService,
+    private companyService: CompanyService,
+    private vendorService: VendorService,
+    private reportsService: ReportsService
+  ) { }
 
   ngOnInit() {
+    this.spinner.show();
+    this.itemNo = 0;
+    this.defaultPagination = 1;
+    this.getOrderList();
+    this.getCompanyList();
+    this.getVendorList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.employeeAdd.heading;
+      this.help_description = res.data.employeeAdd.desc;
+    })
+  }
+
+  getOrderList() {
+    this.purchaseOrdersService.getPurchaseOrderListWithoutPagination().subscribe(
+      res => {
+        this.order_list = res;
+        this.spinner.hide();
+      },
+      error => {
+        this.spinner.hide();
+      }
+    )
+  }
+
+  orderChange(id) {
+    if (id) {
+      this.spinner.show();
+      this.purchaseOrdersService.getPurchaseOrderDetails(id).subscribe(res => {
+        this.orderDetails = res;
+        // console.log(this.orderDetails)
+        this.order_details_key = true;
+        this.Search_order_list_key = false;
+        this.spinner.hide();
+      })
+    }
+    else {
+      this.order_details_key = false;
+      this.getSearchOrderList();
+    }
+  }
+
+  getCompanyList() {
+    this.companyService.getCompanyDropdownList().subscribe(res => {
+      this.company_list = res;
+    })
+  }
+
+  getVendorList() {
+    this.vendorService.getVendorListWithoutPagination().subscribe(res => {
+      this.vendor_list = res;
+    })
+  }
+
+  search() {
+    this.getSearchOrderList();
+  }
+
+  pagination() {
+    this.getSearchOrderList();
+  }
+
+  dConvert(n) {
+    return n < 10 ? "0"+n : n;
+  }
+
+  getSearchOrderList() {
+    this.Search_order_list_key = true;
+    this.spinner.show();
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('page', this.defaultPagination.toString());
+    if (this.company > 0) {
+      params.set('company', this.company.toString());
+    }
+    if (this.status != "") {
+      params.set('status', this.status.toString());
+    }
+    if (this.approve != "") {
+      params.set('approve', this.approve.toString());
+    }
+    if (this.vendor > 0) {
+      params.set('vendor', this.vendor.toString());
+    }    
+
+    if (this.from_date != undefined && this.to_date != undefined) {
+      var FrDate = new Date(this.from_date.year, this.from_date.month - 1, this.from_date.day)
+      params.set('from_date', FrDate.getFullYear()+"-"+this.dConvert(FrDate.getMonth()+1)+"-"+this.dConvert(FrDate.getDate()));
+      var ToDate = new Date(this.to_date.year, this.to_date.month - 1, this.to_date.day)
+      params.set('to_date', ToDate.getFullYear()+"-"+this.dConvert(ToDate.getMonth()+1)+"-"+this.dConvert(ToDate.getDate()));
+      this.order_date = ""
+    }
+
+    else if (this.order_date != undefined) {
+      var PoDate = new Date(this.order_date.year, this.order_date.month - 1, this.order_date.day)
+      params.set('created_at', PoDate.getFullYear()+"-"+this.dConvert(PoDate.getMonth()+1)+"-"+this.dConvert(PoDate.getDate()));
+    }
+
+    this.reportsService.getPurchaseOrderReportList(params).subscribe(
+      (data: any[]) => {
+        this.totalSearchOrderList = data['count'];
+        this.SearchOrderList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+        if (this.totalSearchOrderList > Globals.pageSize * this.defaultPagination) {
+          this.upper_count = Globals.pageSize * this.defaultPagination
+        }
+        else {
+          this.upper_count = this.totalSearchOrderList
+        }
+        this.spinner.hide();
+        // console.log(data)
+      },
+      error => {
+        this.spinner.hide();
+      }
+    );
+  };
+
+  getRequisitionDate(date){
+    var PrDate = date.split('/')
+    return PrDate[0]
   }
 
 }

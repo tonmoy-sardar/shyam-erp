@@ -6,6 +6,8 @@ import { TransportService } from '../../../core/services/transport.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-transport-edit',
@@ -18,6 +20,8 @@ export class TransportEditComponent implements OnInit {
   companyList = [];
   storageList = [];
   stateList = [];
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -25,7 +29,8 @@ export class TransportEditComponent implements OnInit {
     private transportService: TransportService,
     private companyService: CompanyService,
     private statesService: StatesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -68,7 +73,16 @@ export class TransportEditComponent implements OnInit {
       amount_credit: '',
       amount_debit: ''
     };
+    this.getHelp();
   }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.transportEdit.heading;
+      this.help_description = res.data.transportEdit.desc;
+    })
+  }
+
   goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };

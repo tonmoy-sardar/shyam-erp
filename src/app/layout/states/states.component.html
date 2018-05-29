@@ -51,16 +51,16 @@
               <td>{{state.tin_number}}</td>
               <td>{{state.state_code}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(state.id)" *ngIf="state.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(state.id)" *ngIf="state.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(state.id)" *ngIf="state.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(state.id)" *ngIf="state.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/states/edit', state.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/states/edit', state.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteState(state.id)">
+                <a href="javascript:void(0);" class="anchor-action" title="Delete" name="Delete" (click)="deleteState(state.id)">
                   <i class="fa fa-trash-o"></i>
                 </a>
               </td>
@@ -81,7 +81,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card-body pull-right" *ngIf="totalstateList > 10">
-        <ngb-pagination [collectionSize]="totalstateList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+        <ngb-pagination [collectionSize]="totalstateList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
           size="sm"></ngb-pagination>
       </div>
     </div>

@@ -7,6 +7,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-transport-add',
   templateUrl: './transport-add.component.html',
@@ -17,13 +20,16 @@ export class TransportAddComponent implements OnInit {
   companyList = [];
   storageList = [];
   stateList = [];
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private transportService: TransportService,
     private companyService: CompanyService,
     private statesService: StatesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
 
@@ -52,9 +58,17 @@ export class TransportAddComponent implements OnInit {
     });
     this.getCompanyList();
     this.getStateList();
+    this.getHelp();
   }
 
-  btnClickNav= function (toNav) {
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.transportAdd.heading;
+      this.help_description = res.data.transportAdd.desc;
+    })
+  }
+
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/'+toNav);
   };
 

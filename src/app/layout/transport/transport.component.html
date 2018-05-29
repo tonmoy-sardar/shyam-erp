@@ -4,8 +4,7 @@
           <h4 class="page-header">Transport List</h4>
         </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-        <button type="button" class="btn btn-secondary"><i class="fa fa-question" aria-hidden="true"></i> Help</button>
-        <button type="button" class="btn btn-secondary"><i class="fa fa-refresh"></i> Reload</button>
+        <app-help [heading]="help_heading" [description]="help_description"></app-help>
         <button type="button" class="btn btn-primary" (click)="btnClickNav('transport/add')"><i class="fa fa-plus"></i> New Transport</button>
     </div>
     <div class="clearfix"></div>
@@ -49,16 +48,16 @@
             <th scope="row">{{i +1}}</th>
             <td>{{transport.transporter_name}}</td>
             <td>{{transport.created_at | date:'dd-MM-yyyy'}}</td>
-            <td><a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(transport.id)" *ngIf="transport.status==true">
+            <td><a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(transport.id)" *ngIf="transport.status==true">
                 <i class="fa fa-thumbs-up"></i> Active</a>
-              <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(transport.id)" *ngIf="transport.status==false">
+              <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(transport.id)" *ngIf="transport.status==false">
                 <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
             <td>
-              <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/transport/edit', transport.id]">
+              <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/transport/edit', transport.id]">
                 <i class="fa fa-edit"></i>
               </a>&nbsp;&nbsp;&nbsp;
-              <a href="javascript:void(0);" title="Map" name="Map" (click)="deletetransport(transport.id)">
+              <a href="javascript:void(0);" class="anchor-action" title="Delete" name="Delete" (click)="deletetransport(transport.id)">
                 <i class="fa fa-trash-o"></i>
               </a>
             </td>
@@ -68,13 +67,19 @@
             </tr>
           </tbody>
       </table>
+      <div class="col-md-12">
+        <div class="pagination-msg" *ngIf="totalTransportList > 0">
+          <p>Showing {{lower_count}} to {{upper_count}} of {{totalTransportList}} entries</p>
+        </div>
+      </div>
     </div>
   </div>
   </div>
-  <div class="row" *ngIf="totaltransportList > 10">
+  <div class="row" *ngIf="totalTransportList > 10">
       <div class="col-md-12">
         <div class="card-body pull-right">
-          <ngb-pagination [collectionSize]="totaltransportList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+          <ngb-pagination [collectionSize]="totalTransportList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+          
         </div>
       </div>
     </div>

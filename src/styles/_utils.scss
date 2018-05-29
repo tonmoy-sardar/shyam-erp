@@ -117,7 +117,7 @@
 }
 
 .help .modal-content .modal-header {
-    background: #1976d2;
+    background: #284c6f;
     color: #fff;
     padding: 5px 10px;
 }
@@ -146,4 +146,16 @@
 .btn-primary:hover {
     background-color: #1a3650 !important;
     border-color: #1a3650 !important;
+}
+
+.anchor-action
+{
+    color: #007bff !important;
+    text-decoration: none;
+}
+
+.anchor-action:hover
+{
+    color: #0c6b10 !important;
+    text-decoration: none;
 }
