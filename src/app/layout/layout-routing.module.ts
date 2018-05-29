@@ -31,6 +31,8 @@ const routes: Routes = [
       { path: 'designations', loadChildren: './designations/designations.module#DesignationsModule' },
       { path: 'employees', loadChildren: './employees/employees.module#EmployeesModule' },
       { path: 'reports', loadChildren: './reports/reports.module#ReportsModule' },
+      { path: 'vendor-type', loadChildren: './vendor-type/vendor-type.module#VendorTypeModule' },
+      { path: 'expenses', loadChildren: './expenses/expenses.module#ExpensesModule' }
 
     ]
   }

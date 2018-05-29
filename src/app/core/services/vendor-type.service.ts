@@ -9,43 +9,43 @@ export class VendorTypeService {
 
   constructor(private http: HttpClient) { }
 
-  addNewVendortype(data): Observable<any>{
+  addNewVendorType(data): Observable<any>{
     return this.http.post(environment.apiEndpoint+'all_vendor_type/', data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
-  getVendortypeList(params): Observable<any>{
+  getVendorTypeList(params): Observable<any>{
     return this.http.get(environment.apiEndpoint+'all_vendor_type/?'+params, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
-  getVendortypeActiveList(): Observable<any>{
+  getVendorTypeActiveList(): Observable<any>{
     return this.http.get(environment.apiEndpoint+'active_vendor_type/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
-  getVendortypeDetails(id): Observable<any>{
+  getVendorTypeDetails(id): Observable<any>{
     return this.http.get(environment.apiEndpoint+'all_vendor_type/'+id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
-  updateVendortype(data): Observable<any>{
+  updateVendorType(data): Observable<any>{
     return this.http.put(environment.apiEndpoint+'all_vendor_type/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
-  activeInactiveVendortype(data): Observable<any>{
+  activeInactiveVendorType(data): Observable<any>{
     return this.http.patch(environment.apiEndpoint+'all_vendor_type/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
-  deleteVendortype(data): Observable<any>{
+  deleteVendorType(data): Observable<any>{
     return this.http.delete(environment.apiEndpoint+'all_vendor_type/'+data.id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
