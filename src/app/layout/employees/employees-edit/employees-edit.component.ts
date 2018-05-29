@@ -106,7 +106,15 @@ export class EmployeesEditComponent implements OnInit {
     this.employeesService.getEmployeeDetails(id).subscribe(res => {
       this.employee_details = res;
       this.spinner.hide();
-      console.log(res)
+      // console.log(res)
+      var date = new Date(this.employee_details.dob)
+      this.employee_details.dob = {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate()
+      }
+      this.getDepartmentList(this.employee_details.departments);
+      this.getDesignationList(this.employee_details.designation);
     })
   }
 
@@ -119,8 +127,8 @@ export class EmployeesEditComponent implements OnInit {
 
   getHelp() {
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.stateAdd.heading;
-      this.help_description = res.data.stateAdd.desc;
+      this.help_heading = res.data.employeeEdit.heading;
+      this.help_description = res.data.employeeEdit.desc;
     })
   }
 

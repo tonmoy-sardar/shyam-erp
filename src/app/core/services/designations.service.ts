@@ -22,7 +22,7 @@ export class DesignationsService {
   }
 
   getDesignationDetails(id): Observable<any>{
-    return this.http.get(environment.apiEndpoint+'all_designation/'+id+'/', {
+    return this.http.get(environment.apiEndpoint+'designation/'+id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
