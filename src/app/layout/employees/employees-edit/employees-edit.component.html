@@ -112,7 +112,7 @@
                       <div class="form-group col-md-4">
                         <label>Address</label>
                         <textarea class="form-control" rows="1" placeholder="Address" name="emp_present_address" formControlName="emp_present_address"
-                          [ngClass]="displayFieldCss('emp_present_address')">{{employee_details.emp_present_address}}</textarea>
+                          [ngClass]="displayFieldCss('emp_present_address')" [(ngModel)]="employee_details.emp_present_address"></textarea>
                         <div class="invalid-feedback" *ngIf="form.controls['emp_present_address'].hasError('required')">
                           Please enter address
                         </div>
@@ -151,7 +151,7 @@
                       <div class="form-group col-md-4">
                         <label>Address</label>
                         <textarea class="form-control" rows="1" placeholder="Address" name="emp_permanent_address" formControlName="emp_permanent_address"
-                          [ngClass]="displayFieldCss('emp_permanent_address')">{{employee_details.emp_permanent_address}}</textarea>
+                          [ngClass]="displayFieldCss('emp_permanent_address')" [(ngModel)]="employee_details.emp_permanent_address"></textarea>
                         <div class="invalid-feedback" *ngIf="form.controls['emp_permanent_address'].hasError('required')">
                           Please enter address
                         </div>

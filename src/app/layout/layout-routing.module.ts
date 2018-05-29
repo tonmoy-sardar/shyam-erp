@@ -30,7 +30,7 @@ const routes: Routes = [
       { path: 'departments', loadChildren: './departments/departments.module#DepartmentsModule' },
       { path: 'designations', loadChildren: './designations/designations.module#DesignationsModule' },
       { path: 'employees', loadChildren: './employees/employees.module#EmployeesModule' },
-      // { path: 'grn-reverse', loadChildren: './grn-reverse/grn-reverse.module#GrnReverseModule' },
+      { path: 'reports', loadChildren: './reports/reports.module#ReportsModule' },
 
     ]
   }

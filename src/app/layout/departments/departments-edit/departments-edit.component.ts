@@ -49,15 +49,15 @@ export class DepartmentsEditComponent implements OnInit {
     this.departmentsService.getDepartmentDetails(id).subscribe(res => {
       this.department_deatils = res;
       this.visible_key = true;
-      console.log(this.department_deatils)
+      // console.log(this.department_deatils)
       this.spinner.hide();
     })
   }
 
   getHelp(){
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.stateAdd.heading;
-      this.help_description = res.data.stateAdd.desc;
+      this.help_heading = res.data.departmentEdit.heading;
+      this.help_description = res.data.departmentEdit.desc;
     })
   }
 
