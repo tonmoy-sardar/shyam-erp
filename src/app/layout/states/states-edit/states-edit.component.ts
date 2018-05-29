@@ -51,7 +51,7 @@ export class StatesEditComponent implements OnInit {
     })
   }
 
-  getStateDetails = function (id) {
+  getStateDetails(id) {
     this.statesService.getStateDetails(id).subscribe(
       (data: any[]) => {
         this.states = data;
@@ -60,12 +60,12 @@ export class StatesEditComponent implements OnInit {
     );
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
 
-  updateState = function () {
+  updateState() {
     if (this.form.valid) {
       this.spinner.show();      
       this.statesService.updateState(this.states).subscribe(
@@ -91,7 +91,7 @@ export class StatesEditComponent implements OnInit {
     }    
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

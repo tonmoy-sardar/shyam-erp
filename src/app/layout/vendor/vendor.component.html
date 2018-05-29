@@ -77,8 +77,8 @@
           </tbody>
         </table>
         <div class="col-md-12">
-          <div class="pagination-msg" *ngIf="totalvendorList > 0">
-            <p>Showing {{lower_count}} to {{upper_count}} of {{totalvendorList}} entries</p>
+          <div class="pagination-msg" *ngIf="totalVendorList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalVendorList}} entries</p>
           </div>
         </div>
       </div>
@@ -86,8 +86,8 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right" *ngIf="totalvendorList > 10">
-        <ngb-pagination [collectionSize]="totalvendorList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+      <div class="card-body pull-right" *ngIf="totalVendorList > itemPerPage">
+        <ngb-pagination [collectionSize]="totalVendorList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>
   </div>

@@ -14,13 +14,15 @@ import * as Globals from '../../core/globals';
 export class DepartmentsComponent implements OnInit {
   departmentList = [];  
   defaultPagination: number;
-  totaldepartmentList: number;
+  totalDepartmentList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private departmentsService: DepartmentsService,
     private router: Router,
@@ -33,6 +35,8 @@ export class DepartmentsComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getdepartmentList();
     this.getHelp();
   }
@@ -60,16 +64,16 @@ export class DepartmentsComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.departmentsService.getDepartmentList(params).subscribe(
       (data: any[]) => {
-        this.totaldepartmentList = data['count'];
+        this.totalDepartmentList = data['count'];
         this.departmentList = data['results'];
         // console.log(this.departmentList)
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totaldepartmentList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalDepartmentList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totaldepartmentList
+          this.upper_count = this.totalDepartmentList
         }
         this.spinner.hide();
         // console.log(data)

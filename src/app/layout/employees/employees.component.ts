@@ -15,13 +15,15 @@ export class EmployeesComponent implements OnInit {
 
   employeeList = [];  
   defaultPagination: number;
-  totalemployeeList: number;
+  totalEmployeeList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private employeesService: EmployeesService,
     private router: Router,
@@ -34,6 +36,8 @@ export class EmployeesComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getEmployeeList();
     this.getHelp();
   }
@@ -61,16 +65,16 @@ export class EmployeesComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.employeesService.getEmployeeList(params).subscribe(
       (data: any[]) => {
-        this.totalemployeeList = data['count'];
+        this.totalEmployeeList = data['count'];
         this.employeeList = data['results'];
         // console.log(this.employeeList)
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalemployeeList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalEmployeeList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalemployeeList
+          this.upper_count = this.totalEmployeeList
         }
         this.spinner.hide();
         // console.log(data)

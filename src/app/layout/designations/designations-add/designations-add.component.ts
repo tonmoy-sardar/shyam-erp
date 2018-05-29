@@ -19,7 +19,7 @@ export class DesignationsAddComponent implements OnInit {
   department_list: any[] = [];
   form: FormGroup;
   help_heading = "";
-  help_description = ""; 
+  help_description = "";
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
@@ -35,34 +35,34 @@ export class DesignationsAddComponent implements OnInit {
     this.spinner.show();
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
-      departments: ['',Validators.required],
+      departments: ['', Validators.required],
       designation_name: ['', Validators.required]
-    });    
+    });
     this.getHelp();
     this.getCompanyList();
   }
 
-  getHelp(){
+  getHelp() {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.designationAdd.heading;
       this.help_description = res.data.designationAdd.desc;
     })
   }
 
-  getCompanyList(){
+  getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(res => {
       this.company_list = res;
       this.spinner.hide();
     })
   }
 
-  companyChange(val){
-    if(val != ""){
+  companyChange(val) {
+    if (val != "") {
       this.getDepartmentList(val);
     }
   }
 
-  getDepartmentList(id){
+  getDepartmentList(id) {
     this.departmentsService.getDepartmentListByCompany(id).subscribe(res => {
       this.department_list = res;
     })
@@ -81,7 +81,7 @@ export class DesignationsAddComponent implements OnInit {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('designations');          
+          this.goToList('designations');
         },
         error => {
           console.log('error', error)
@@ -97,13 +97,13 @@ export class DesignationsAddComponent implements OnInit {
       });
     }
   }
-  
+
   reSet() {
     this.form.reset();
   }
 
 
-  btnClickNav (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

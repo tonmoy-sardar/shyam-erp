@@ -70,7 +70,7 @@ export class TermsConditionEditComponent implements OnInit {
 
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
   goToList(toNav) {

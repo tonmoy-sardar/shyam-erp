@@ -21,6 +21,8 @@ export class PurchaseOrganizationComponent implements OnInit {
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
 
   constructor(
     private purchaseOrganizationService: PurchaseOrganizationService,
@@ -34,6 +36,8 @@ export class PurchaseOrganizationComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getPurchaseOrganizationList();
     this.getHelp();
   }
@@ -45,15 +49,17 @@ export class PurchaseOrganizationComponent implements OnInit {
     })
   }
 
-  btnClickNav= function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/'+toNav);
   };
+
   dataSearch() {
     this.spinner.show();
     this.defaultPagination = 1;
     this.getPurchaseOrganizationList();
   }
-  getPurchaseOrganizationList= function(){
+
+  getPurchaseOrganizationList(){
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
@@ -61,20 +67,21 @@ export class PurchaseOrganizationComponent implements OnInit {
       (data: any[]) =>{
         this.purchaseOrganizationList = data['results'];
         this.totalPurchaseOrganizationList = data['count'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.purchaseOrganizationList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+
+        if(this.totalPurchaseOrganizationList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.purchaseOrganizationList
+          this.upper_count = this.totalPurchaseOrganizationList
         }
         this.spinner.hide();
       }
      );
   };
 
-  activePurchaseOrganization = function(id){
+  activePurchaseOrganization(id){
     this.spinner.show();
     let purchaseOrganization;
 
@@ -98,7 +105,7 @@ export class PurchaseOrganizationComponent implements OnInit {
     );
   };
 
-  inactivePurchaseOrganization = function(id){
+  inactivePurchaseOrganization(id){
     this.spinner.show();
     let purchaseOrganization;
 
@@ -123,7 +130,7 @@ export class PurchaseOrganizationComponent implements OnInit {
     );
   };
 
-  pagination = function () {
+  pagination() {
     this.spinner.show();
     this.getPurchaseOrganizationList();
   };

@@ -49,7 +49,7 @@ export class PurchaseOrganizationEditComponent implements OnInit {
     })
   }
 
-  getPurchaseOrganizationDetails = function (id) {
+  getPurchaseOrganizationDetails(id) {
 
     this.purchaseOrganizationService.getPurchaseOrganizationDetails(id).subscribe(
       (data: any[]) => {
@@ -59,14 +59,14 @@ export class PurchaseOrganizationEditComponent implements OnInit {
     );
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
   reSet() {
     this.form.reset();
   }
-  updatePurchaseOrganization = function () {
+  updatePurchaseOrganization() {
     if (this.form.valid) {
       this.spinner.show();
       this.purchaseOrganizationService.updatePurchaseOrganization(this.purchaseOrganization).subscribe(
@@ -93,7 +93,7 @@ export class PurchaseOrganizationEditComponent implements OnInit {
     
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

@@ -85,7 +85,7 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right" *ngIf="totalGstRatesList > 10">
+      <div class="card-body pull-right" *ngIf="totalGstRatesList > itemPerPage">
         <ngb-pagination [collectionSize]="totalGstRatesList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>

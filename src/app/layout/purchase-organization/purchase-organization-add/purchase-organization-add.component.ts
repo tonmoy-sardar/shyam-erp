@@ -42,11 +42,11 @@ export class PurchaseOrganizationAddComponent implements OnInit {
       this.help_description = res.data.purchaseOrganizationAdd.desc;
     })
   }
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addNewPurchaseOrganization = function () {
+  addNewPurchaseOrganization() {
     if (this.form.valid) {
       this.spinner.show();
       this.purchaseOrganizationService.addNewPurchaseOrganization(this.form.value).subscribe(
@@ -75,7 +75,7 @@ export class PurchaseOrganizationAddComponent implements OnInit {
   reSet() {
     this.form.reset();
   }
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
   isFieldValid(field: string) {

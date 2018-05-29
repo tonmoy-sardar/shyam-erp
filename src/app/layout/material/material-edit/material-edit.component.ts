@@ -10,6 +10,9 @@ import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-material-edit',
   templateUrl: './material-edit.component.html',
@@ -24,6 +27,8 @@ export class MaterialEditComponent implements OnInit {
   form: FormGroup;
   is_taxable_value = false;
   visible_key: boolean;
+  help_heading = "";
+  help_description = "";
 
   constructor(
     private materialService: MaterialService,
@@ -34,7 +39,8 @@ export class MaterialEditComponent implements OnInit {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -57,6 +63,14 @@ export class MaterialEditComponent implements OnInit {
     this.getMaterialTypeList();
     this.getPurchaseGroupActiveList();
     this.getPurchaseOrganizationActiveList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.materialEdit.heading;
+      this.help_description = res.data.materialEdit.desc;
+    })
   }
 
   getMaterialDetails(id) {

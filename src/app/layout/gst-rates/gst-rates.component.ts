@@ -22,6 +22,7 @@ export class GstRatesComponent implements OnInit {
   lower_count: number;
   upper_count: number;
   paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private router: Router,
     private gstRatesService: GstRatesService,
@@ -35,6 +36,7 @@ export class GstRatesComponent implements OnInit {
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getGstList();
     this.getHelp();
   }
@@ -52,7 +54,7 @@ export class GstRatesComponent implements OnInit {
     this.getGstList();
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
@@ -64,10 +66,10 @@ export class GstRatesComponent implements OnInit {
       (data: any[]) => {
         this.totalGstRatesList = data['count'];
         this.gstRatesList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalGstRatesList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalGstRatesList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
           this.upper_count = this.totalGstRatesList
@@ -77,7 +79,7 @@ export class GstRatesComponent implements OnInit {
     );
   };
 
-  activeGst (id) {
+  activeGst(id) {
     this.spinner.show();
     let gstRate;
 
@@ -101,7 +103,7 @@ export class GstRatesComponent implements OnInit {
     );
   };
 
-  inactiveGst (id) {
+  inactiveGst(id) {
     this.spinner.show();
     let gstRate;
 
@@ -126,7 +128,7 @@ export class GstRatesComponent implements OnInit {
     );
   };
 
-  deleteGST (id) {
+  deleteGST(id) {
     this.spinner.show();
     let gstRate;
 
@@ -150,7 +152,7 @@ export class GstRatesComponent implements OnInit {
     );
   };
 
-  pagination () {
+  pagination() {
     this.spinner.show();
     this.getGstList();
   };

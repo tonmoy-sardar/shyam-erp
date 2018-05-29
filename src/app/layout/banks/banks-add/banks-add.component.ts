@@ -16,8 +16,8 @@ import * as Globals from '../../../core/globals';
 })
 export class BanksAddComponent implements OnInit {
   banks;
-  companyList=[];
-  bankList=[];
+  companyList = [];
+  bankList = [];
   form: FormGroup;
   help_heading = "";
   help_description = "";
@@ -42,14 +42,14 @@ export class BanksAddComponent implements OnInit {
       bank_ifsc: [null, Validators.required]
     });
     this.banks = {
-      company:'',
+      company: '',
       bank_branch: '',
       bank_name: '',
-      bank_ifsc:''
+      bank_ifsc: ''
     };
 
     this.getCompanyDropdownList();
-   this.getHelp();
+    this.getHelp();
   }
 
   getHelp() {
@@ -68,7 +68,7 @@ export class BanksAddComponent implements OnInit {
     );
   };
   btnClickNav(toNav) {
-    this.router.navigateByUrl('/'+toNav);
+    this.router.navigateByUrl('/' + toNav);
   };
 
   goToList(toNav) {
@@ -90,7 +90,7 @@ export class BanksAddComponent implements OnInit {
     };
   }
 
-  addNewBank(){
+  addNewBank() {
     if (this.form.valid) {
       this.spinner.show();
       this.banksService.addNewBank(this.form.value).subscribe(
@@ -99,7 +99,7 @@ export class BanksAddComponent implements OnInit {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('banks');          
+          this.goToList('banks');
         },
         error => {
           console.log('error', error)

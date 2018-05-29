@@ -42,11 +42,11 @@ export class StatesAddComponent implements OnInit {
     })
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addState = function () {
+  addState() {
     if (this.form.valid) {
       this.spinner.show();
       this.statesService.addNewState(this.form.value).subscribe(
@@ -77,7 +77,7 @@ export class StatesAddComponent implements OnInit {
   }
 
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

@@ -14,13 +14,15 @@ import * as Globals from '../../core/globals';
 export class PurchaseGroupComponent implements OnInit {
   purchaseGroupList = [];
   defaultPagination: number;
-  totalpurchaseGroupList: number;
+  totalPurchaseGroupList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private purchaseGroupService: PurchaseGroupService,
     private router: Router,
@@ -33,6 +35,8 @@ export class PurchaseGroupComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getPurchaseGroupList();
     this.getHelp();
   }
@@ -58,16 +62,16 @@ export class PurchaseGroupComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.purchaseGroupService.getPurchaseGroupList(params).subscribe(
       (data: any[]) => {
-        this.totalpurchaseGroupList = data['count'];
+        this.totalPurchaseGroupList = data['count'];
         this.purchaseGroupList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalpurchaseGroupList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalPurchaseGroupList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalpurchaseGroupList
+          this.upper_count = this.totalPurchaseGroupList
         }
         this.spinner.hide();
       }

@@ -8,6 +8,8 @@ import { PurchaseGroupService } from '../../../core/services/purchase-group.serv
 import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-material-add',
@@ -22,6 +24,8 @@ export class MaterialAddComponent implements OnInit {
   purchaseOrganizationList = [];
   form: FormGroup;
   is_taxable_value = false;
+  help_heading = "";
+  help_description = "";
 
   constructor(
     private materialService: MaterialService,
@@ -31,7 +35,8 @@ export class MaterialAddComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -53,7 +58,16 @@ export class MaterialAddComponent implements OnInit {
     this.getMaterialTypeList();
     this.getPurchaseGroupActiveList();
     this.getPurchaseOrganizationActiveList();
+    this.getHelp();
   }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.materialAdd.heading;
+      this.help_description = res.data.materialAdd.desc;
+    })
+  }
+
 
 
   getMaterialUom(form) {

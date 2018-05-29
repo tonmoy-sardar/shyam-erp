@@ -41,11 +41,11 @@ export class SaleGroupAddComponent implements OnInit {
     })
   }
   
-  goToList= function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/'+toNav);
   };
 
-  addNewSaleGroup = function(){
+  addNewSaleGroup(){
     if (this.form.valid) {
       this.spinner.show();
       this.saleGroupService.addNewSaleGroup(this.form.value).subscribe(
@@ -75,7 +75,7 @@ export class SaleGroupAddComponent implements OnInit {
     this.form.reset();
   }
 
-  btnClickNav= function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/'+toNav);
   };
 

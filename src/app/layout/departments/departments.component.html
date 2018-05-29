@@ -49,16 +49,16 @@
               <td>{{dept.department_name}}</td>
               <td>{{dept.company.company_name}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(dept.id)" *ngIf="dept.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(dept.id)" *ngIf="dept.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(dept.id)" *ngIf="dept.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(dept.id)" *ngIf="dept.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/departments/edit', dept.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/departments/edit', dept.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteDepartment(dept.id)">
+                <a href="javascript:void(0);" class="anchor-action" title="Map" name="Map" (click)="deleteDepartment(dept.id)">
                   <i class="fa fa-trash-o"></i>
                 </a>
               </td>
@@ -69,8 +69,8 @@
           </tbody>
         </table>
         <div class="col-md-12">
-          <div class="pagination-msg" *ngIf="totaldepartmentList > 0">
-            <p>Showing {{lower_count}} to {{upper_count}} of {{totaldepartmentList}} entries</p>
+          <div class="pagination-msg" *ngIf="totalDepartmentList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalDepartmentList}} entries</p>
           </div>
         </div>
       </div>
@@ -78,8 +78,8 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right" *ngIf="totaldepartmentList > 10">
-        <ngb-pagination [collectionSize]="totaldepartmentList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+      <div class="card-body pull-right" *ngIf="totalDepartmentList > itemPerPage">
+        <ngb-pagination [collectionSize]="totalDepartmentList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
           size="sm"></ngb-pagination>
       </div>
     </div>

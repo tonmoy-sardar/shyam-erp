@@ -14,14 +14,15 @@ import * as Globals from '../../core/globals';
 export class SaleOrganizationComponent implements OnInit {
   saleOrganizationList = [];
   defaultPagination: number;
-  totalsaleOrganizationList: number;
+  totalSaleOrganizationList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
-
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private saleOrganizationService: SaleOrganizationService,
     private router: Router,
@@ -33,6 +34,8 @@ export class SaleOrganizationComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getSaleOrganizationList();
     this.getHelp();
   }
@@ -59,16 +62,16 @@ export class SaleOrganizationComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.saleOrganizationService.getSaleOrganizationList(params).subscribe(
       (data: any[]) => {
-        this.totalsaleOrganizationList = data['count'];
+        this.totalSaleOrganizationList = data['count'];
         this.saleOrganizationList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalsaleOrganizationList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalSaleOrganizationList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalsaleOrganizationList
+          this.upper_count = this.totalSaleOrganizationList
         }
         this.spinner.hide();
       }

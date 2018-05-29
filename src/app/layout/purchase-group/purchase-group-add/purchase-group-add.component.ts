@@ -42,11 +42,11 @@ export class PurchaseGroupAddComponent implements OnInit {
     })
   }
   
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addNewPurchaseGroup = function () {
+  addNewPurchaseGroup() {
     if (this.form.valid) {
       this.spinner.show();
       this.purchaseGroupService.addNewPurchaseGroup(this.form.value).subscribe(
@@ -74,7 +74,7 @@ export class PurchaseGroupAddComponent implements OnInit {
   reSet() {
     this.form.reset();
   }
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
   isFieldValid(field: string) {

@@ -15,13 +15,15 @@ export class DesignationsComponent implements OnInit {
 
   designationList = [];  
   defaultPagination: number;
-  totaldesignationList: number;
+  totalDesignationList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private designationsService: DesignationsService,
     private router: Router,
@@ -34,6 +36,8 @@ export class DesignationsComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getDesignationList();
     this.getHelp();
   }
@@ -61,16 +65,16 @@ export class DesignationsComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.designationsService.getDesignationList(params).subscribe(
       (data: any[]) => {
-        this.totaldesignationList = data['count'];
+        this.totalDesignationList = data['count'];
         this.designationList = data['results'];
         // console.log(this.designationList)
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totaldesignationList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalDesignationList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totaldesignationList
+          this.upper_count = this.totalDesignationList
         }
         this.spinner.hide();
         // console.log(data)

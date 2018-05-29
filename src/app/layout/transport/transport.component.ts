@@ -23,6 +23,7 @@ export class TransportComponent implements OnInit {
   lower_count: number;
   upper_count: number;
   paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -35,6 +36,7 @@ export class TransportComponent implements OnInit {
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getTransportList();
     this.getHelp();
   }
@@ -65,10 +67,10 @@ export class TransportComponent implements OnInit {
        
         this.totalTransportList = data['count'];
         this.transportList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalTransportList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalTransportList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
           this.upper_count = this.totalTransportList

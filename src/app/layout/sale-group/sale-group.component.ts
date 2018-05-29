@@ -14,13 +14,15 @@ import * as Globals from '../../core/globals';
 export class SaleGroupComponent implements OnInit {
   saleGroupList = [];
   defaultPagination: number;
-  totalsaleGroupList: number;
+  totalSaleGroupList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private saleGroupService: SaleGroupService,
     private router: Router,
@@ -32,6 +34,8 @@ export class SaleGroupComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getSaleGroupList();
     this.getHelp();
   }
@@ -52,22 +56,22 @@ export class SaleGroupComponent implements OnInit {
     this.router.navigateByUrl('/'+toNav);
   };
 
-  getSaleGroupList= function(){
+  getSaleGroupList(){
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
     this.saleGroupService.getSaleGroupList(params).subscribe(
       (data: any[]) =>{
-        this.totalsaleGroupList = data['count'];   
+        this.totalSaleGroupList = data['count'];   
         this.saleGroupList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalsaleGroupList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalSaleGroupList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalsaleGroupList
+          this.upper_count = this.totalSaleGroupList
         }
 
         this.spinner.hide();
@@ -75,7 +79,7 @@ export class SaleGroupComponent implements OnInit {
      );
   };
 
-  activeSaleGroup = function(id){
+  activeSaleGroup(id){
     this.spinner.show();
     let saleGroup;
 
@@ -83,7 +87,7 @@ export class SaleGroupComponent implements OnInit {
       id: id,
       status: true
     };
-    this.saleGroupService.activeInactivePurchaseGroup(saleGroup).subscribe(
+    this.saleGroupService.activeInactiveSaleGroup(saleGroup).subscribe(
       response => {
         this.toastr.success('Status changed successfully', '', {
           timeOut: 3000,
@@ -99,7 +103,7 @@ export class SaleGroupComponent implements OnInit {
     );
   };
 
-  inactiveSaleGroup = function(id){
+  inactiveSaleGroup(id){
     this.spinner.show();
     let saleGroup;
 
@@ -124,7 +128,7 @@ export class SaleGroupComponent implements OnInit {
     );
   };
 
-  pagination = function () {
+  pagination() {
     this.spinner.show();
     this.getSaleGroupList();
   };

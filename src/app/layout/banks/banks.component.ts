@@ -23,6 +23,7 @@ export class BanksComponent implements OnInit {
   lower_count: number;
   upper_count: number;
   paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private router: Router,
     private banksService: BanksService,
@@ -35,6 +36,7 @@ export class BanksComponent implements OnInit {
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getBankList();
     this.getHelp();
   }
@@ -56,7 +58,7 @@ export class BanksComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  getBankList(){
+  getBankList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
@@ -64,12 +66,12 @@ export class BanksComponent implements OnInit {
       (data: any[]) => {
         this.totalBankList = data['count'];
         this.bankList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalBankList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if (this.totalBankList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalBankList
         }
         this.spinner.hide();

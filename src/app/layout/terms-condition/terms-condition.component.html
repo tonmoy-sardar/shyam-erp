@@ -79,7 +79,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalTermsList > 10">
+  <div class="row" *ngIf="totalTermsList > itemPerPage">
     <div class="col-md-12">
       <div class="card-body pull-right">
         <ngb-pagination [collectionSize]="totalTermsList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>

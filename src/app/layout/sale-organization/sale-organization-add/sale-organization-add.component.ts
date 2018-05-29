@@ -42,11 +42,11 @@ export class SaleOrganizationAddComponent implements OnInit {
     })
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addNewSaleOrganization = function () {
+  addNewSaleOrganization() {
     if (this.form.valid) {
       this.spinner.show();
       this.saleOrganizationService.addNewSaleOrganization(this.form.value).subscribe(
@@ -76,7 +76,7 @@ export class SaleOrganizationAddComponent implements OnInit {
     this.form.reset();
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
