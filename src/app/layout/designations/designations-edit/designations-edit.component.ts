@@ -53,7 +53,7 @@ export class DesignationsEditComponent implements OnInit {
   getDesignationDetails(id){
     this.designationsService.getDesignationDetails(id).subscribe(res => {
       this.designationDetails = res;
-      console.log(this.designationDetails)
+      // console.log(this.designationDetails)
       this.visible_key = true;
       this.getDepartmentList(this.designationDetails.company);
       this.spinner.hide();
@@ -62,8 +62,8 @@ export class DesignationsEditComponent implements OnInit {
 
   getHelp(){
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.stateAdd.heading;
-      this.help_description = res.data.stateAdd.desc;
+      this.help_heading = res.data.designationEdit.heading;
+      this.help_description = res.data.designationEdit.desc;
     })
   }
 

@@ -39,8 +39,8 @@ export class DepartmentsAddComponent implements OnInit {
 
   getHelp(){
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.stateAdd.heading;
-      this.help_description = res.data.stateAdd.desc;
+      this.help_heading = res.data.departmentAdd.heading;
+      this.help_description = res.data.departmentAdd.desc;
     })
   }
 

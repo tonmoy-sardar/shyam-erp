@@ -1,29 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EmployeesService } from '../../core/services/employees.service';
+import { VendorTypeService } from '../../core/services/vendor-type.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 
 @Component({
-  selector: 'app-employees',
-  templateUrl: './employees.component.html',
-  styleUrls: ['./employees.component.scss']
+  selector: 'app-vendor-type',
+  templateUrl: './vendor-type.component.html',
+  styleUrls: ['./vendor-type.component.scss']
 })
-export class EmployeesComponent implements OnInit {
-
-  employeeList = [];  
+export class VendorTypeComponent implements OnInit {
+  vendortypeList = [];  
   defaultPagination: number;
-  totalemployeeList: number;
+  totalvendortypeList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+
   constructor(
-    private employeesService: EmployeesService,
+    private vendortypeService: VendorTypeService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
@@ -34,70 +34,62 @@ export class EmployeesComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
-    this.getEmployeeList();
+    this.getVendortypeList();
     this.getHelp();
   }
 
   getHelp() {
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.employee.heading;
-      this.help_description = res.data.employee.desc;
+      this.help_heading = res.data.vendortype.heading;
+      this.help_description = res.data.vendortype.desc;
     })
+
   }
 
   dataSearch() {
     this.spinner.show();
     this.defaultPagination = 1;
-    this.getEmployeeList();
+    this.getVendortypeList();
   }
 
-  btnClickNav = function (toNav) {
-    this.router.navigateByUrl('/' + toNav);
-  };
-
-  getEmployeeList() {
+  getVendortypeList = function () {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
-    this.employeesService.getEmployeeList(params).subscribe(
+    this.vendortypeService.getVendorttypeList(params).subscribe(
       (data: any[]) => {
-        this.totalemployeeList = data['count'];
-        this.employeeList = data['results'];
-        // console.log(this.employeeList)
+        this.totalvendortypeList = data['count'];
+        this.vendortypeList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
         this.lower_count = this.itemNo + 1;
-        if(this.totalemployeeList > Globals.pageSize*this.defaultPagination){
+        if(this.totalvendortypeList > Globals.pageSize*this.defaultPagination){
           this.upper_count = Globals.pageSize*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalemployeeList
+          this.upper_count = this.totalvendortypeList
         }
         this.spinner.hide();
         // console.log(data)
-      },
-      error =>{
-        this.spinner.hide();
       }
     );
   };
 
-  activeState(id) {
+  activeVendortype = function (id) {
     this.spinner.show();
-    let employee;
+    let vendortype;
 
-    employee = {
+    vendortype = {
       id: id,
       status: true
     };
-    this.employeesService.activeInactiveEmployee(employee).subscribe(
+    this.vendortypeService.activeInactiveVendortype(vendortype).subscribe(
       response => {
         this.toastr.success('Status changed successfully', '', {
           timeOut: 3000,
         });
-        this.getEmployeeList();
+        this.getVendortypeList();
       },
       error => {
-        this.spinner.hide();
         console.log('error', error)
         // this.toastr.error('everything is broken', '', {
         //   timeOut: 3000,
@@ -106,24 +98,23 @@ export class EmployeesComponent implements OnInit {
     );
   };
 
-  inactiveState(id) {
+  inactiveVendortype = function (id) {
     this.spinner.show();
-    let employee;
+    let vendortype;
 
-    employee = {
+    vendortype = {
       id: id,
       status: false
     };
 
-    this.employeesService.activeInactiveEmployee(employee).subscribe(
+    this.VendortypeService.activeInactiveVendortype(vendortype).subscribe(
       response => {
         this.toastr.success('Status changed successfully', '', {
           timeOut: 3000,
         });
-        this.getEmployeeList();
+        this.getVendortypeList();
       },
       error => {
-        this.spinner.hide();
         console.log('error', error)
         // this.toastr.error('everything is broken', '', {
         //   timeOut: 3000,
@@ -132,23 +123,22 @@ export class EmployeesComponent implements OnInit {
     );
   };
 
-  deleteEmployee(id) {
+  deleteVendortype = function (id) {
     this.spinner.show();
-    let employee;
+    let vendortype;
 
-    employee = {
+    vendortype = {
       id: id
     };
 
-    this.employeesService.deleteEmployee(employee).subscribe(
+    this.vendortypeService.deleteVendortype(vendortype).subscribe(
       response => {
-        this.toastr.success('Employee deleted successfully', '', {
+        this.toastr.success('Vendor type deleted successfully', '', {
           timeOut: 3000,
         });
-        this.getEmployeeList();
+        this.getVendortypeList();
       },
       error => {
-        this.spinner.hide();
         console.log('error', error)
         // this.toastr.error('everything is broken', '', {
         //   timeOut: 3000,
@@ -157,9 +147,9 @@ export class EmployeesComponent implements OnInit {
     );
   };
 
-  pagination() {
+  pagination = function () {
     this.spinner.show();
-    this.getEmployeeList();
+    this.getVendortypeList();
   };
 
 }

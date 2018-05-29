@@ -23,7 +23,7 @@ export class EmployeesService {
   
 
   getEmployeeDetails(id): Observable<any>{
-    return this.http.get(environment.apiEndpoint+'all_employee/'+id+'/', {
+    return this.http.get(environment.apiEndpoint+'employee/'+id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
