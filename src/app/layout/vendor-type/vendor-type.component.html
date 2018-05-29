@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
       <app-help [heading]="help_heading" [description]="help_description"></app-help>
-      <button type="button" class="btn btn-primary" (click)="btnClickNav('vendortype/add')">
+      <button type="button" class="btn btn-primary" (click)="btnClickNav('vendor-type/add')">
         <i class="fa fa-plus"></i> New Vendor Type</button>
     </div>
     <div class="clearfix"></div>
@@ -17,7 +17,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col-md-9">
-              <h5>States</h5>
+              <h5>Vendors Type</h5>
             </div>
             <div class="col-md-3">
               <form role="form" (ngSubmit)="dataSearch()">
@@ -37,42 +37,40 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>State</th>
-              <th>Tin</th>
-              <th>State code</th>
+              <th>Vendor Type</th>
+              <th>Created Date</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let vendortp of vendortypeList ; let i = index">
+            <tr *ngFor="let vendorType of vendorTypeList ; let i = index">
               <th scope="row">{{itemNo + i +1}}</th>
-              <td>{{vendortp.vendort_type}}</td>
-              <!-- <td>{{vendortp.tin_number}}</td>
-              <td>{{vendortp.state_code}}</td> -->
+              <td>{{vendorType.vendor_type}}</td>
+              <td>{{vendorType.created_at | date:'dd-MM-yyyy'}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveVendortype(vendortype.id)" *ngIf="vendortype.status==true">
+                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveVendorType(vendorType.id)" *ngIf="vendorType.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeVendortype(vendortype.id)" *ngIf="vendortype.status==false">
+                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeVendorType(vendorType.id)" *ngIf="vendorType.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/states/edit', state.id]">
+                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/vendor-type/edit', vendorType.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteVendortype(vendortype.id)">
+                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteVendorType(vendorType.id)">
                   <i class="fa fa-trash-o"></i>
                 </a>
               </td>
             </tr>
-            <tr *ngIf="stateList.length == 0">
+            <tr *ngIf="vendorTypeList.length == 0">
               <td colspan="6" class="text-center">No record found</td>
             </tr>
           </tbody>
         </table>
         <div class="col-md-12">
-          <div class="pagination-msg" *ngIf="totalvendortypeList > 0">
-            <p>Showing {{lower_count}} to {{upper_count}} of {{totalvendortypeList}} entries</p>
+          <div class="pagination-msg" *ngIf="totalVendorTypeList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalVendorTypeList}} entries</p>
           </div>
         </div>
       </div>
@@ -80,8 +78,8 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right" *ngIf="totalvendortypeList > 10">
-        <ngb-pagination [collectionSize]="totalvendortypeList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+      <div class="card-body pull-right" *ngIf="totalVendorTypeList > 10">
+        <ngb-pagination [collectionSize]="totalVendorTypeList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
           size="sm"></ngb-pagination>
       </div>
     </div>
