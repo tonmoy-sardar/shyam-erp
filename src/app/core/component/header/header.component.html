@@ -1,5 +1,7 @@
 <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="#"><img class="img-fluid" src="assets/images/logo.png" alt="" /></a>
+    <a class="navbar-brand" href="#">
+        <img class="img-fluid" src="assets/images/logo.png" alt="" />
+    </a>
     <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
         <!-- <span class="navbar-toggler-icon"></span> -->
         <i class="fa fa-bars text-muted" aria-hidden="true"></i>
@@ -51,27 +53,27 @@
                     </a> -->
                 </div>
             </li>
-            <!-- <li class="nav-item dropdown" ngbDropdown>
+            <li class="nav-item dropdown" ngbDropdown>
                 <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
                     <i class="fa fa-list-alt"></i> Reports
                     <b class="caret"></b>
                 </a>
                 <div class="dropdown-menu-right" ngbDropdownMenu>
-                    <a class="dropdown-item" href="javascript:void(0)">
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/reports/purchase-requisition']">
                         <i class="fa fa-pencil" aria-hidden="true"></i> Purchase Requisition
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/reports/purchase-order']">
                         <i class="fa fa-shopping-basket" aria-hidden="true"></i> Purchase Orders
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
+                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/reports/grn']">
                         <i class="fa fa-truck" aria-hidden="true"></i> GRN
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
+                    <!-- <a class="dropdown-item" href="javascript:void(0)">
                         <i class="fa fa-money" aria-hidden="true"></i> Transfer Material
-                    </a>
+                    </a> -->
                 </div>
             </li>
-            <li class="nav-item dropdown" ngbDropdown>
+            <!-- <li class="nav-item dropdown" ngbDropdown>
                 <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
                     <i class="fa fa-list-alt"></i> Expenses
                     <b class="caret"></b>
