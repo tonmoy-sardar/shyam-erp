@@ -14,13 +14,14 @@ import * as Globals from '../../core/globals';
 export class GstRatesComponent implements OnInit {
   gstRatesList = [];
   defaultPagination: number;
-  totalgstRatesList: number;
+  totalGstRatesList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
   constructor(
     private router: Router,
     private gstRatesService: GstRatesService,
@@ -33,6 +34,7 @@ export class GstRatesComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
     this.getGstList();
     this.getHelp();
   }
@@ -60,15 +62,15 @@ export class GstRatesComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.gstRatesService.getGSTList(params).subscribe(
       (data: any[]) => {
-        this.totalgstRatesList = data['count'];
+        this.totalGstRatesList = data['count'];
         this.gstRatesList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
         this.lower_count = this.itemNo + 1;
-        if(this.totalgstRatesList > Globals.pageSize*this.defaultPagination){
+        if(this.totalGstRatesList > Globals.pageSize*this.defaultPagination){
           this.upper_count = Globals.pageSize*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalgstRatesList
+          this.upper_count = this.totalGstRatesList
         }
         this.spinner.hide();
       }

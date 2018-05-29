@@ -15,7 +15,7 @@ import * as Globals from '../../core/globals';
 export class TermsConditionComponent implements OnInit {
   termsList = [];
   defaultPagination: number;
-  totaltermsList: number;
+  totalTermsList: number;
   search_key = '';
   companyList = [];
   itemNo: number;
@@ -23,6 +23,7 @@ export class TermsConditionComponent implements OnInit {
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -50,6 +51,7 @@ export class TermsConditionComponent implements OnInit {
   dataSearch() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
     this.getTermsList();
   }
 
@@ -71,15 +73,15 @@ export class TermsConditionComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.termsConditionService.getTermsList(params).subscribe(
       (data: any[]) => {
-        this.totaltermsList = data['count'];
+        this.totalTermsList = data['count'];
         this.termsList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
         this.lower_count = this.itemNo + 1;
-        if(this.totaltermsList > Globals.pageSize*this.defaultPagination){
+        if(this.totalTermsList > Globals.pageSize*this.defaultPagination){
           this.upper_count = Globals.pageSize*this.defaultPagination
         }
         else{
-          this.upper_count = this.totaltermsList
+          this.upper_count = this.totalTermsList
         }
         this.spinner.hide();
       }

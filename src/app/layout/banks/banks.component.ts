@@ -4,6 +4,9 @@ import { BanksService } from '../../core/services/banks.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
+
 @Component({
   selector: 'app-banks',
   templateUrl: './banks.component.html',
@@ -14,17 +17,33 @@ export class BanksComponent implements OnInit {
   defaultPagination: number;
   totalBankList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
   constructor(
     private router: Router,
     private banksService: BanksService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
     this.getBankList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.banks.heading;
+      this.help_description = res.data.banks.desc;
+    })
   }
 
   dataSearch() {
@@ -33,7 +52,7 @@ export class BanksComponent implements OnInit {
     this.getBankList();
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
@@ -45,12 +64,20 @@ export class BanksComponent implements OnInit {
       (data: any[]) => {
         this.totalBankList = data['count'];
         this.bankList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalBankList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalBankList
+        }
         this.spinner.hide();
       }
     );
   };
 
-  activeBank (id) {
+  activeBank(id) {
     this.spinner.show();
     let gstRate;
 
@@ -74,7 +101,7 @@ export class BanksComponent implements OnInit {
     );
   };
 
-  inactiveBank (id) {
+  inactiveBank(id) {
     this.spinner.show();
     let gstRate;
 
@@ -99,7 +126,7 @@ export class BanksComponent implements OnInit {
     );
   };
 
-  deleteBank (id) {
+  deleteBank(id) {
     this.spinner.show();
     let bank;
 
@@ -123,7 +150,7 @@ export class BanksComponent implements OnInit {
     );
   };
 
-  pagination () {
+  pagination() {
     this.spinner.show();
     this.getBankList();
   };

@@ -21,6 +21,7 @@ export class StatesComponent implements OnInit {
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
   constructor(
     private statesService: StatesService,
     private router: Router,
@@ -34,6 +35,7 @@ export class StatesComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
     this.getStateList();
     this.getHelp();
   }

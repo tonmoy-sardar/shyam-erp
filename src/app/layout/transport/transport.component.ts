@@ -4,6 +4,9 @@ import { TransportService } from '../../core/services/transport.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
+
 @Component({
   selector: 'app-transport',
   templateUrl: './transport.component.html',
@@ -12,19 +15,35 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class TransportComponent implements OnInit {
   transportList = [];
   defaultPagination: number;
-  totaltransportList: number;
+  totalTransportList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private transportService: TransportService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
-    this.gettransportList();
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.getTransportList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.transport.heading;
+      this.help_description = res.data.transport.desc;
+    })
   }
 
   btnClickNav= function (toNav) {
@@ -34,17 +53,26 @@ export class TransportComponent implements OnInit {
   dataSearch() {
     this.spinner.show();
     this.defaultPagination = 1;
-    this.gettransportList();
+    this.getTransportList();
   }
   
-  gettransportList() {
+  getTransportList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
     this.transportService.getTransporterList(params).subscribe(
       (data: any[]) => {
-        this.totaltransportList = data['count'];
+       
+        this.totalTransportList = data['count'];
         this.transportList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalTransportList > Globals.pageSize*this.defaultPagination){
+          this.upper_count = Globals.pageSize*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalTransportList
+        }
         this.spinner.hide();
       }
     );
@@ -63,7 +91,7 @@ export class TransportComponent implements OnInit {
         this.toastr.success('Status changed successfully', '', {
           timeOut: 3000,
         });
-        this.gettransportList();
+        this.getTransportList();
       },
       error => {
         console.log('error', error)
@@ -88,7 +116,7 @@ export class TransportComponent implements OnInit {
         this.toastr.success('Status changed successfully', '', {
           timeOut: 3000,
         });
-        this.gettransportList();
+        this.getTransportList();
       },
       error => {
         console.log('error', error)
@@ -112,7 +140,7 @@ export class TransportComponent implements OnInit {
         this.toastr.success('Transporter deleted successfully', '', {
           timeOut: 3000,
         });
-        this.gettransportList();
+        this.getTransportList();
       },
       error => {
         console.log('error', error)
@@ -125,6 +153,6 @@ export class TransportComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
-    this.gettransportList();
+    this.getTransportList();
   };
 }

@@ -21,6 +21,7 @@ export class VendorComponent implements OnInit {
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
   constructor(
     private router: Router,
     private vendorService: VendorService,
@@ -32,6 +33,7 @@ export class VendorComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
     this.getVendorList();
     this.getHelp();
   }

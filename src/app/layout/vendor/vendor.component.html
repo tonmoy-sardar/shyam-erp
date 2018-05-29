@@ -56,16 +56,16 @@
               <td>{{vendor.vendor_address[0].email}}</td>
               <td>{{vendor.vendor_address[0].mobile}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(vendor.id)" *ngIf="vendor.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(vendor.id)" *ngIf="vendor.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(vendor.id)" *ngIf="vendor.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(vendor.id)" *ngIf="vendor.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/vendor/edit', vendor.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/vendor/edit', vendor.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteVendor(vendor.id)">
+                <a href="javascript:void(0);" class="anchor-action" title="Delete" name="Delete" (click)="deleteVendor(vendor.id)">
                   <i class="fa fa-trash-o"></i>
                 </a>
               </td>
@@ -87,7 +87,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card-body pull-right" *ngIf="totalvendorList > 10">
-        <ngb-pagination [collectionSize]="totalvendorList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+        <ngb-pagination [collectionSize]="totalvendorList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>
   </div>
