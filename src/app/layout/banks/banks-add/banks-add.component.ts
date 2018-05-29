@@ -6,6 +6,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-banks-add',
   templateUrl: './banks-add.component.html',
@@ -16,6 +19,8 @@ export class BanksAddComponent implements OnInit {
   companyList=[];
   bankList=[];
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
 
   constructor(
     private companyService: CompanyService,
@@ -24,7 +29,8 @@ export class BanksAddComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -43,6 +49,14 @@ export class BanksAddComponent implements OnInit {
     };
 
     this.getCompanyDropdownList();
+   this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.banksAdd.heading;
+      this.help_description = res.data.banksAdd.desc;
+    })
   }
 
   getCompanyDropdownList() {
