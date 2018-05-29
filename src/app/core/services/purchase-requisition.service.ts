@@ -58,7 +58,7 @@ export class PurchaseRequisitionService {
   }
 
   finalizePurchaseRequisition(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'purchase_requistion/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'purchase_requistion_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
