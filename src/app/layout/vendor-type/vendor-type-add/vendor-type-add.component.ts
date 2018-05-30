@@ -39,8 +39,8 @@ export class VendorTypeAddComponent implements OnInit {
 
   getHelp(){
     this.helpService.getHelp().subscribe(res => {
-      //this.help_heading = res.data.vendorTypeAdd.heading;
-      //this.help_description = res.data.vendorTypeAdd.desc;
+      this.help_heading = res.data.vendorTypeAdd.heading;
+      this.help_description = res.data.vendorTypeAdd.desc;
     })
   }
 

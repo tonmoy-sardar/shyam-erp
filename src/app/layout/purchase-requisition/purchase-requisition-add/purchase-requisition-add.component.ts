@@ -9,6 +9,9 @@ import { PurchaseGroupService } from '../../../core/services/purchase-group.serv
 import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 import * as _ from "lodash";
 
 @Component({
@@ -28,6 +31,8 @@ export class PurchaseRequisitionAddComponent implements OnInit {
   companyStorageDropdownList = [];
   companyStoragebinDropdownList = [];
   purchaseRequisition;
+  help_heading = "";
+  help_description = "";
 
   constructor(
     private purchaseRequisitionService: PurchaseRequisitionService,
@@ -38,7 +43,8 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
 
@@ -62,7 +68,16 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     this.getPurchaseGroupActiveList();
     this.getPurchaseOrganizationActiveList();
 
+    this.getHelp();
   }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseRequisitionAdd.heading;
+      this.help_description = res.data.purchaseRequisitionAdd.desc;
+    })
+  }
+
   createRequisitionDetail() {
     return this.formBuilder.group({
       material: ['', Validators.required],
@@ -88,7 +103,7 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     control.removeAt(index);
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

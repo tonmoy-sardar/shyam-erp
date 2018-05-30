@@ -6,6 +6,9 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-company-edit',
   templateUrl: './company-edit.component.html',
@@ -15,13 +18,16 @@ export class CompanyEditComponent implements OnInit {
   company;
   stateList;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -65,8 +71,17 @@ export class CompanyEditComponent implements OnInit {
     };
     this.getCompanyDetails(this.route.snapshot.params['id']);
     this.getStateList();
+    this.getHelp();
   }
-  getCompanyDetails = function (id) {
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.companyEdit.heading;
+      this.help_description = res.data.companyEdit.desc;
+    })
+  }
+
+  getCompanyDetails(id) {
 
     this.companyService.getCompanyDetails(id).subscribe(
       (data: any[]) => {
@@ -76,12 +91,12 @@ export class CompanyEditComponent implements OnInit {
     );
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
 
-  updateCompany = function () {
+  updateCompany() {
     if (this.form.valid) {
       this.spinner.show();
       this.companyService.updateCompany(this.company).subscribe(
@@ -108,7 +123,7 @@ export class CompanyEditComponent implements OnInit {
     
   }
 
-  getStateList = function () {
+  getStateList() {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;
@@ -116,7 +131,7 @@ export class CompanyEditComponent implements OnInit {
     );
   };
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

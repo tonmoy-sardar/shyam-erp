@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { StocksService } from '../../../core/services/stocks.service';
 import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
 
 @Component({
   selector: 'app-stocks-issue-history',
@@ -19,6 +20,10 @@ export class StocksIssueHistoryComponent implements OnInit {
   search_key = '';
   help_heading = "";
   help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -32,6 +37,8 @@ export class StocksIssueHistoryComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getStockIssueList();
     this.getHelp();
   }
@@ -60,6 +67,14 @@ export class StocksIssueHistoryComponent implements OnInit {
     this.stocksService.getStockIssueHistoryList(params,this.route.snapshot.params['id']).subscribe(res => {      
       this.totalStockIssueList = res['count'];
       this.stockIssueList = res['results'];
+      this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
+      this.lower_count = this.itemNo + 1;
+      if(this.totalStockIssueList > this.itemPerPage*this.defaultPagination){
+        this.upper_count = this.itemPerPage*this.defaultPagination
+      }
+      else{
+        this.upper_count = this.totalStockIssueList
+      }
       this.spinner.hide();
       // console.log(this.stockIssueList)
     })

@@ -19,13 +19,15 @@ export class StorageBinListComponent implements OnInit {
   companyStorageBinCompShow;
   companyStorageBinId;
   defaultPagination: number;
-  totalcompanyStorageBinList: number;
+  totalCompanyStorageBinList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
 
   constructor(
     private companyService: CompanyService,
@@ -40,6 +42,8 @@ export class StorageBinListComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.companyStorageBinCompShow = {
       showList: true,
       showAdd: false,
@@ -57,11 +61,11 @@ export class StorageBinListComponent implements OnInit {
     })
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  showStorageBinAdd = function () {
+  showStorageBinAdd() {
     this.companyStorageBinCompShow = {
       showList: false,
       showAdd: true,
@@ -69,7 +73,7 @@ export class StorageBinListComponent implements OnInit {
     };
   };
 
-  showStorageBinEdit = function (id) {
+  showStorageBinEdit(id) {
     this.companyStorageBinId = id;
     this.companyStorageBinCompShow = {
       showList: false,
@@ -78,7 +82,7 @@ export class StorageBinListComponent implements OnInit {
     };
   };
 
-  reloadStorageBinList = function () {
+  reloadStorageBinList() {
     this.companyStorageBinCompShow = {
       showList: true,
       showAdd: false,
@@ -88,22 +92,22 @@ export class StorageBinListComponent implements OnInit {
     this.getCompanyStorageBinList(this.route.snapshot.params['id']);
   }
 
-  getCompanyStorageBinList = function (id) {
+  getCompanyStorageBinList(id) {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
     this.companyService.getCompanyStorageBinList(id,params).subscribe(
       (data: any[]) => {
         this.companyStorageBinList = data['results'];
-        this.totalcompanyStorageBinList = data['count'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.totalCompanyStorageBinList = data['count'];
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalcompanyStorageBinList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalCompanyStorageBinList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalcompanyStorageBinList
+          this.upper_count = this.totalCompanyStorageBinList
         }
         this.spinner.hide();
       }
@@ -116,7 +120,7 @@ export class StorageBinListComponent implements OnInit {
     this.getCompanyStorageBinList(this.route.snapshot.params['id']);
   }
 
-  pagination = function () {
+  pagination() {
     this.spinner.show();
     this.getCompanyStorageBinList(this.route.snapshot.params['id']);
   };

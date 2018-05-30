@@ -4,10 +4,7 @@
       <h4 class="page-header">Purchase Requisition List</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-refresh"></i> Reload</button>
+      <app-help [heading]="help_heading" [description]="help_description"></app-help>
       <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-requisition/add')">
         <i class="fa fa-plus"></i> New Purchase Organization</button>
     </div>
@@ -41,12 +38,22 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>PR No <span class="info" ngbTooltip="Purchase Requisition Number">i</span></th>
+              <th>PR No
+                <span class="info" ngbTooltip="Purchase Requisition Number">i</span>
+              </th>
               <th>Company</th>
-              <th>P. Org. <span class="info" ngbTooltip="Purchase Organisation">i</span></th>
-              <th>P. Group <span class="info" ngbTooltip="Purchase Group">i</span></th>
-              <th>PR Raised Date <span class="info" ngbTooltip="Purchase Requisition Raised Date">i</span></th>
-              <th>PR Raised By <span class="info" ngbTooltip="Purchase Requisition Raised By">i</span></th>
+              <th>P. Org.
+                <span class="info" ngbTooltip="Purchase Organisation">i</span>
+              </th>
+              <th>P. Group
+                <span class="info" ngbTooltip="Purchase Group">i</span>
+              </th>
+              <th>PR Raised Date
+                <span class="info" ngbTooltip="Purchase Requisition Raised Date">i</span>
+              </th>
+              <th>PR Raised By
+                <span class="info" ngbTooltip="Purchase Requisition Raised By">i</span>
+              </th>
               <th>Status</th>
               <th>Is approved</th>
               <th>Action</th>
@@ -54,7 +61,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let purchaseRequisition of purchaseRequisitionList ; let i = index">
-              <th scope="row">{{i +1}}</th>
+              <th scope="row">{{itemNo + i +1}}</th>
               <td>{{purchaseRequisition.requisition_map[0].requisition_no}}</td>
               <td>{{purchaseRequisition.company.company_name}}</td>
               <td>{{purchaseRequisition.purchase_org.name}}</td>
@@ -83,7 +90,7 @@
                 </select>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/purchase-requisition/details', purchaseRequisition.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/purchase-requisition/details', purchaseRequisition.id]">
                   <i class="fa fa-eye"></i>
                 </a>
               </td>
@@ -94,13 +101,18 @@
             </tr>
           </tbody>
         </table>
+        <div class="col-md-12">
+          <div class="pagination-msg" *ngIf="totalPurchaseRequisitionList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalPurchaseRequisitionList}} entries</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalPurchaseRequisitionList > 10">
+  <div class="row" *ngIf="totalPurchaseRequisitionList > itemPerPage">
     <div class="col-md-12">
       <div class="card-body pull-right">
-        <ngb-pagination [collectionSize]="totalPurchaseRequisitionList" [(page)]="defaultPagination" (pageChange)="pagination()"
+        <ngb-pagination [collectionSize]="totalPurchaseRequisitionList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
           size="sm"></ngb-pagination>
       </div>
     </div>

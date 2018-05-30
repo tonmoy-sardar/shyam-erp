@@ -13,7 +13,7 @@
             <div class="col-md-12">
                 <form role="form" [formGroup]="form">
                     <div class="card bg-light mb-3">
-                        <div class="card-header" style="background-color:#868e96; color: #fff;">Company Storage Add</div>
+                        <div class="card-header" style="background-color:#868e96; color: #fff;">Company Storage Location Add</div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -37,8 +37,8 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Phone</label>
-                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="companyStorage.storage_contact_no" name="storage_contact_no" placeholder="Phone"
-                                        formControlName="storage_contact_no" [ngClass]="displayFieldCss('storage_contact_no')">
+                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="companyStorage.storage_contact_no" name="storage_contact_no"
+                                        placeholder="Phone" formControlName="storage_contact_no" [ngClass]="displayFieldCss('storage_contact_no')">
                                     <div class="invalid-feedback" *ngIf="isFieldValid('storage_contact_no')">
                                         Please enter phone
                                     </div>

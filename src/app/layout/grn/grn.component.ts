@@ -5,6 +5,9 @@ import { StocksService } from '../../core/services/stocks.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
+
 @Component({
   selector: 'app-grn',
   templateUrl: './grn.component.html',
@@ -13,8 +16,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class GrnComponent implements OnInit {
   grnList = []
   defaultPagination: number;
-  totalgrnList: number;
+  totalGrnList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   stock = {
     grn: '',
     company: '',
@@ -31,16 +41,25 @@ export class GrnComponent implements OnInit {
     private toastr: ToastrService,
     private grnService: GrnService,
     private spinner: NgxSpinnerService,
-    private stocksService: StocksService
+    private stocksService: StocksService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
     this.getGrnList();
+    this.getHelp();
   }
 
-  btnClickNav= function (toNav) {
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.grn.heading;
+      this.help_description = res.data.grn.desc;
+    })
+  }
+
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/'+toNav);
   };
 
@@ -56,8 +75,16 @@ export class GrnComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.grnService.getGrnList(params).subscribe(
       (data: any[]) => {
-        this.totalgrnList = data['count'];
+        this.totalGrnList = data['count'];
         this.grnList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalGrnList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalGrnList
+        }
         this.spinner.hide();
       }
     );

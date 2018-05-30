@@ -20,13 +20,15 @@ export class BranchListComponent implements OnInit {
   companyBranchCompShow;
   companyBranchId;
   defaultPagination: number;
-  totalcompanyBranchList: number;
+  totalCompanyBranchList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
 
   constructor(
     private companyService: CompanyService,
@@ -41,6 +43,8 @@ export class BranchListComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.companyBranchCompShow = {
       showList: true,
       showAdd: false,
@@ -58,11 +62,11 @@ export class BranchListComponent implements OnInit {
     })
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  showBranchAdd = function () {
+  showBranchAdd() {
     this.companyBranchCompShow = {
       showList: false,
       showAdd: true,
@@ -70,7 +74,7 @@ export class BranchListComponent implements OnInit {
     };
   };
 
-  showBranchEdit = function (id) {
+  showBranchEdit(id) {
     this.companyBranchId = id;
     this.companyBranchCompShow = {
       showList: false,
@@ -79,7 +83,7 @@ export class BranchListComponent implements OnInit {
     };
   };
 
-  reloadBranchList = function () {
+  reloadBranchList() {
     this.companyBranchCompShow = {
       showList: true,
       showAdd: false,
@@ -89,23 +93,23 @@ export class BranchListComponent implements OnInit {
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   }
 
-  getCompanyBranchList = function (id) {
+  getCompanyBranchList(id) {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
     this.companyService.getCompanyBranchList(id,params).subscribe(
       (data: any[]) => {
-        this.totalcompanyBranchList = data['count'];
+        this.totalCompanyBranchList = data['count'];
         this.companyBranchList = data['results'];
 
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalcompanyBranchList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalCompanyBranchList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalcompanyBranchList
+          this.upper_count = this.totalCompanyBranchList
         }
 
         this.spinner.hide();
@@ -119,7 +123,7 @@ export class BranchListComponent implements OnInit {
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   }
 
-  pagination = function () {
+  pagination() {
     this.spinner.show();
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   };

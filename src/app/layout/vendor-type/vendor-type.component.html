@@ -78,8 +78,8 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right" *ngIf="totalVendorTypeList > 10">
-        <ngb-pagination [collectionSize]="totalVendorTypeList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+      <div class="card-body pull-right" *ngIf="totalVendorTypeList > itemPerPage">
+        <ngb-pagination [collectionSize]="totalVendorTypeList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
           size="sm"></ngb-pagination>
       </div>
     </div>

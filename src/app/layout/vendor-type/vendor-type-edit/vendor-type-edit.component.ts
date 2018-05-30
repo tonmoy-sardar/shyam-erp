@@ -60,11 +60,11 @@ export class VendorTypeEditComponent implements OnInit {
     );
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  updateVendorType = function () {
+  updateVendorType() {
     if (this.form.valid) {
       this.spinner.show();      
       this.vendorTypeService.updateVendorType(this.vendorType).subscribe(
@@ -90,7 +90,7 @@ export class VendorTypeEditComponent implements OnInit {
     }    
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

@@ -67,7 +67,7 @@ export class StorageLocationAddComponent implements OnInit {
     })
   }
 
-  addNewCompanyStorage = function () {
+  addNewCompanyStorage() {
     if (this.form.valid) {
       this.spinner.show();
       this.companyService.addNewCompanyStorage(this.companyStorage).subscribe(
@@ -94,11 +94,11 @@ export class StorageLocationAddComponent implements OnInit {
     
   }
 
-  btnClickNav = function () {
+  btnClickNav() {
     this.showStorageList.emit();
   };
 
-  getStateList = function () {
+  getStateList() {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;
@@ -106,10 +106,10 @@ export class StorageLocationAddComponent implements OnInit {
     );
   };
 
-  getCompanyBranchList = function (id) {
-    this.companyService.getCompanyBranchList(id).subscribe(
+  getCompanyBranchList(id) {
+    this.companyService.getCompanyBranchDropdownList(id).subscribe(
       (data: any[]) => {
-        this.companyBranchList = data['results'];
+        this.companyBranchList = data;
         this.spinner.hide();
       }
     );

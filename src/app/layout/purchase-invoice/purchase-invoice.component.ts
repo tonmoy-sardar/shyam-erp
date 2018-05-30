@@ -4,6 +4,9 @@ import { PurchaseInvoiceService } from '../../core/services/purchase-invoice.ser
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
+
 @Component({
   selector: 'app-purchase-invoice',
   templateUrl: './purchase-invoice.component.html',
@@ -12,22 +15,39 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class PurchaseInvoiceComponent implements OnInit {
   purchaseInvoiceList = []
   defaultPagination: number;
-  totalurchaseInvoiceList: number;
+  totalPurchaseInvoiceList: number;
   search_key = '';
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private purchaseInvoiceService: PurchaseInvoiceService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.defaultPagination = 1;
     this.getpurchaseInvoiceList();
     this.spinner.show();
+    this.getHelp();
   }
 
-  btnClickNav = function (toNav) {
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseInvoice.heading;
+      this.help_description = res.data.purchaseInvoice.desc;
+    })
+  }
+
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
@@ -42,8 +62,16 @@ export class PurchaseInvoiceComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.purchaseInvoiceService.getPurchaseInvoiceList(params).subscribe(
       (data: any[]) => {
-        this.totalurchaseInvoiceList = data['count'];
+        this.totalPurchaseInvoiceList = data['count'];
         this.purchaseInvoiceList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalPurchaseInvoiceList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalPurchaseInvoiceList
+        }
         this.spinner.hide();
         // console.log(this.purchaseInvoiceList)        
       }

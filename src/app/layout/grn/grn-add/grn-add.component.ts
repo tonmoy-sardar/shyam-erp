@@ -6,6 +6,9 @@ import { GrnService } from '../../../core/services/grn.service';
 import { PurchaseOrdersService } from '../../../core/services/purchase-orders.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-grn-add',
   templateUrl: './grn-add.component.html',
@@ -21,13 +24,16 @@ export class GrnAddComponent implements OnInit {
   purchase_order_details: any;
   previous_grn_list: any[] = [];
   total_rest_quantity: number = 0;
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private purchaseOrdersService: PurchaseOrdersService,
     private grnService: GrnService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -47,6 +53,14 @@ export class GrnAddComponent implements OnInit {
       grn_detail: this.formBuilder.array([])
     });
     this.getPurchaseOrderList()
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.grnAdd.heading;
+      this.help_description = res.data.grnAdd.desc;
+    })
   }
 
   getPrevGrnList(id) {
@@ -236,7 +250,7 @@ export class GrnAddComponent implements OnInit {
     );
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
   goToList(toNav) {

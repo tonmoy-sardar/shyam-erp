@@ -6,6 +6,9 @@ import { GrnService } from '../../../core/services/grn.service';
 import { PurchaseInvoiceService } from '../../../core/services/purchase-invoice.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-purchase-invoice-add',
   templateUrl: './purchase-invoice-add.component.html',
@@ -17,14 +20,17 @@ export class PurchaseInvoiceAddComponent implements OnInit {
   pur_invoice_detail: any[] = [];
   visible_key: boolean;
   material_details_list: any[] = [];
-  grn_details: any
+  grn_details: any;
+  help_heading = "";
+  help_description = "";
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private purchaseInvoiceService: PurchaseInvoiceService,
     private grnService: GrnService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -42,7 +48,17 @@ export class PurchaseInvoiceAddComponent implements OnInit {
       pur_invoice_detail: this.formBuilder.array([])
     });
     this.getGrnList()
+    this.getHelp();
   }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseInvoiceAdd.heading;
+      this.help_description = res.data.purchaseInvoiceAdd.desc;
+    })
+  }
+
+
   getGrnList() {
     this.grnService.getGrnListWithoutPagination().subscribe(res => {
       this.grnList = res;

@@ -22,6 +22,8 @@ export class VendorTypeComponent implements OnInit {
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
 
   constructor(
     private vendorTypeService: VendorTypeService,
@@ -35,14 +37,16 @@ export class VendorTypeComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getVendorTypeList();
     this.getHelp();
   }
 
   getHelp() {
     this.helpService.getHelp().subscribe(res => {
-      //this.help_heading = res.data.vendorType.heading;
-      //this.help_description = res.data.vendorType.desc;
+      this.help_heading = res.data.vendorType.heading;
+      this.help_description = res.data.vendorType.desc;
     })
 
   }
@@ -66,10 +70,10 @@ export class VendorTypeComponent implements OnInit {
         this.totalVendorTypeList = data['count'];
         this.vendorTypeList = data['results'];
        
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalVendorTypeList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalVendorTypeList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
           this.upper_count = this.totalVendorTypeList

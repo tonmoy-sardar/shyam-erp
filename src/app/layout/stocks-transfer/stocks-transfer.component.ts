@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
+
 @Component({
   selector: 'app-stocks-transfer',
   templateUrl: './stocks-transfer.component.html',
@@ -13,18 +16,27 @@ export class StocksTransferComponent implements OnInit {
   stocksTransferList = [];
   itemNo:number;
   defaultPagination: number;
-  totalstocksTransferList: number;
+  totalStocksTransferList: number;
   search_key = '';
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getStocksTransferList();
   }
 
@@ -34,7 +46,7 @@ export class StocksTransferComponent implements OnInit {
     this.getStocksTransferList();
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
