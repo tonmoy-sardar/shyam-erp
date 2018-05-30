@@ -59,13 +59,13 @@
               <td>{{employee.departments.department_name}}</td>
               <td>{{employee.designation.designation_name}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(employee.id)" *ngIf="employee.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(employee.id)" *ngIf="employee.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(employee.id)" *ngIf="employee.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(employee.id)" *ngIf="employee.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/employees/edit', employee.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/employees/edit', employee.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
                 <!-- <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteEmployee(employee.id)">
@@ -79,8 +79,8 @@
           </tbody>
         </table>
         <div class="col-md-12">
-          <div class="pagination-msg" *ngIf="totalemployeeList > 0">
-            <p>Showing {{lower_count}} to {{upper_count}} of {{totalemployeeList}} entries</p>
+          <div class="pagination-msg" *ngIf="totalEmployeeList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalEmployeeList}} entries</p>
           </div>
         </div>
       </div>
@@ -88,8 +88,8 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right" *ngIf="totalemployeeList > 10">
-        <ngb-pagination [collectionSize]="totalemployeeList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+      <div class="card-body pull-right" *ngIf="totalEmployeeList > itemPerPage">
+        <ngb-pagination [collectionSize]="totalEmployeeList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
           size="sm"></ngb-pagination>
       </div>
     </div>

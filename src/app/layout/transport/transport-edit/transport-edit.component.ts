@@ -113,7 +113,7 @@ export class TransportEditComponent implements OnInit {
       this.spinner.hide();
     })
   }
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
   updateTransport() {

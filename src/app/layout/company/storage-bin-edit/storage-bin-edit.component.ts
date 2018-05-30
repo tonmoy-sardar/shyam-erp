@@ -70,7 +70,7 @@ export class StorageBinEditComponent implements OnInit {
       this.help_description = res.data.storageBinEdit.desc;
     })
   }
-  getCompanyStorageBinDetails = function (id) {
+  getCompanyStorageBinDetails(id) {
 
     this.companyService.getCompanyStorageBinDetails(id).subscribe(
       (data: any[]) => {
@@ -80,7 +80,7 @@ export class StorageBinEditComponent implements OnInit {
     );
   }
 
-  updateCompanyStorageBin = function () {
+  updateCompanyStorageBin() {
     if (this.form.valid) {
       this.spinner.show();
       this.companyService.updateCompanyStorageBin(this.companyStorageBin).subscribe(
@@ -108,30 +108,30 @@ export class StorageBinEditComponent implements OnInit {
     
   }
 
-  btnClickNav = function () {
+  btnClickNav() {
     this.showStorageBinList.emit();
   };
 
 
-  getCompanyBranchList = function (id) {
-    this.companyService.getCompanyBranchList(id).subscribe(
+  getCompanyBranchList(id) {
+    this.companyService.getCompanyBranchDropdownList(id).subscribe(
       (data: any[]) => {
-        this.companyBranchList = data['results'];
+        this.companyBranchList = data;
         // console.log(this.companyBranchList);
       }
     );
   };
 
-  getCompanyStorageList = function (id) {
-    this.companyService.getCompanyStorageList(id).subscribe(
+  getCompanyStorageList(id) {
+    this.companyService.getCompanyStorageDropdownList(id).subscribe(
       (data: any[]) => {
-        this.companyStorageList = data['results'];
+        this.companyStorageList = data;
         // console.log(this.companyStorageList);
       }
     );
   };
 
-  getUOMList = function () {
+  getUOMList() {
     this.companyService.getUOMList().subscribe(
       (data: any[]) => {
         this.UOMList = data['results'];

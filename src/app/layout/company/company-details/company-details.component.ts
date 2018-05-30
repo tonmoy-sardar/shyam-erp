@@ -4,6 +4,9 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-company-details',
   templateUrl: './company-details.component.html',
@@ -12,12 +15,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class CompanyDetailsComponent implements OnInit {
   company;
   states;
+  help_heading = "";
+  help_description = "";
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -45,6 +51,14 @@ export class CompanyDetailsComponent implements OnInit {
     };
     this.getCompanyDetails(this.route.snapshot.params['id']);
 
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.companyDetails.heading;
+      this.help_description = res.data.companyDetails.desc;
+    })
   }
 
   getCompanyDetails(id) {

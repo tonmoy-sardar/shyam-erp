@@ -51,13 +51,13 @@
               <td>{{saleOrganization.name}}</td>
               <td>{{saleOrganization.description}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveSaleOrganization(saleOrganization.id)" *ngIf="saleOrganization.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveSaleOrganization(saleOrganization.id)" *ngIf="saleOrganization.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeSaleOrganization(saleOrganization.id)" *ngIf="saleOrganization.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeSaleOrganization(saleOrganization.id)" *ngIf="saleOrganization.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/sale-organization/edit', saleOrganization.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/sale-organization/edit', saleOrganization.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
 
@@ -69,13 +69,19 @@
             </tr>
           </tbody>
         </table>
+        <div class="col-md-12">
+          <div class="pagination-msg" *ngIf="totalSaleOrganizationList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalSaleOrganizationList}} entries</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalsaleOrganizationList > 10">
+  <div class="row" *ngIf="totalSaleOrganizationList > itemPerPage">
     <div class="col-md-12">
       <div class="card-body pull-right">
-        <ngb-pagination [collectionSize]="totalsaleOrganizationList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+        <ngb-pagination [collectionSize]="totalSaleOrganizationList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
+          size="sm"></ngb-pagination>
       </div>
     </div>
   </div>

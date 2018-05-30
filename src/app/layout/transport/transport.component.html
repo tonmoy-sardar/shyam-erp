@@ -75,7 +75,7 @@
     </div>
   </div>
   </div>
-  <div class="row" *ngIf="totalTransportList > 10">
+  <div class="row" *ngIf="totalTransportList > itemPerPage">
       <div class="col-md-12">
         <div class="card-body pull-right">
           <ngb-pagination [collectionSize]="totalTransportList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>

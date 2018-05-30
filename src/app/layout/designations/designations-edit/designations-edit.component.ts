@@ -20,7 +20,7 @@ export class DesignationsEditComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
-  visible_key: boolean; 
+  visible_key: boolean;
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
@@ -42,15 +42,15 @@ export class DesignationsEditComponent implements OnInit {
     }
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
-      departments: ['',Validators.required],
+      departments: ['', Validators.required],
       designation_name: ['', Validators.required]
-    });    
+    });
     this.getHelp();
     this.getCompanyList();
     this.getDesignationDetails(this.route.snapshot.params['id']);
   }
 
-  getDesignationDetails(id){
+  getDesignationDetails(id) {
     this.designationsService.getDesignationDetails(id).subscribe(res => {
       this.designationDetails = res;
       // console.log(this.designationDetails)
@@ -60,26 +60,26 @@ export class DesignationsEditComponent implements OnInit {
     })
   }
 
-  getHelp(){
+  getHelp() {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.designationEdit.heading;
       this.help_description = res.data.designationEdit.desc;
     })
   }
 
-  getCompanyList(){
+  getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(res => {
-      this.company_list = res;      
+      this.company_list = res;
     })
   }
 
-  companyChange(val){
-    if(val != ""){
+  companyChange(val) {
+    if (val != "") {
       this.getDepartmentList(val);
-    }    
+    }
   }
 
-  getDepartmentList(id){
+  getDepartmentList(id) {
     this.departmentsService.getDepartmentListByCompany(id).subscribe(res => {
       this.department_list = res;
     })
@@ -98,7 +98,7 @@ export class DesignationsEditComponent implements OnInit {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('designations');          
+          this.goToList('designations');
         },
         error => {
           console.log('error', error)
@@ -114,13 +114,13 @@ export class DesignationsEditComponent implements OnInit {
       });
     }
   }
-  
+
   reSet() {
     this.form.reset();
   }
 
 
-  btnClickNav (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

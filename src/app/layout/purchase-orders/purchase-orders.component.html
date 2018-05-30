@@ -4,10 +4,7 @@
       <h4 class="page-header">Purchase Order List</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-refresh"></i> Reload</button>
+      <app-help [heading]="help_heading" [description]="help_description"></app-help>
       <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-orders/add')">
         <i class="fa fa-plus"></i> New Purchase Order</button>
     </div>
@@ -41,14 +38,20 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>Po No <span class="info" ngbTooltip="Purchase Order Number">i</span></th>
+              <th>Po No
+                <span class="info" ngbTooltip="Purchase Order Number">i</span>
+              </th>
               <th>Indent No</th>
-              <th>Po Amount <span class="info" ngbTooltip="Purchase Order Amount">i</span></th>
+              <th>Po Amount
+                <span class="info" ngbTooltip="Purchase Order Amount">i</span>
+              </th>
               <th>Company</th>
               <th>Plant</th>
               <th>Storage</th>
               <th>Bin</th>
-              <th>Po Raised Date <span class="info" ngbTooltip="Purchase Order Raised Date">i</span></th>
+              <th>Po Raised Date
+                <span class="info" ngbTooltip="Purchase Order Raised Date">i</span>
+              </th>
               <th>Status</th>
               <th>Is approved</th>
               <th>Action</th>
@@ -56,7 +59,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let purchaseOrder of purchaseOrderList ; let i = index">
-              <th scope="row">{{i +1}}</th>
+              <th scope="row">{{itemNo + i +1}}</th>
               <td>{{purchaseOrder.purchase_order_map[0].purchase_order_no}}</td>
               <td>{{purchaseOrder.requisition_no[0].requisition_no}}</td>
               <td>{{purchaseOrder.grand_total}}</td>
@@ -87,7 +90,7 @@
                 </select>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Details" name="Details" [routerLink]="['/purchase-orders/details', purchaseOrder.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Details" name="Details" [routerLink]="['/purchase-orders/details', purchaseOrder.id]">
                   <i class="fa fa-eye"></i>
                 </a>
               </td>
@@ -98,13 +101,18 @@
             </tr>
           </tbody>
         </table>
+        <div class="col-md-12">
+          <div class="pagination-msg" *ngIf="totalPurchaseOrderList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalPurchaseOrderList}} entries</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalpurchaseOrderList > 10">
+  <div class="row" *ngIf="totalPurchaseOrderList > itemPerPage">
     <div class="col-md-12">
       <div class="card-body pull-right">
-        <ngb-pagination [collectionSize]="totalpurchaseOrderList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+        <ngb-pagination [collectionSize]="totalPurchaseOrderList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>
   </div>

@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PurchaseRequisitionService } from '../../../core/services/purchase-requisition.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-purchase-requisition-deatils',
   templateUrl: './purchase-requisition-deatils.component.html',
@@ -11,11 +14,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class PurchaseRequisitionDeatilsComponent implements OnInit {
   purchaseRequisition;
+  help_heading = "";
+  help_description = "";
   constructor(
     private purchaseRequisitionService: PurchaseRequisitionService,
     private router: Router, 
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -31,6 +37,14 @@ export class PurchaseRequisitionDeatilsComponent implements OnInit {
       requisition_detail:[{material:{material_code:'',material_fullname:'',id:''},quantity:'',uom:{id:'',name:''}}]
     };
     this.getPurchaseRequisitionDetails(this.route.snapshot.params['id']);
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseRequisitionDetails.heading;
+      this.help_description = res.data.purchaseRequisitionDetails.desc;
+    })
   }
 
   getPurchaseRequisitionDetails(id) {

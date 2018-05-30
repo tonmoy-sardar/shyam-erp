@@ -50,13 +50,13 @@
                             <td>{{purchaseGroup.name}}</td>
                             <td>{{purchaseGroup.description}}</td>
                             <td>
-                                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactivePurchaseGroup(purchaseGroup.id)" *ngIf="purchaseGroup.status==true">
+                                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactivePurchaseGroup(purchaseGroup.id)" *ngIf="purchaseGroup.status==true">
                                     <i class="fa fa-thumbs-up"></i> Active</a>
-                                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activePurchaseGroup(purchaseGroup.id)" *ngIf="purchaseGroup.status==false">
+                                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activePurchaseGroup(purchaseGroup.id)" *ngIf="purchaseGroup.status==false">
                                     <i class="fa fa-thumbs-down"></i> Inactive</a>
                             </td>
                             <td>
-                                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/purchase-group/edit', purchaseGroup.id]">
+                                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/purchase-group/edit', purchaseGroup.id]">
                                     <i class="fa fa-edit"></i>
                                 </a>&nbsp;&nbsp;&nbsp;
 
@@ -67,13 +67,18 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="col-md-12">
+                    <div class="pagination-msg" *ngIf="totalPurchaseGroupList > 0">
+                        <p>Showing {{lower_count}} to {{upper_count}} of {{totalPurchaseGroupList}} entries</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row" *ngIf="totalpurchaseGroupList > 10">
+    <div class="row" *ngIf="totalPurchaseGroupList > itemPerPage">
         <div class="col-md-12">
             <div class="card-body pull-right">
-                <ngb-pagination [collectionSize]="totalpurchaseGroupList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+                <ngb-pagination [collectionSize]="totalPurchaseGroupList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
             </div>
         </div>
     </div>

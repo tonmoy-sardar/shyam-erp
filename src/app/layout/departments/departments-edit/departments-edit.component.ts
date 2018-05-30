@@ -18,7 +18,7 @@ export class DepartmentsEditComponent implements OnInit {
   form: FormGroup;
   visible_key: boolean;
   help_heading = "";
-  help_description = ""; 
+  help_description = "";
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
@@ -32,9 +32,9 @@ export class DepartmentsEditComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.department_deatils ={
-      company:'',
-      department_name:'',
+    this.department_deatils = {
+      company: '',
+      department_name: '',
     }
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
@@ -45,7 +45,7 @@ export class DepartmentsEditComponent implements OnInit {
     this.getCompanyList();
   }
 
-  getDepartmentDetails(id){
+  getDepartmentDetails(id) {
     this.departmentsService.getDepartmentDetails(id).subscribe(res => {
       this.department_deatils = res;
       this.visible_key = true;
@@ -54,14 +54,14 @@ export class DepartmentsEditComponent implements OnInit {
     })
   }
 
-  getHelp(){
+  getHelp() {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.departmentEdit.heading;
       this.help_description = res.data.departmentEdit.desc;
     })
   }
 
-  getCompanyList(){
+  getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(res => {
       this.company_list = res;
       // console.log(res)
@@ -81,7 +81,7 @@ export class DepartmentsEditComponent implements OnInit {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('departments');          
+          this.goToList('departments');
         },
         error => {
           console.log('error', error)
@@ -97,13 +97,13 @@ export class DepartmentsEditComponent implements OnInit {
       });
     }
   }
-  
+
   reSet() {
     this.form.reset();
   }
 
 
-  btnClickNav (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

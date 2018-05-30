@@ -4,10 +4,7 @@
       <h4 class="page-header">Purchase Invoice List</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-      <button type="button" class="btn btn-secondary">
-        <i class="fa fa-refresh"></i> Reload</button>
+        <app-help [heading]="help_heading" [description]="help_description"></app-help>
       <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-invoice/add')">
         <i class="fa fa-plus"></i> New Purchase Invoice</button>
     </div>
@@ -54,7 +51,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let pInvoice of purchaseInvoiceList ; let i = index">
-              <th scope="row">{{i + 1}}</th>
+              <th scope="row">{{itemNo + i + 1}}</th>
               <td>{{pInvoice.company.company_name}}</td>
               <td>{{pInvoice.pur_invoice_map[0].purchase_inv_no}}</td>
               <td>{{pInvoice.grn_number[0].grn_no}}</td>
@@ -83,7 +80,7 @@
                 </select>
               </td>
               <td>
-                <a href="javascript:void(0);" title="View" name="View" [routerLink]="['/purchase-invoice/details', pInvoice.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Details" name="Details" [routerLink]="['/purchase-invoice/details', pInvoice.id]">
                   <i class="fa fa-eye"></i>
                 </a>
               </td>
@@ -93,13 +90,18 @@
             </tr>
           </tbody>
         </table>
+        <div class="col-md-12">
+            <div class="pagination-msg" *ngIf="totalPurchaseInvoiceList > 0">
+              <p>Showing {{lower_count}} to {{upper_count}} of {{totalPurchaseInvoiceList}} entries</p>
+            </div>
+          </div>
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalurchaseInvoiceList > 10">
+  <div class="row" *ngIf="totalPurchaseInvoiceList > itemPerPage">
     <div class="col-md-12">
       <div class="card-body pull-right">
-        <ngb-pagination [collectionSize]="totalurchaseInvoiceList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+        <ngb-pagination [collectionSize]="totalPurchaseInvoiceList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
       </div>
     </div>
   </div>

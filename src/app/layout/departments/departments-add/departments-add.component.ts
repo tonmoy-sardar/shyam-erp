@@ -16,7 +16,7 @@ export class DepartmentsAddComponent implements OnInit {
   company_list: any[] = [];
   form: FormGroup;
   help_heading = "";
-  help_description = ""; 
+  help_description = "";
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
@@ -32,19 +32,19 @@ export class DepartmentsAddComponent implements OnInit {
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
       department_name: ['', Validators.required]
-    });    
+    });
     this.getHelp();
     this.getCompanyList();
   }
 
-  getHelp(){
+  getHelp() {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.departmentAdd.heading;
       this.help_description = res.data.departmentAdd.desc;
     })
   }
 
-  getCompanyList(){
+  getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(res => {
       this.company_list = res;
       this.spinner.hide();
@@ -64,7 +64,7 @@ export class DepartmentsAddComponent implements OnInit {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('departments');          
+          this.goToList('departments');
         },
         error => {
           console.log('error', error)
@@ -80,13 +80,13 @@ export class DepartmentsAddComponent implements OnInit {
       });
     }
   }
-  
+
   reSet() {
     this.form.reset();
   }
 
 
-  btnClickNav (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

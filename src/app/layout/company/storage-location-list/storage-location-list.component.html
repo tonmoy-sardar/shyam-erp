@@ -16,7 +16,7 @@
           <div class="card-header">
             <div class="row">
               <div class="col-md-9">
-                <h5>Storage</h5>
+                <h5>Storage Location</h5>
               </div>
               <div class="col-md-3">
                 <form role="form" (ngSubmit)="dataSearch()">
@@ -49,7 +49,7 @@
                 <td>{{companyStorage.storage_contact_no}}</td>
                 <td>{{companyStorage.storage_email}}</td>
                 <td>
-                  <a href="javascript:void(0);" title="Edit" name="Edit" (click)="showStorageEdit(companyStorage.id)">
+                  <a href="javascript:void(0);"  class="anchor-action" title="Edit" name="Edit" (click)="showStorageEdit(companyStorage.id)">
                     <i class="fa fa-edit"></i>
                   </a>
                 </td>
@@ -59,13 +59,18 @@
               </tr>
             </tbody>
           </table>
+          <div class="col-md-12">
+            <div class="pagination-msg" *ngIf="totalCompanyStorageList > 0">
+              <p>Showing {{lower_count}} to {{upper_count}} of {{totalCompanyStorageList}} entries</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row" *ngIf="totalcompanyStorageList > 10">
+    <div class="row" *ngIf="totalCompanyStorageList > itemPerPage">
       <div class="col-md-12">
         <div class="card-body pull-right">
-          <ngb-pagination [collectionSize]="totalcompanyStorageList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+          <ngb-pagination [collectionSize]="totalCompanyStorageList" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
         </div>
       </div>
     </div>

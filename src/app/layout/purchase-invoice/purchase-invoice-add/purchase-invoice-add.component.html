@@ -1,13 +1,10 @@
-<div>    
+<div>
     <div class="row">
         <div class="col-md-6">
             <h4 class="page-header">Purchase Invoice Add</h4>
         </div>
         <div class="col-md-6 pull-right" style="text-align: right">
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-refresh"></i> Reload</button>
+            <app-help [heading]="help_heading" [description]="help_description"></app-help>
             <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-invoice')">
                 <i class="fa fa-arrow-left"></i> Back</button>
         </div>
@@ -132,9 +129,4 @@
         </div>
     </div>
 </div>
-<ngx-spinner
-bdColor = "rgba(0, 0, 0, 0.8)"
-size = "default"
-color = "#fff"
-type = "ball-spin"
-></ngx-spinner>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>

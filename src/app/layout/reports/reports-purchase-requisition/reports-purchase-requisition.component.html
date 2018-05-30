@@ -159,9 +159,9 @@
                         <p>Showing {{lower_count}} to {{upper_count}} of {{totalSearchRequisitionList}} entries</p>
                       </div>
                     </div>
-                    <div class="col-md-12" *ngIf="totalSearchRequisitionList > 10">
+                    <div class="col-md-12" *ngIf="totalSearchRequisitionList > itemPerPage">
                       <div class="pull-right">
-                        <ngb-pagination [collectionSize]="totalSearchRequisitionList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+                        <ngb-pagination [collectionSize]="totalSearchRequisitionList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
                           size="sm"></ngb-pagination>
                       </div>
                     </div>

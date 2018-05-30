@@ -19,14 +19,15 @@ export class StorageLocationListComponent implements OnInit {
   companyStorageCompShow;
   companyStorageId;
   defaultPagination: number;
-  totalcompanyStorageList: number;
+  totalCompanyStorageList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
-
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
@@ -41,6 +42,8 @@ export class StorageLocationListComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.companyStorageCompShow = {
       showList: true,
       showAdd: false,
@@ -58,11 +61,11 @@ export class StorageLocationListComponent implements OnInit {
     })
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  showStorageAdd = function () {
+  showStorageAdd() {
     this.companyStorageCompShow = {
       showList: false,
       showAdd: true,
@@ -70,7 +73,7 @@ export class StorageLocationListComponent implements OnInit {
     };
   };
 
-  showStorageEdit = function (id) {
+  showStorageEdit(id) {
     this.companyStorageId = id;
     this.companyStorageCompShow = {
       showList: false,
@@ -79,7 +82,7 @@ export class StorageLocationListComponent implements OnInit {
     };
   };
 
-  reloadStorageList = function () {
+  reloadStorageList() {
     this.companyStorageCompShow = {
       showList: true,
       showAdd: false,
@@ -89,22 +92,22 @@ export class StorageLocationListComponent implements OnInit {
     this.getCompanyStorageList(this.route.snapshot.params['id']);
   }
 
-  getCompanyStorageList = function (id) {
+  getCompanyStorageList(id) {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
     this.companyService.getCompanyStorageList(id,params).subscribe(
       (data: any[]) => {
-        this.totalcompanyStorageList = data['count'];
+        this.totalCompanyStorageList = data['count'];
         this.companyStorageList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalcompanyStorageList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalCompanyStorageList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalcompanyStorageList
+          this.upper_count = this.totalCompanyStorageList
         }
 
         this.spinner.hide();
@@ -118,7 +121,7 @@ export class StorageLocationListComponent implements OnInit {
     this.getCompanyStorageList(this.route.snapshot.params['id']);
   }
 
-  pagination = function () {
+  pagination() {
     this.spinner.show();
     this.getCompanyStorageList(this.route.snapshot.params['id']);
   };

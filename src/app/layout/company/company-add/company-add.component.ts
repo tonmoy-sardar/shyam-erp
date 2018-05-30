@@ -6,6 +6,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-company-add',
   templateUrl: './company-add.component.html',
@@ -15,12 +18,15 @@ export class CompanyAddComponent implements OnInit {
   companyList=[];
   stateList;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -51,14 +57,22 @@ export class CompanyAddComponent implements OnInit {
     });
     this.getCompanyDropdownList();
     this.getStateList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.companyAdd.heading;
+      this.help_description = res.data.companyAdd.desc;
+    })
   }
 
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addNewCompany = function () {
+  addNewCompany() {
     if (this.form.valid) {
       this.spinner.show();
       this.companyService.addNewCompany(this.form.value).subscribe(
@@ -86,7 +100,7 @@ export class CompanyAddComponent implements OnInit {
 
   }
 
-  getStateList = function () {
+  getStateList() {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;
@@ -95,7 +109,7 @@ export class CompanyAddComponent implements OnInit {
     );
   };
 
-  getCompanyDropdownList = function () {
+  getCompanyDropdownList() {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
@@ -104,7 +118,7 @@ export class CompanyAddComponent implements OnInit {
     );
   };
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

@@ -14,7 +14,7 @@ import * as Globals from '../../core/globals';
 export class StatesComponent implements OnInit {
   stateList = [];  
   defaultPagination: number;
-  totalstateList: number;
+  totalStateList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
@@ -22,6 +22,7 @@ export class StatesComponent implements OnInit {
   lower_count: number;
   upper_count: number;
   paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private statesService: StatesService,
     private router: Router,
@@ -36,6 +37,7 @@ export class StatesComponent implements OnInit {
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getStateList();
     this.getHelp();
   }
@@ -53,25 +55,25 @@ export class StatesComponent implements OnInit {
     this.getStateList();
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  getStateList = function () {
+  getStateList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
     this.statesService.getStateList(params).subscribe(
       (data: any[]) => {
-        this.totalstateList = data['count'];
+        this.totalStateList = data['count'];
         this.stateList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalstateList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalStateList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalstateList
+          this.upper_count = this.totalStateList
         }
         this.spinner.hide();
         // console.log(data)
@@ -79,7 +81,7 @@ export class StatesComponent implements OnInit {
     );
   };
 
-  activeState = function (id) {
+  activeState(id) {
     this.spinner.show();
     let state;
 
@@ -103,7 +105,7 @@ export class StatesComponent implements OnInit {
     );
   };
 
-  inactiveState = function (id) {
+  inactiveState(id) {
     this.spinner.show();
     let state;
 
@@ -128,7 +130,7 @@ export class StatesComponent implements OnInit {
     );
   };
 
-  deleteState = function (id) {
+  deleteState(id) {
     this.spinner.show();
     let state;
 
@@ -152,7 +154,7 @@ export class StatesComponent implements OnInit {
     );
   };
 
-  pagination = function () {
+  pagination() {
     this.spinner.show();
     this.getStateList();
   };

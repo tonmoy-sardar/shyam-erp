@@ -51,16 +51,16 @@
               <td>{{designation.departments.department_name}}</td>
               <td>{{designation.company.company_name}}</td>
               <td>
-                <a href="javascript:void(0);" title="Active" name="Active" (click)="inactiveState(designation.id)" *ngIf="designation.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(designation.id)" *ngIf="designation.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" title="Inactive" name="Inactive" (click)="activeState(designation.id)" *ngIf="designation.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(designation.id)" *ngIf="designation.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>
-                <a href="javascript:void(0);" title="Edit" name="Edit" [routerLink]="['/designations/edit', designation.id]">
+                <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/designations/edit', designation.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0);" title="Map" name="Map" (click)="deleteDesignation(designation.id)">
+                <a href="javascript:void(0);" class="anchor-action" title="Delete" name="Delete" (click)="deleteDesignation(designation.id)">
                   <i class="fa fa-trash-o"></i>
                 </a>
               </td>
@@ -71,8 +71,8 @@
           </tbody>
         </table>
         <div class="col-md-12">
-          <div class="pagination-msg" *ngIf="totaldesignationList > 0">
-            <p>Showing {{lower_count}} to {{upper_count}} of {{totaldesignationList}} entries</p>
+          <div class="pagination-msg" *ngIf="totalDesignationList > 0">
+            <p>Showing {{lower_count}} to {{upper_count}} of {{totalDesignationList}} entries</p>
           </div>
         </div>
       </div>
@@ -80,8 +80,8 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card-body pull-right" *ngIf="totaldesignationList > 10">
-        <ngb-pagination [collectionSize]="totaldesignationList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+      <div class="card-body pull-right" *ngIf="totalDesignationList > itemPerPage">
+        <ngb-pagination [collectionSize]="totalDesignationList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
           size="sm"></ngb-pagination>
       </div>
     </div>

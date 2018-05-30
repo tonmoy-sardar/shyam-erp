@@ -28,6 +28,9 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
   itemNo: number;
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
+
   requisitionDetails: any;
   requisition_details_key: boolean;
   company: number;
@@ -51,6 +54,8 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getRequisitionList();
     this.getCompanyList();
     this.getHelp();
@@ -142,10 +147,10 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
       (data: any[]) => {
         this.totalSearchRequisitionList = data['count'];
         this.SearchRequisitionList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if (this.totalSearchRequisitionList > Globals.pageSize * this.defaultPagination) {
-          this.upper_count = Globals.pageSize * this.defaultPagination
+        if (this.totalSearchRequisitionList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
         else {
           this.upper_count = this.totalSearchRequisitionList

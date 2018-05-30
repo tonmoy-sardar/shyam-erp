@@ -53,6 +53,8 @@ import { DepartmentsService } from './services/departments.service';
 import { DesignationsService } from './services/designations.service';
 import { EmployeesService } from './services/employees.service';
 import { ReportsService } from './services/reports.service';
+import { VendorTypeService }  from './services/vendor-type.service';
+import { ExpensesService } from './services/expenses.service';
 
 @NgModule({
   imports: [
@@ -142,7 +144,9 @@ export class CoreModule {
         DepartmentsService,
         DesignationsService,
         EmployeesService,
-        ReportsService
+        ReportsService,
+        VendorTypeService,
+        ExpensesService
       ]
     };
   }

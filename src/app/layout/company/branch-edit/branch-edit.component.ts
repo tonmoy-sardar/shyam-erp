@@ -78,7 +78,7 @@ export class BranchEditComponent implements OnInit {
   }
 
 
-  getCompanyBranchDetails = function (id) {
+  getCompanyBranchDetails(id) {
     this.companyService.getCompanyBranchDetails(id).subscribe(
       (data: any[]) => {
         this.companyBranch = data;
@@ -87,7 +87,7 @@ export class BranchEditComponent implements OnInit {
     );
   }
 
-  updateCompanyBranch = function () {
+  updateCompanyBranch() {
     if (this.form.valid) {
       this.spinner.show();
       this.companyService.updateCompanyBranch(this.companyBranch).subscribe(
@@ -115,11 +115,11 @@ export class BranchEditComponent implements OnInit {
     
   }
 
-  btnClickNav = function () {
+  btnClickNav() {
     this.showBranchList.emit();
   };
 
-  getStateList = function () {
+  getStateList() {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;

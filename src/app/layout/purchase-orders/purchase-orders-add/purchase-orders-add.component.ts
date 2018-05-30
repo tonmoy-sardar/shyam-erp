@@ -11,6 +11,9 @@ import { TermsConditionService } from '../../../core/services/terms-condition.se
 import { GstRatesService } from '../../../core/services/gst-rates.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 declare var require: any;
 var converter = require('number-to-words');
 
@@ -37,6 +40,9 @@ export class PurchaseOrdersAddComponent implements OnInit {
   sum: number = 0;
   previous_purchase_list: any[] = [];
   total_rest_quantity: number = 0;
+  help_heading = "";
+  help_description = "";
+  
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -48,7 +54,8 @@ export class PurchaseOrdersAddComponent implements OnInit {
     private vendorService: VendorService,
     private termsConditionService: TermsConditionService,
     private gstRatesService: GstRatesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -72,6 +79,14 @@ export class PurchaseOrdersAddComponent implements OnInit {
     this.getVendorList();
     this.getTermsConditionList();
     this.getGstRatesList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseOrderAdd.heading;
+      this.help_description = res.data.purchaseOrderAdd.desc;
+    })
   }
 
   getRequisitionPurchaseOrderList(id) {

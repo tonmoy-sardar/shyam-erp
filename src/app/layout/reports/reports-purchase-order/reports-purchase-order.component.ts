@@ -30,6 +30,9 @@ export class ReportsPurchaseOrderComponent implements OnInit {
   itemNo: number;
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
+
   orderDetails: any;
   order_details_key: boolean;
   company: number;
@@ -53,8 +56,9 @@ export class ReportsPurchaseOrderComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getOrderList();
     this.getCompanyList();
     this.getVendorList();
@@ -156,10 +160,10 @@ export class ReportsPurchaseOrderComponent implements OnInit {
       (data: any[]) => {
         this.totalSearchOrderList = data['count'];
         this.SearchOrderList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if (this.totalSearchOrderList > Globals.pageSize * this.defaultPagination) {
-          this.upper_count = Globals.pageSize * this.defaultPagination
+        if (this.totalSearchOrderList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
         else {
           this.upper_count = this.totalSearchOrderList

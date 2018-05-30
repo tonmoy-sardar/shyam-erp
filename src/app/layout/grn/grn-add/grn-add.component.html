@@ -4,10 +4,7 @@
             <h4 class="page-header">GRN Add</h4>
         </div>
         <div class="col-md-6 pull-right" style="text-align: right">
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-refresh"></i> Reload</button>
+            <app-help [heading]="help_heading" [description]="help_description"></app-help>
             <button type="button" class="btn btn-primary" (click)="btnClickNav('grn')">
                 <i class="fa fa-arrow-left"></i> Back</button>
         </div>
@@ -68,34 +65,34 @@
                                 </div>
                             </div>
                             <div class="card bg-light mb-3" *ngIf="visible_key && previous_grn_list.length > 0">
-                                 <div class="card-header">Previous GRN</div>
-                                 <div class="card-body">
-                                     <div class="row">
-                                         <table class="card-body table table-sm ">
-                                             <thead>
-                                                 <tr>
-                                                     <th>Material</th>
-                                                     <th>PO. Qty.</th>
-                                                     <th>Qty. Taken</th>
-                                                     <th>Qty. Rest</th>
-                                                     <th>UOM</th>
-                                                     <th>Recieved At</th>
-                                                 </tr>
-                                             </thead>
-                                             <tbody>
-                                                 <tr *ngFor="let grn of previous_grn_list">
-                                                     <td>{{grn.grn_detail[0].material.material_code}}</td>
-                                                     <td>{{grn.grn_detail[0].order_quantity}}</td>
-                                                     <td>{{grn.grn_detail[0].receive_quantity}}</td>
-                                                     <td>{{total_rest_quantity}}</td>
-                                                     <td>{{grn.grn_detail[0].uom.name}}</td>
-                                                     <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
-                                                 </tr>
-                                             </tbody>
-                                         </table>
-                                     </div>
-                                 </div>
-                             </div>
+                                <div class="card-header">Previous GRN</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <table class="card-body table table-sm ">
+                                            <thead>
+                                                <tr>
+                                                    <th>Material</th>
+                                                    <th>PO. Qty.</th>
+                                                    <th>Qty. Taken</th>
+                                                    <th>Qty. Rest</th>
+                                                    <th>UOM</th>
+                                                    <th>Recieved At</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let grn of previous_grn_list">
+                                                    <td>{{grn.grn_detail[0].material.material_code}}</td>
+                                                    <td>{{grn.grn_detail[0].order_quantity}}</td>
+                                                    <td>{{grn.grn_detail[0].receive_quantity}}</td>
+                                                    <td>{{total_rest_quantity}}</td>
+                                                    <td>{{grn.grn_detail[0].uom.name}}</td>
+                                                    <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="card bg-light mb-3" *ngIf="visible_key">
                                 <div class="card-header">Material Line</div>
                                 <div class="card-body">

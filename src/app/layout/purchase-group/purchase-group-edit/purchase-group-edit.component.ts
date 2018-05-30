@@ -49,7 +49,7 @@ export class PurchaseGroupEditComponent implements OnInit {
     })
   }
 
-  getPurchaseGroupDetails = function (id) {
+  getPurchaseGroupDetails(id) {
     this.purchaseGroupService.getPurchaseGroupDetails(id).subscribe(
       (data: any[]) => {
         this.purchaseGroup = data;
@@ -58,12 +58,12 @@ export class PurchaseGroupEditComponent implements OnInit {
     );
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
 
-  updatePurchaseGroup = function () {
+  updatePurchaseGroup() {
     if (this.form.valid) {
       this.spinner.show();
       this.purchaseGroupService.updatePurchaseGroup(this.purchaseGroup).subscribe(
@@ -92,7 +92,7 @@ export class PurchaseGroupEditComponent implements OnInit {
   reSet() {
     this.form.reset();
   }
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
   

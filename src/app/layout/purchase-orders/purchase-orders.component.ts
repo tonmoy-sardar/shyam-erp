@@ -5,6 +5,9 @@ import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../../core/services/company.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
+
 @Component({
   selector: 'app-purchase-orders',
   templateUrl: './purchase-orders.component.html',
@@ -13,25 +16,45 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class PurchaseOrdersComponent implements OnInit {
   purchaseOrderList = []
   defaultPagination: number;
-  totalpurchaseOrderList: number;
+  totalPurchaseOrderList: number;
   search_key = '';
   companyList = [];
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private purchaseOrdersService: PurchaseOrdersService,
     private companyService: CompanyService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getPurchaseOrderList();
     this.getCompanyList()
+    this.getHelp();
   }
 
-  btnClickNav = function (toNav) {
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseOrder.heading;
+      this.help_description = res.data.purchaseOrder.desc;
+    })
+  }
+
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
@@ -54,8 +77,16 @@ export class PurchaseOrdersComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.purchaseOrdersService.getPurchaseOrderList(params).subscribe(
       (data: any[]) => {
-        this.totalpurchaseOrderList = data['count'];
+        this.totalPurchaseOrderList = data['count'];
         this.purchaseOrderList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalPurchaseOrderList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalPurchaseOrderList
+        }
         this.spinner.hide();
         // console.log(this.purchaseOrderList)
       }

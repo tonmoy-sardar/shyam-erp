@@ -4,10 +4,7 @@
             <h4 class="page-header">Purchase Order Add</h4>
         </div>
         <div class="col-md-6 pull-right" style="text-align: right">
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-question" aria-hidden="true"></i> Help</button>
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-refresh"></i> Reload</button>
+            <app-help [heading]="help_heading" [description]="help_description"></app-help>
             <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-orders')">
                 <i class="fa fa-arrow-left"></i> Back</button>
         </div>
@@ -29,8 +26,8 @@
                                         <option value="">Select Requisition</option>
                                         <option value="{{requisition.id}}" *ngFor="let requisition of requisition_list">{{requisition.requisition_map[0].requisition_no}}</option>
                                     </select> -->
-                                    <ng-select class="form-control" placeholder="Select Requisition" (change)="requisitionChange($event)" [clearable]="false" name="requisition" formControlName="requisition"
-                                        [ngClass]="displayFieldCss('requisition')">
+                                    <ng-select class="form-control" placeholder="Select Requisition" (change)="requisitionChange($event)" [clearable]="false"
+                                        name="requisition" formControlName="requisition" [ngClass]="displayFieldCss('requisition')">
                                         <ng-option *ngFor="let requisition of requisition_list" [value]="requisition.id">{{requisition.requisition_map[0].requisition_no}}</ng-option>
                                     </ng-select>
                                     <div class="invalid-feedback" *ngIf="form.controls['requisition'].hasError('required')">

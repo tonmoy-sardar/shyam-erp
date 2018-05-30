@@ -71,7 +71,7 @@ export class BranchAddComponent implements OnInit {
     })
   }
 
-  addNewCompanyBranch = function () {
+  addNewCompanyBranch() {
     if (this.form.valid) {
       this.spinner.show();
       this.companyService.addNewCompanyBranch(this.companyBranch).subscribe(
@@ -98,11 +98,11 @@ export class BranchAddComponent implements OnInit {
     
   }
 
-  btnClickNav = function () {
+  btnClickNav() {
     this.showBranchList.emit();
   };
 
-  getStateList = function () {
+  getStateList() {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;

@@ -14,7 +14,7 @@ import * as Globals from '../../core/globals';
 export class VendorComponent implements OnInit {
   vendorList = []
   defaultPagination: number;
-  totalvendorList: number;
+  totalVendorList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
@@ -22,6 +22,7 @@ export class VendorComponent implements OnInit {
   lower_count: number;
   upper_count: number;
   paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private router: Router,
     private vendorService: VendorService,
@@ -34,6 +35,7 @@ export class VendorComponent implements OnInit {
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getVendorList();
     this.getHelp();
   }
@@ -45,7 +47,7 @@ export class VendorComponent implements OnInit {
     })
   }
 
-  btnClickNav= function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/'+toNav);
   };
 
@@ -61,15 +63,15 @@ export class VendorComponent implements OnInit {
     params.set('search', this.search_key.toString());
     this.vendorService.getVendorList(params).subscribe(
       (data: any[]) => {
-        this.totalvendorList = data['count'];
+        this.totalVendorList = data['count'];
         this.vendorList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalvendorList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalVendorList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalvendorList
+          this.upper_count = this.totalVendorList
         }
         this.spinner.hide();
       }

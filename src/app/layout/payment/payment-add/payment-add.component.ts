@@ -7,6 +7,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-payment-add',
   templateUrl: './payment-add.component.html',
@@ -19,6 +22,8 @@ export class PaymentAddComponent implements OnInit {
   invoiceList = [];
   purchaseInvoiceId: number;
   form: FormGroup;
+  help_heading = "";
+  help_description = "";
   constructor(
     private companyService: CompanyService,
     private paymentService: PaymentService,
@@ -27,7 +32,8 @@ export class PaymentAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private purchaseInvoiceService: PurchaseInvoiceService
+    private purchaseInvoiceService: PurchaseInvoiceService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
@@ -58,6 +64,14 @@ export class PaymentAddComponent implements OnInit {
     };
 
     this.getCompanyDropdownList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.paymentAdd.heading;
+      this.help_description = res.data.paymentAdd.desc;
+    })
   }
 
   getCompanyDropdownList() {
@@ -110,7 +124,7 @@ export class PaymentAddComponent implements OnInit {
     }
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 

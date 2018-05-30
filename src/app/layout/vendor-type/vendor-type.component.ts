@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { VendorTypeService } from '../../core/services/vendor-type.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 
@@ -12,18 +13,20 @@ import * as Globals from '../../core/globals';
   styleUrls: ['./vendor-type.component.scss']
 })
 export class VendorTypeComponent implements OnInit {
-  vendortypeList = [];  
+  vendorTypeList = [];  
   defaultPagination: number;
-  totalvendortypeList: number;
+  totalVendorTypeList: number;
   search_key = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
 
   constructor(
-    private vendortypeService: VendorTypeService,
+    private vendorTypeService: VendorTypeService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
@@ -34,14 +37,16 @@ export class VendorTypeComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
-    this.getVendortypeList();
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
+    this.getVendorTypeList();
     this.getHelp();
   }
 
   getHelp() {
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.vendortype.heading;
-      this.help_description = res.data.vendortype.desc;
+      this.help_heading = res.data.vendorType.heading;
+      this.help_description = res.data.vendorType.desc;
     })
 
   }
@@ -49,45 +54,49 @@ export class VendorTypeComponent implements OnInit {
   dataSearch() {
     this.spinner.show();
     this.defaultPagination = 1;
-    this.getVendortypeList();
+    this.getVendorTypeList();
   }
 
-  getVendortypeList = function () {
+  btnClickNav(toNav) {
+    this.router.navigateByUrl('/' + toNav);
+  };
+
+  getVendorTypeList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
-    this.vendortypeService.getVendorttypeList(params).subscribe(
+    this.vendorTypeService.getVendorTypeList(params).subscribe( 
       (data: any[]) => {
-        this.totalvendortypeList = data['count'];
-        this.vendortypeList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.totalVendorTypeList = data['count'];
+        this.vendorTypeList = data['results'];
+       
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalvendortypeList > Globals.pageSize*this.defaultPagination){
-          this.upper_count = Globals.pageSize*this.defaultPagination
+        if(this.totalVendorTypeList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
         }
         else{
-          this.upper_count = this.totalvendortypeList
+          this.upper_count = this.totalVendorTypeList
         }
         this.spinner.hide();
-        // console.log(data)
       }
     );
   };
 
-  activeVendortype = function (id) {
+  activeVendorType(id) {
     this.spinner.show();
-    let vendortype;
+    let vendorType;
 
-    vendortype = {
+    vendorType = {
       id: id,
       status: true
     };
-    this.vendortypeService.activeInactiveVendortype(vendortype).subscribe(
+    this.vendorTypeService.activeInactiveVendorType(vendorType).subscribe(
       response => {
         this.toastr.success('Status changed successfully', '', {
           timeOut: 3000,
         });
-        this.getVendortypeList();
+        this.getVendorTypeList();
       },
       error => {
         console.log('error', error)
@@ -98,21 +107,21 @@ export class VendorTypeComponent implements OnInit {
     );
   };
 
-  inactiveVendortype = function (id) {
+  inactiveVendorType(id) {
     this.spinner.show();
-    let vendortype;
+    let vendorType;
 
-    vendortype = {
+    vendorType = {
       id: id,
       status: false
     };
 
-    this.VendortypeService.activeInactiveVendortype(vendortype).subscribe(
+    this.vendorTypeService.activeInactiveVendorType(vendorType).subscribe(
       response => {
         this.toastr.success('Status changed successfully', '', {
           timeOut: 3000,
         });
-        this.getVendortypeList();
+        this.getVendorTypeList();
       },
       error => {
         console.log('error', error)
@@ -123,20 +132,20 @@ export class VendorTypeComponent implements OnInit {
     );
   };
 
-  deleteVendortype = function (id) {
+  deleteVendorType(id) {
     this.spinner.show();
-    let vendortype;
+    let vendorType;
 
-    vendortype = {
+    vendorType = {
       id: id
     };
 
-    this.vendortypeService.deleteVendortype(vendortype).subscribe(
+    this.vendorTypeService.deleteVendorType(vendorType).subscribe(
       response => {
         this.toastr.success('Vendor type deleted successfully', '', {
           timeOut: 3000,
         });
-        this.getVendortypeList();
+        this.getVendorTypeList();
       },
       error => {
         console.log('error', error)
@@ -147,9 +156,9 @@ export class VendorTypeComponent implements OnInit {
     );
   };
 
-  pagination = function () {
+  pagination() {
     this.spinner.show();
-    this.getVendortypeList();
+    this.getVendorTypeList();
   };
 
 }

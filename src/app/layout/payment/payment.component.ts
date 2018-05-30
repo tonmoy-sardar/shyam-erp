@@ -4,6 +4,9 @@ import { PaymentService } from '../../core/services/payment.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../core/services/help.service';
+import * as Globals from '../../core/globals';
+
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
@@ -15,18 +18,36 @@ export class PaymentComponent implements OnInit {
   defaultPagination: number;
   totalPaymentList: number;
   search_key = '';
-
+  itemNo: number;
+  help_heading = "";
+  help_description = "";
+  lower_count: number;
+  upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private paymentService: PaymentService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getPaymentList();
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.payment.heading;
+      this.help_description = res.data.payment.desc;
+    })
   }
 
   btnClickNav= function (toNav) {
@@ -47,6 +68,14 @@ export class PaymentComponent implements OnInit {
       (data: any[]) => {
         this.totalPaymentList = data['count'];
         this.paymentList = data['results'];
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
+        this.lower_count = this.itemNo + 1;
+        if(this.totalPaymentList > this.itemPerPage*this.defaultPagination){
+          this.upper_count = this.itemPerPage*this.defaultPagination
+        }
+        else{
+          this.upper_count = this.totalPaymentList
+        }
         // console.log(this.paymentList)
         this.spinner.hide();
       }

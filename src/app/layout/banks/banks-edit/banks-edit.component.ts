@@ -15,8 +15,8 @@ import * as Globals from '../../../core/globals';
 })
 export class BanksEditComponent implements OnInit {
   banks;
-  companyList=[];
-  bankList=[];
+  companyList = [];
+  bankList = [];
   form: FormGroup;
   help_heading = "";
   help_description = "";
@@ -40,11 +40,11 @@ export class BanksEditComponent implements OnInit {
       bank_ifsc: [null, Validators.required]
     });
     this.banks = {
-      id:'',
-      company:'',
+      id: '',
+      company: '',
       bank_branch: '',
       bank_name: '',
-      bank_ifsc:''
+      bank_ifsc: ''
     };
 
     this.getBankDetails(this.route.snapshot.params['id']);
@@ -77,7 +77,7 @@ export class BanksEditComponent implements OnInit {
     );
   };
   btnClickNav(toNav) {
-    this.router.navigateByUrl('/'+toNav);
+    this.router.navigateByUrl('/' + toNav);
   };
 
   goToList(toNav) {
@@ -99,7 +99,7 @@ export class BanksEditComponent implements OnInit {
     };
   }
 
-  updateBank(){
+  updateBank() {
     if (this.form.valid) {
       this.spinner.show();
       this.banksService.updateBank(this.banks).subscribe(
@@ -108,7 +108,7 @@ export class BanksEditComponent implements OnInit {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('banks');          
+          this.goToList('banks');
         },
         error => {
           console.log('error', error)

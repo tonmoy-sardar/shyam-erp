@@ -4,6 +4,9 @@ import { PurchaseOrganizationService } from '../../../core/services/purchase-org
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { HelpService } from '../../../core/services/help.service';
+import * as Globals from '../../../core/globals';
+
 @Component({
   selector: 'app-purchase-organization-mapping',
   templateUrl: './purchase-organization-mapping.component.html',
@@ -11,19 +14,30 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class PurchaseOrganizationMappingComponent implements OnInit {
   companyBranchTree: any[] = [];
-  PurchaseOrganizationMapingList: any[] = []
+  PurchaseOrganizationMapingList: any[] = [];
+  help_heading = "";
+  help_description = "";
   constructor(
     private purchaseOrganizationService: PurchaseOrganizationService,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.spinner.show();
     this.getCompanyBranchTree();
     this.getPurchaseOragnizationList(this.route.snapshot.params['id'])
+    this.getHelp();
+  }
+
+  getHelp() {
+    this.helpService.getHelp().subscribe(res => {
+      this.help_heading = res.data.purchaseOrganizationMapping.heading;
+      this.help_description = res.data.purchaseOrganizationMapping.desc;
+    })
   }
 
   goToList(toNav) {

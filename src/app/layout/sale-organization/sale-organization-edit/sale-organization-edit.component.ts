@@ -49,7 +49,7 @@ export class SaleOrganizationEditComponent implements OnInit {
     })
   }
 
-  getSaleOrganizationDetails = function (id) {
+  getSaleOrganizationDetails(id) {
     this.saleOrganizationService.getSaleOrganizationDetails(id).subscribe(
       (data: any[]) => {
         this.saleOrganization = data;
@@ -58,12 +58,12 @@ export class SaleOrganizationEditComponent implements OnInit {
     );
   }
 
-  goToList = function (toNav) {
+  goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
 
-  updateSaleOrganization = function () {
+  updateSaleOrganization() {
     if (this.form.valid) {
       this.spinner.show();
       this.saleOrganizationService.updateSaleOrganization(this.saleOrganization).subscribe(
@@ -93,7 +93,7 @@ export class SaleOrganizationEditComponent implements OnInit {
     this.form.reset();
   }
 
-  btnClickNav = function (toNav) {
+  btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
