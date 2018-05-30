@@ -101,13 +101,13 @@
                     <div class="col-md-3 text-right">
                       <button type="submit" class="btn btn-default">Excel</button>
                       <button type="submit" class="btn btn-default">PDF</button>
-                      <button type="submit" class="btn btn-default">Print</button>
+                      <button type="submit" class="btn btn-default"  (click)="print()">Print</button>
                     </div>
                   </div>
                 </div>
                 <div class="card-body">
-                  <div class="row">
-                    <table class="card-body table table-hover table-sm table-bordered">
+                  <div class="row" id="purchase-requisition-report-list">
+                    <table class="card-body table table-hover table-sm table-bordered" >
                       <thead>
                         <tr>
                           <th>Sl.No.</th>
