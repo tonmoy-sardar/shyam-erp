@@ -185,10 +185,10 @@ export class ReportsGrnComponent implements OnInit {
       (data: any[]) => {
         this.totalSearchGrnList = data['count'];
         this.SearchGrnList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.pageSize;
+        this.itemNo = (this.defaultPagination - 1) * Globals.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if (this.totalSearchGrnList > Globals.pageSize * this.defaultPagination) {
-          this.upper_count = Globals.pageSize * this.defaultPagination
+        if (this.totalSearchGrnList > Globals.itemPerPage * this.defaultPagination) {
+          this.upper_count = Globals.itemPerPage * this.defaultPagination
         }
         else {
           this.upper_count = this.totalSearchGrnList
@@ -207,7 +207,7 @@ export class ReportsGrnComponent implements OnInit {
   generatePdf(id: string) {
     const elementToPrint = document.getElementById(id);
     console.log(elementToPrint)
-    const pdf = new jsPDF('p', 'pt', 'a4');
+    const pdf = new jsPDF();
     pdf.addHTML(elementToPrint, () => {
       pdf.save('web.pdf');
     });
