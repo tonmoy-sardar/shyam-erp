@@ -21,4 +21,10 @@ export class ReportsService {
     })
   }
 
+  getGrnReportList(params): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'grn_search/?'+params, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
 }
