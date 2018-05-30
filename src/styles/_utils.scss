@@ -148,14 +148,35 @@
     border-color: #1a3650 !important;
 }
 
-.anchor-action
-{
+.anchor-action {
     color: #007bff !important;
     text-decoration: none;
 }
 
-.anchor-action:hover
-{
+.anchor-action:hover {
     color: #0c6b10 !important;
     text-decoration: none;
+}
+
+.nav-full-pading .nav-item .nav-link {
+    padding: 19px 6px;
+    transition: all .40s ease-out
+}
+
+.nav-full-pading .nav-item .nav-link:hover {
+    background-color: #0c559c;
+    transition: all .40s ease;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.main-logo {
+    padding-left: 22px !important;
+}
+
+.nav-full-pading .dropdown-menu {
+    margin-top: 0;
+    border: none;
 }
