@@ -165,9 +165,9 @@
                         <p>Showing {{lower_count}} to {{upper_count}} of {{totalSearchGrnList}} entries</p>
                       </div>
                     </div>
-                    <div class="col-md-12" *ngIf="totalSearchGrnList > 10">
+                    <div class="col-md-12" *ngIf="totalSearchGrnList > itemPerPage">
                       <div class="pull-right">
-                        <ngb-pagination [collectionSize]="totalSearchGrnList" [maxSize]="2" [(page)]="defaultPagination" (pageChange)="pagination()"
+                        <ngb-pagination [collectionSize]="totalSearchGrnList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
                           size="sm"></ngb-pagination>
                       </div>
                     </div>
