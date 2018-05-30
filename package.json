@@ -23,6 +23,7 @@
     "@angular/router": "^5.2.9",
     "@ng-bootstrap/ng-bootstrap": "^1.1.0",
     "@ng-select/ng-select": "^1.4.1",
+    "@types/jspdf": "^1.1.31",
     "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",

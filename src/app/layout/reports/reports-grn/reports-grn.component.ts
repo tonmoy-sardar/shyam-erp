@@ -206,9 +206,13 @@ export class ReportsGrnComponent implements OnInit {
   // pdf
   generatePdf(id: string) {
     const elementToPrint = document.getElementById(id);
-    console.log(elementToPrint)
-    const pdf = new jsPDF();
-    pdf.addHTML(elementToPrint, () => {
+    var options = {
+      background: '#FFFFFF',
+      pagesplit: true
+    };
+    const pdf = new jsPDF('p', 'pt', 'a4');
+    pdf.internal.scaleFactor = 2.10;
+    pdf.addHTML(elementToPrint, 0, 0, options, () => {
       pdf.save('web.pdf');
     });
   }
