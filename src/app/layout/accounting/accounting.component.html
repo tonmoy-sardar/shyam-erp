@@ -63,12 +63,15 @@
               <td>{{payment.created_by.first_name}}</td>
               <td>{{payment.total_amount}}</td>
               <td>
-                <label *ngIf="payment.is_paid">Applied</label>
+                <label *ngIf="payment.is_paid">Paid</label>
                 <a href="javascript:void(0);" class="anchor-action" title="Pay" name="Pay" [routerLink]="['/accounting/pay', payment.id]" *ngIf="!payment.is_paid">
                   <i class="fa fa-credit-card" aria-hidden="true"></i>
                 </a>
               </td>
             </tr>
+            <tr *ngIf="paymentList.length == 0">
+                <td colspan="10" class="text-center">No record found</td>
+              </tr>
           </tbody>
         </table>
         <div class="col-md-12">

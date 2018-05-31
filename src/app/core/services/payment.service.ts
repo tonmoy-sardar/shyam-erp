@@ -26,9 +26,21 @@ export class PaymentService {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
+
+  getPaymentListWithoutPagination(): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'payment_dropdown/', {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
   
   getPaymentDetails(id): Observable<any>{
     return this.http.get(environment.apiEndpoint+'payment/'+id+'/', {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
+  getPaymentInfoDetails(id): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'all_payment/'+id+'/', {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

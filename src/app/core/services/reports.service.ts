@@ -27,4 +27,10 @@ export class ReportsService {
     })
   }
 
+  getPaymentReportList(params): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'payment_search/?'+params, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
 }
