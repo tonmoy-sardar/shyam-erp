@@ -11,11 +11,12 @@ import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
 
 @Component({
-  selector: 'app-payment-add',
-  templateUrl: './payment-add.component.html',
-  styleUrls: ['./payment-add.component.scss']
+  selector: 'app-pay',
+  templateUrl: './pay.component.html',
+  styleUrls: ['./pay.component.scss']
 })
-export class PaymentAddComponent implements OnInit {
+export class PayComponent implements OnInit {
+
   payment;
   companyList = [];
   bankList = [];
@@ -39,9 +40,9 @@ export class PaymentAddComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.form = this.formBuilder.group({
-      company: [null, Validators.required],
-      pur_inv: [null, Validators.required],
-      total_amount: [null, Validators.required],
+      company: [{value: null, disabled: true}],
+      pur_inv: [{value: null, disabled: true}],
+      total_amount: [{value: null, disabled: true}],
       bank: [null, Validators.required],
       created_at: [null, Validators.required],
       payment_mode: [null, Validators.required],
@@ -60,25 +61,42 @@ export class PaymentAddComponent implements OnInit {
       po_order: '',
       po_order_no: '',
       purchase_inv_date: '',
-      purchase_inv_no: ''
+      purchase_inv_no: '',
+      is_paid: true
     };
 
     this.getCompanyDropdownList();
     this.getHelp();
+    this.getPaymentDetails(this.route.snapshot.params['id']);
+  }
+
+  getPaymentDetails(id){
+    this.paymentService.getPaymentDetails(id).subscribe(res => {
+      // console.log(res)
+      this.payment = res;
+      var date = new Date(this.payment.created_at)
+      this.payment.created_at = {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate()
+      }
+      this.getCompanyInvoiceList(this.payment.company);
+      this.getCompanyBankList(this.payment.company);
+      this.spinner.hide();
+    })
   }
 
   getHelp() {
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.paymentAdd.heading;
-      this.help_description = res.data.paymentAdd.desc;
+      this.help_heading = res.data.paymentPay.heading;
+      this.help_description = res.data.paymentPay.desc;
     })
   }
 
   getCompanyDropdownList() {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
-        this.companyList = data;
-        this.spinner.hide();
+        this.companyList = data;        
       }
     );
   };
@@ -101,37 +119,18 @@ export class PaymentAddComponent implements OnInit {
     );
   };
 
-  changeCompany(id) {
-    if (id > 0) {
-      this.getCompanyBankList(id);
-      this.getCompanyInvoiceList(id);
-    }
-  }
-
-  changeInv(id) {
-    if (id > 0) {
-      for (var i = 0; i < this.invoiceList.length; i++) {
-        if (this.invoiceList[i].id == id) {
-          this.payment.total_amount = this.invoiceList[i].total_amount;
-          this.payment.po_order = this.invoiceList[i].po_order;
-          this.payment.po_order_no = this.invoiceList[i].po_order_no[0].purchase_order_no;
-          this.payment.purchase_inv_date = this.invoiceList[i].created_at;
-          this.payment.purchase_inv_no = this.invoiceList[i].pur_invoice_map[0].purchase_inv_no;
-          // console.log(this.invoiceList);
-        }
-      }
-      this.purchaseInvoiceId = id;
-    }
-  }
 
   goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  addNewPayment() {
+  Payment() {
     if (this.form.valid) {
       this.spinner.show();
-      this.paymentService.addNewPayment(this.payment).subscribe(
+      var date = new Date(this.form.value.created_at.year, this.form.value.created_at.month - 1, this.form.value.created_at.day)      
+      this.payment.created_at = date.toISOString();
+      this.payment.is_paid = true;
+      this.paymentService.updatePayment(this.payment).subscribe(
         response => {
           this.purchaseInvoiceFinalize()
         },
@@ -153,12 +152,12 @@ export class PaymentAddComponent implements OnInit {
   purchaseInvoiceFinalize() {
     let d;
     d = {
-      id: this.purchaseInvoiceId,
+      id: this.payment.pur_inv,
       is_finalised: 1
     };
     this.purchaseInvoiceService.finalizePurchaseInvoice(d).subscribe(
       response => {
-        this.toastr.success('Payment added successfully', '', {
+        this.toastr.success('Payment successfully', '', {
           timeOut: 3000,
         });
         this.spinner.hide();
