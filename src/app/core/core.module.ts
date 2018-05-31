@@ -56,6 +56,8 @@ import { ReportsService } from './services/reports.service';
 import { VendorTypeService }  from './services/vendor-type.service';
 import { ExpensesService } from './services/expenses.service';
 
+import { WindowRefService } from './services/window-ref.service'
+
 @NgModule({
   imports: [
     CommonModule,
@@ -146,7 +148,8 @@ export class CoreModule {
         EmployeesService,
         ReportsService,
         VendorTypeService,
-        ExpensesService
+        ExpensesService,
+        WindowRefService
       ]
     };
   }

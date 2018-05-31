@@ -55,7 +55,7 @@ export class EmployeesAddComponent implements OnInit {
         Validators.maxLength(12)
       ]],
       dob: ['', Validators.required],
-      blood_group: ['', Validators.required],
+      blood_group: [''],
       pan: ['', Validators.required],
       adhaar_no: ['', Validators.required],
       emp_present_address: ['', Validators.required],
