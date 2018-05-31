@@ -55,6 +55,7 @@ import { EmployeesService } from './services/employees.service';
 import { ReportsService } from './services/reports.service';
 import { VendorTypeService }  from './services/vendor-type.service';
 import { ExpensesService } from './services/expenses.service';
+import { ContractorsService } from './services/contractors.service';
 
 @NgModule({
   imports: [
@@ -146,7 +147,8 @@ export class CoreModule {
         EmployeesService,
         ReportsService,
         VendorTypeService,
-        ExpensesService
+        ExpensesService,
+        ContractorsService
       ]
     };
   }
