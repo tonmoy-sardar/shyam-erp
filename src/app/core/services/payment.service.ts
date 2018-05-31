@@ -15,11 +15,23 @@ export class PaymentService {
     })
   }
 
+  updatePayment(data): Observable<any>{
+    return this.http.put(environment.apiEndpoint+'payment/'+data.id+'/', data, {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
+
   getPaymentList(params): Observable<any>{
     return this.http.get(environment.apiEndpoint+'all_payment/?'+params, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
-  } 
+  }
+  
+  getPaymentDetails(id): Observable<any>{
+    return this.http.get(environment.apiEndpoint+'payment/'+id+'/', {
+      headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
+    })
+  }
 
   activeInactivePayment(data): Observable<any>{
     return this.http.patch(environment.apiEndpoint+'payment_status/'+data.id+'/',data, {

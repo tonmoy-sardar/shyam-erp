@@ -5,7 +5,7 @@
         </div>
         <div class="col-md-6 pull-right" style="text-align: right">
             <app-help [heading]="help_heading" [description]="help_description"></app-help>
-            <button type="button" class="btn btn-primary" (click)="btnClickNav('payment')">
+            <button type="button" class="btn btn-primary" (click)="btnClickNav('accounting')">
                 <i class="fa fa-arrow-left"></i> Back</button>
         </div>
         <div class="clearfix"></div>
@@ -21,39 +21,26 @@
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label>Company</label>
-                                    <select class="form-control" [(ngModel)]="payment.company" name="company" formControlName="company" [ngClass]="displayFieldCss('company')"
-                                        (ngModelChange)="changeCompany(payment.company)">
+                                    <select class="form-control" [(ngModel)]="payment.company" name="company" formControlName="company">
                                         <option value="">Select Company</option>
                                         <option *ngFor="let companyObj of companyList ;" value="{{companyObj.id}}">{{companyObj.company_name}}</option>
                                     </select>
-                                    <div class="invalid-feedback" *ngIf="form.controls['company'].hasError('required')">
-                                        Please select company
-                                    </div>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Select PO INV</label>
-                                    <select class="form-control" [(ngModel)]="payment.pur_inv" name="pur_inv" formControlName="pur_inv" [ngClass]="displayFieldCss('pur_inv')"
-                                        (ngModelChange)="changeInv(payment.pur_inv)">
-                                        <option value="">Select PO INV</option>
+                                    <select class="form-control" [(ngModel)]="payment.pur_inv" name="pur_inv" formControlName="pur_inv">
+                                        <option value="null">Select PO INV</option>
                                         <option *ngFor="let invoiceObj of invoiceList ;" value="{{invoiceObj.id}}">{{invoiceObj.pur_invoice_map[0].purchase_inv_no}}</option>
                                     </select>
-                                    <div class="invalid-feedback" *ngIf="form.controls['pur_inv'].hasError('required')">
-                                        Please select PO INV
-                                    </div>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Total Amount</label>
-                                    <input class="form-control" [(ngModel)]="payment.total_amount" name="total_amount" formControlName="total_amount" [ngClass]="displayFieldCss('total_amount')"
-                                        placeholder="Total Amount">
-
-                                    <div class="invalid-feedback" *ngIf="form.controls['total_amount'].hasError('required')">
-                                        Please enter total amount
-                                    </div>
+                                    <input class="form-control" [(ngModel)]="payment.total_amount" name="total_amount" formControlName="total_amount" placeholder="Total Amount">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Select Bank</label>
                                     <select class="form-control" [(ngModel)]="payment.bank" name="bank" formControlName="bank" [ngClass]="displayFieldCss('bank')">
-                                        <option value="">Select Bank</option>
+                                        <option value="null">Select Bank</option>
                                         <option *ngFor="let bankObj of bankList ;" value="{{bankObj.id}}">{{bankObj.bank_name}}</option>
                                     </select>
                                     <div class="invalid-feedback" *ngIf="form.controls['bank'].hasError('required')">
@@ -78,7 +65,7 @@
                                 <div class="form-group col-md-3">
                                     <label>Mode of Payment</label>
                                     <select class="form-control" [(ngModel)]="payment.payment_mode" name="payment_mode" formControlName="payment_mode" [ngClass]="displayFieldCss('payment_mode')">
-                                        <option value="">Select Mode of Payment</option>
+                                        <option value="null">Select Mode of Payment</option>
                                         <option>Cheque</option>
                                         <option>Cash</option>
                                         <option>Online</option>
@@ -104,8 +91,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12" style="text-align: right">
-                                    <button type="submit" class="btn btn-primary" (click)="addNewPayment()">Submit</button>
-                                    <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                    <button type="submit" class="btn btn-primary" (click)="Payment()">Pay</button>
                                 </div>
                             </div>
                         </div>

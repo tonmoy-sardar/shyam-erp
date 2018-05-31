@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { PurchaseInvoiceService } from '../../core/services/purchase-invoice.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { PaymentService } from '../../core/services/payment.service';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 
@@ -30,11 +30,15 @@ export class PurchaseInvoiceComponent implements OnInit {
     private toastr: ToastrService,
     private purchaseInvoiceService: PurchaseInvoiceService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    private paymentService: PaymentService
   ) { }
 
   ngOnInit() {
+    this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getpurchaseInvoiceList();
     this.spinner.show();
     this.getHelp();
@@ -66,10 +70,10 @@ export class PurchaseInvoiceComponent implements OnInit {
         this.purchaseInvoiceList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalPurchaseInvoiceList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalPurchaseInvoiceList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalPurchaseInvoiceList
         }
         this.spinner.hide();
@@ -111,22 +115,27 @@ export class PurchaseInvoiceComponent implements OnInit {
     }
   }
 
-  changeApproveStatus(value, id) {
+  changeApproveStatus(value, pInvoice) {
     if (value > 0) {
       this.spinner.show();
       let PurchaseInvoice;
 
       PurchaseInvoice = {
-        id: id,
+        id: pInvoice.id,
         is_approve: value
       };
 
       this.purchaseInvoiceService.approveDisapprovePurchaseInvoice(PurchaseInvoice).subscribe(
         response => {
-          this.toastr.success('Purchase invoice approve status changed successfully', '', {
-            timeOut: 3000,
-          });
-          this.getpurchaseInvoiceList();
+          if (value == 1) {
+            this.paymentCreation(pInvoice);
+          }
+          else {
+            this.toastr.success('Purchase invoice approve status changed successfully', '', {
+              timeOut: 3000,
+            });
+            this.getpurchaseInvoiceList();
+          }
         },
         error => {
           console.log('error', error)
@@ -137,6 +146,35 @@ export class PurchaseInvoiceComponent implements OnInit {
       );
     }
 
+  }
+
+  paymentCreation(pInvoice) {
+    var payment = {
+      company: pInvoice.company.id,
+      pur_inv: pInvoice.id,
+      total_amount: pInvoice.total_amount,
+      po_order: pInvoice.po_order_no[0].id,
+      po_order_no: pInvoice.po_order_no[0].purchase_order_no,
+      purchase_inv_date: pInvoice.created_at,
+      purchase_inv_no: pInvoice.pur_invoice_map[0].purchase_inv_no,
+      vendor: pInvoice.vendor.id,
+      vendor_address: pInvoice.vendor_address.id
+    };
+
+    this.paymentService.addNewPayment(payment).subscribe(
+      response => {
+        this.toastr.success('Purchase invoice approve status changed successfully', '', {
+          timeOut: 3000,
+        });
+        this.getpurchaseInvoiceList();
+      },
+      error => {
+        console.log('error', error)
+        // this.toastr.error('everything is broken', '', {
+        //   timeOut: 3000,
+        // });
+      }
+    );
   }
 
   pagination() {

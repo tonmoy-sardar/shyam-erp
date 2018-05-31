@@ -47,7 +47,10 @@ export class GrnComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getGrnList();
     this.getHelp();
   }

@@ -281,11 +281,11 @@
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
         },
         "payment": {
-            "heading": "Payment",
+            "heading": "Payment List",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
         },
-        "paymentAdd": {
-            "heading": "Payment Add",
+        "paymentPay": {
+            "heading": "Payment Pay",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
         },
         "purchaseInvoice": {

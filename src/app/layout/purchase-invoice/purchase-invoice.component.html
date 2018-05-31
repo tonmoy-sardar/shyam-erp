@@ -62,7 +62,7 @@
                 <label *ngIf="pInvoice.is_finalised == 1">Finalised</label>
                 <label *ngIf="pInvoice.status && pInvoice.is_finalised == 0">Active</label>
                 <label *ngIf="!pInvoice.status && pInvoice.is_finalised == 0">Inactive</label>
-                <select *ngIf="pInvoice.is_finalised == 0" class="form-control" name="status" (change)="changeStatus($event.target.value,pInvoice.id)">
+                <select *ngIf="pInvoice.is_finalised == 0 && (pInvoice.is_approve == 2 || pInvoice.is_approve == 0)" class="form-control" name="status" (change)="changeStatus($event.target.value,pInvoice.id)">
                   <option value=''>Change Status</option>
                   <option value='0'>Cancel</option>
                   <option value='1'>Active</option>
@@ -73,7 +73,7 @@
                 <label *ngIf="pInvoice.is_approve == 0 && pInvoice.is_finalised == 0">None</label>
                 <label *ngIf="pInvoice.is_approve == 1 && pInvoice.is_finalised == 0">Yes</label>
                 <label *ngIf="pInvoice.is_approve == 2 && pInvoice.is_finalised == 0">No</label>
-                <select *ngIf="pInvoice.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,pInvoice.id)">
+                <select *ngIf="pInvoice.is_finalised == 0 && (pInvoice.is_approve == 2 || pInvoice.is_approve == 0)" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,pInvoice)">
                   <option value='0'>Change Approve</option>
                   <option value='1'>Approve</option>
                   <option value='2'>Dis-Approve</option>

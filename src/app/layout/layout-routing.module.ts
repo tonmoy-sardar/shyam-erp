@@ -23,7 +23,6 @@ const routes: Routes = [
       { path: 'purchase-requisition', loadChildren: './purchase-requisition/purchase-requisition.module#PurchaseRequisitionModule' },
       { path: 'purchase-orders', loadChildren: './purchase-orders/purchase-orders.module#PurchaseOrdersModule' },      
       { path: 'grn', loadChildren: './grn/grn.module#GrnModule' },
-      { path: 'payment', loadChildren: './payment/payment.module#PaymentModule' },
       { path: 'purchase-invoice', loadChildren: './purchase-invoice/purchase-invoice.module#PurchaseInvoiceModule' },
       { path: 'stocks', loadChildren: './stocks/stocks.module#StocksModule' },
       { path: 'stocks-transfer', loadChildren: './stocks-transfer/stocks-transfer.module#StocksTransferModule' },
@@ -32,8 +31,8 @@ const routes: Routes = [
       { path: 'employees', loadChildren: './employees/employees.module#EmployeesModule' },
       { path: 'reports', loadChildren: './reports/reports.module#ReportsModule' },
       { path: 'vendor-type', loadChildren: './vendor-type/vendor-type.module#VendorTypeModule' },
-      { path: 'expenses', loadChildren: './expenses/expenses.module#ExpensesModule' }
-
+      { path: 'expenses', loadChildren: './expenses/expenses.module#ExpensesModule' },
+      { path: 'accounting', loadChildren: './accounting/accounting.module#AccountingModule' }
     ]
   }
 
