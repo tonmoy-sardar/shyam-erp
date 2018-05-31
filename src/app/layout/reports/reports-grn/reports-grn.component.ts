@@ -32,6 +32,8 @@ export class ReportsGrnComponent implements OnInit {
   itemNo: number;
   lower_count: number;
   upper_count: number;
+  paginationMaxSize: number;
+  itemPerPage: number;
   grnDetails: any;
   grn_details_key: boolean;
   company: number;
@@ -57,6 +59,8 @@ export class ReportsGrnComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getGrnList();
     this.getCompanyList();
     this.getVendorList();
@@ -185,10 +189,10 @@ export class ReportsGrnComponent implements OnInit {
       (data: any[]) => {
         this.totalSearchGrnList = data['count'];
         this.SearchGrnList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) * Globals.itemPerPage;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if (this.totalSearchGrnList > Globals.itemPerPage * this.defaultPagination) {
-          this.upper_count = Globals.itemPerPage * this.defaultPagination
+        if (this.totalSearchGrnList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
         else {
           this.upper_count = this.totalSearchGrnList
@@ -206,9 +210,13 @@ export class ReportsGrnComponent implements OnInit {
   // pdf
   generatePdf(id: string) {
     const elementToPrint = document.getElementById(id);
-    console.log(elementToPrint)
-    const pdf = new jsPDF();
-    pdf.addHTML(elementToPrint, () => {
+    var options = {
+      background: '#FFFFFF',
+      pagesplit: true
+    };
+    const pdf = new jsPDF('p', 'pt', 'a4');
+    pdf.internal.scaleFactor = 2.10;
+    pdf.addHTML(elementToPrint, 0, 0, options, () => {
       pdf.save('web.pdf');
     });
   }

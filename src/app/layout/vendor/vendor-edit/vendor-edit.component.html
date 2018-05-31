@@ -42,27 +42,15 @@
                     </div>
                     <div class="form-group col-md-2">
                       <label>PAN</label>
-                      <input type="text" class="form-control" [(ngModel)]="vendor_details.pan_no" name="pan_no" placeholder="Pan" formControlName="pan_no"
-                        [ngClass]="displayFieldCss('pan_no')">
-                      <div class="invalid-feedback" *ngIf="form.controls['pan_no'].hasError('required')">
-                        Please enter PAN
-                      </div>
+                      <input type="text" class="form-control" [(ngModel)]="vendor_details.pan_no" name="pan_no" placeholder="Pan" formControlName="pan_no">
                     </div>
                     <div class="form-group col-md-2">
                       <label>CIN</label>
-                      <input type="text" class="form-control" [(ngModel)]="vendor_details.cin_no" name="cin_no" placeholder="CIN" formControlName="cin_no"
-                        [ngClass]="displayFieldCss('cin_no')">
-                      <div class="invalid-feedback" *ngIf="form.controls['cin_no'].hasError('required')">
-                        Please enter CIN
-                      </div>
+                      <input type="text" class="form-control" [(ngModel)]="vendor_details.cin_no" name="cin_no" placeholder="CIN" formControlName="cin_no">
                     </div>
                     <div class="form-group col-md-2">
                       <label>GSTIN</label>
-                      <input type="text" class="form-control" [(ngModel)]="vendor_details.gst_no" name="gst_no" placeholder="GSTIN" formControlName="gst_no"
-                        [ngClass]="displayFieldCss('gst_no')">
-                      <div class="invalid-feedback" *ngIf="form.controls['gst_no'].hasError('required')">
-                        Please enter GSTIN
-                      </div>
+                      <input type="text" class="form-control" [(ngModel)]="vendor_details.gst_no" name="gst_no" placeholder="GSTIN" formControlName="gst_no">
                     </div>
                   </div>
                 </div>
@@ -75,14 +63,7 @@
                       <div class="row">
                         <div class="form-group col-md-3">
                           <label>Email</label>
-                          <input class="form-control" placeholder="Email" [(ngModel)]="vendor_details.vendor_address[i].email" name="email" formControlName="email"
-                            [ngClass]="{
-                                'is-invalid': contact.get('email').invalid && (contact.get('email').dirty || contact.get('email').touched),
-                                'is-valid': contact.get('email').valid && (contact.get('email').dirty || contact.get('email').touched)
-                              }">
-                          <div class="invalid-feedback" *ngIf="contact.get('email').touched && contact.get('email').hasError('required')">
-                            Please enter email
-                          </div>
+                          <input class="form-control" placeholder="Email" [(ngModel)]="vendor_details.vendor_address[i].email" name="email" formControlName="email">
                         </div>
                         <div class="form-group col-md-3">
                           <label>Contact No.</label>
@@ -98,24 +79,12 @@
                         <div class="form-group col-md-3">
                           <label>Contact Person</label>
                           <input class="form-control" placeholder="Contact Person" name="contact_person" [(ngModel)]="vendor_details.vendor_address[i].contact_person"
-                            formControlName="contact_person" [ngClass]="{
-                                'is-invalid': contact.get('contact_person').invalid && (contact.get('contact_person').dirty || contact.get('contact_person').touched),
-                                'is-valid': contact.get('contact_person').valid && (contact.get('contact_person').dirty || contact.get('contact_person').touched)
-                              }">
-                          <div class="invalid-feedback" *ngIf="contact.get('contact_person').touched && contact.get('contact_person').hasError('required')">
-                            Please enter contact person
-                          </div>
+                            formControlName="contact_person">
                         </div>
                         <div class="form-group col-md-3">
                           <label>Designation</label>
                           <input class="form-control" placeholder="Designation" [(ngModel)]="vendor_details.vendor_address[i].designation" name="designation"
-                            formControlName="designation" [ngClass]="{
-                                'is-invalid': contact.get('designation').invalid && (contact.get('designation').dirty || contact.get('designation').touched),
-                                'is-valid': contact.get('designation').valid && (contact.get('designation').dirty || contact.get('designation').touched)
-                              }">
-                          <div class="invalid-feedback" *ngIf="contact.get('designation').touched && contact.get('designation').hasError('required')">
-                            Please enter designation
-                          </div>
+                            formControlName="designation">
                         </div>
                         <div class="form-group col-md-5">
                           <label>Address</label>

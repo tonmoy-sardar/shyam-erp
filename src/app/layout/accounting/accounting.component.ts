@@ -8,11 +8,11 @@ import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 
 @Component({
-  selector: 'app-payment',
-  templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.scss']
+  selector: 'app-accounting',
+  templateUrl: './accounting.component.html',
+  styleUrls: ['./accounting.component.scss']
 })
-export class PaymentComponent implements OnInit {
+export class AccountingComponent implements OnInit {
 
   paymentList = []
   defaultPagination: number;
@@ -50,8 +50,8 @@ export class PaymentComponent implements OnInit {
     })
   }
 
-  btnClickNav= function (toNav) {
-    this.router.navigateByUrl('/'+toNav);
+  btnClickNav = function (toNav) {
+    this.router.navigateByUrl('/' + toNav);
   };
 
   dataSearch() {
@@ -60,7 +60,7 @@ export class PaymentComponent implements OnInit {
     this.getPaymentList();
   }
 
-  getPaymentList(){
+  getPaymentList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
@@ -70,10 +70,10 @@ export class PaymentComponent implements OnInit {
         this.paymentList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalPaymentList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalPaymentList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalPaymentList
         }
         // console.log(this.paymentList)
@@ -81,67 +81,7 @@ export class PaymentComponent implements OnInit {
       }
     );
   }
-
-  changeStatus(value, id) {
-    this.spinner.show();
-    let payment;
-    if (value != "") {
-      if (value == 0) {
-        payment = {
-          id: id,
-          status: false
-        };
-      }
-      else if (value == 1) {
-        payment = {
-          id: id,
-          status: true
-        };
-      }
-      this.paymentService.activeInactivePayment(payment).subscribe(
-        response => {
-          this.toastr.success('Status changed successfully', '', {
-            timeOut: 3000,
-          });
-          this.getPaymentList();
-        },
-        error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
-        }
-      );
-    }
-  }
-
-  changeApproveStatus(value, id) {    
-    if (value > 0) {
-            
-      this.spinner.show();
-      let payment;
-      payment = {
-        id: id,
-        is_approve: value
-      };
-
-      this.paymentService.approveDisapprovePayment(payment).subscribe(
-        response => {
-          this.toastr.success('Payment approve status changed successfully', '', {
-            timeOut: 3000,
-          });
-          this.getPaymentList();         
-        },
-        error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
-        }
-      );
-    }
-
-  }
+  
 
   pagination() {
     this.spinner.show();
