@@ -38,9 +38,9 @@ export class VendorEditComponent implements OnInit {
     this.form = this.formBuilder.group({
       vendor_fullname: ['', Validators.required],
       vendor_type: ['', Validators.required],
-      pan_no: ['', Validators.required],
-      cin_no: ['', Validators.required],
-      gst_no: ['', Validators.required],
+      pan_no: [''],
+      cin_no: [''],
+      gst_no: [''],
       // amount_credit: ['', Validators.required],
       // amount_debit: ['', Validators.required],
       vendor_address: this.formBuilder.array([]),
@@ -116,10 +116,10 @@ export class VendorEditComponent implements OnInit {
   }
   createContactInfo() {
     return this.formBuilder.group({
-      email: ['', Validators.required],
+      email: [''],
       mobile: ['', Validators.required],
-      contact_person: ['', Validators.required],
-      designation: ['', Validators.required],
+      contact_person: [''],
+      designation: [''],
       address: ['', Validators.required],
       state: ['', Validators.required],
       city: ['', Validators.required],

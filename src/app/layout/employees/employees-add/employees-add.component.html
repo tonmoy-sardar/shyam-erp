@@ -59,14 +59,7 @@
                 </div>
                 <div class="form-group col-md-4">
                   <label>Alternate Contact No.</label>
-                  <input type="text" appOnlyNumber class="form-control" name="alt_contact" placeholder="Alternate Contact No." formControlName="alt_contact"
-                    [ngClass]="displayFieldCss('alt_contact')">
-                  <div class="invalid-feedback" *ngIf="form.controls['alt_contact'].hasError('minlength')">
-                    Please enter at least 10 digit
-                  </div>
-                  <div class="invalid-feedback" *ngIf="form.controls['alt_contact'].hasError('maxlength')">
-                    Phone number should be less then 13 digit
-                  </div>
+                  <input type="text" appOnlyNumber class="form-control" name="alt_contact" placeholder="Alternate Contact No." formControlName="alt_contact">
                 </div>
                 <div class="form-group col-md-4">
                   <label>DOB</label>
@@ -84,15 +77,11 @@
                 </div>
                 <div class="form-group col-md-4">
                   <label>Blood Group</label>
-                  <input type="text" class="form-control" name="blood_group" placeholder="Blood Group" formControlName="blood_group" [ngClass]="displayFieldCss('blood_group')">
-                  
+                  <input type="text" class="form-control" name="blood_group" placeholder="Blood Group" formControlName="blood_group">                  
                 </div>
                 <div class="form-group col-md-4">
                   <label>PAN</label>
-                  <input type="text" class="form-control" name="pan" placeholder="PAN" formControlName="pan" [ngClass]="displayFieldCss('pan')">
-                  <div class="invalid-feedback" *ngIf="form.controls['pan'].hasError('required')">
-                    Please enter PAN
-                  </div>
+                  <input type="text" class="form-control" name="pan" placeholder="PAN" formControlName="pan">
                 </div>
                 <div class="form-group col-md-4">
                   <label>AADHAAR Number</label>
@@ -148,35 +137,22 @@
                   <div class="row">
                     <div class="form-group col-md-4">
                       <label>Address</label>
-                      <textarea class="form-control" rows="1" placeholder="Address" name="emp_permanent_address" formControlName="emp_permanent_address"
-                        [ngClass]="displayFieldCss('emp_permanent_address')"></textarea>
-                      <div class="invalid-feedback" *ngIf="form.controls['emp_permanent_address'].hasError('required')">
-                        Please enter address
-                      </div>
+                      <textarea class="form-control" rows="1" placeholder="Address" name="emp_permanent_address" formControlName="emp_permanent_address"></textarea>
                     </div>
                     <div class="form-group col-md-3">
                       <label>State</label>
-                      <select class="form-control" name="emp_permanent_state" formControlName="emp_permanent_state" [ngClass]="displayFieldCss('emp_permanent_state')">
+                      <select class="form-control" name="emp_permanent_state" formControlName="emp_permanent_state">
                         <option value="">Select State</option>
                         <option value="{{state.id}}" *ngFor="let state of stateList">{{state.state_name}}</option>
                       </select>
-                      <div class="invalid-feedback" *ngIf="form.controls['emp_permanent_state'].hasError('required')">
-                        Please select state
-                      </div>
                     </div>
                     <div class="form-group col-md-3">
                       <label>City</label>
-                      <input class="form-control" placeholder="City" name="emp_permanent_city" formControlName="emp_permanent_city" [ngClass]="displayFieldCss('emp_permanent_city')">
-                      <div class="invalid-feedback" *ngIf="form.controls['emp_permanent_city'].hasError('required')">
-                        Please enter city
-                      </div>
+                      <input class="form-control" placeholder="City" name="emp_permanent_city" formControlName="emp_permanent_city">
                     </div>
                     <div class="form-group col-md-2">
                       <label>Pin</label>
-                      <input class="form-control" placeholder="Pin" name="emp_permanent_pin" formControlName="emp_permanent_pin" [ngClass]="displayFieldCss('emp_permanent_pin')">
-                      <div class="invalid-feedback" *ngIf="form.controls['emp_permanent_pin'].hasError('required')">
-                        Please enter pincode
-                      </div>
+                      <input class="form-control" placeholder="Pin" name="emp_permanent_pin" formControlName="emp_permanent_pin">
                     </div>
                   </div>
                 </div>

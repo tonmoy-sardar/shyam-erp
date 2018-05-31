@@ -50,22 +50,19 @@ export class EmployeesAddComponent implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(12)
       ]],
-      alt_contact: ['', [
-        Validators.minLength(10),
-        Validators.maxLength(12)
-      ]],
+      alt_contact: [''],
       dob: ['', Validators.required],
       blood_group: [''],
-      pan: ['', Validators.required],
+      pan: [''],
       adhaar_no: ['', Validators.required],
       emp_present_address: ['', Validators.required],
       emp_present_state: ['', Validators.required],
       emp_present_city: ['', Validators.required],
       emp_present_pin: ['', Validators.required],
-      emp_permanent_address: ['', Validators.required],
-      emp_permanent_state: ['', Validators.required],
-      emp_permanent_city: ['', Validators.required],
-      emp_permanent_pin: ['', Validators.required],
+      emp_permanent_address: [''],
+      emp_permanent_state: [''],
+      emp_permanent_city: [''],
+      emp_permanent_pin: [''],
       company: ['', Validators.required],
       departments: ['', Validators.required],
       designation: ['', Validators.required]
