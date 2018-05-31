@@ -35,12 +35,12 @@ export class PurchaseInvoiceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
     this.getpurchaseInvoiceList();
-    this.spinner.show();
     this.getHelp();
   }
 
