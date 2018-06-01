@@ -26,6 +26,16 @@ import { TabsComponent } from './component/tabs/tabs.component';
 import { TimepickerComponent } from './component/timepicker/timepicker.component';
 import { TooltipComponent } from './component/tooltip/tooltip.component';
 import { HelpComponent } from './component/help/help.component';
+import { ConfirmDialogComponent } from './component/confirm-dialog/confirm-dialog.component';
+//----------------Material----------------//
+import {
+  MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule,
+  MatChipsModule, MatDatepickerModule, MatDialogModule, MatExpansionModule, MatGridListModule, 
+  MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule, MatPaginatorModule,
+  MatProgressBarModule, MatProgressSpinnerModule,MatStepperIntl, MatRadioModule, MatRippleModule, MatSelectModule,
+  MatSidenavModule, MatSliderModule, MatSlideToggleModule, MatSnackBarModule,
+  MatSortModule, MatTableModule, MatTabsModule, MatToolbarModule, MatTooltipModule, MatStepperModule,
+} from '@angular/material';
 
 //----------------Services----------------//
 import { LoginService } from './services/login.service';
@@ -55,8 +65,8 @@ import { EmployeesService } from './services/employees.service';
 import { ReportsService } from './services/reports.service';
 import { VendorTypeService }  from './services/vendor-type.service';
 import { ExpensesService } from './services/expenses.service';
+import { WindowRefService } from './services/window-ref.service';
 
-import { WindowRefService } from './services/window-ref.service'
 
 @NgModule({
   imports: [
@@ -68,7 +78,16 @@ import { WindowRefService } from './services/window-ref.service'
     NgxSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    //----------------Material----------------//
+    MatAutocompleteModule,MatButtonModule,MatButtonToggleModule,
+    MatCardModule,MatCheckboxModule,MatChipsModule,MatStepperModule,MatDatepickerModule,
+    MatDialogModule,MatExpansionModule,MatGridListModule,MatIconModule,MatInputModule,MatListModule,
+    MatMenuModule,MatNativeDateModule,MatPaginatorModule,MatProgressBarModule,
+    MatProgressSpinnerModule,MatRadioModule,MatRippleModule,MatSelectModule,MatSidenavModule,
+    MatSliderModule,MatSlideToggleModule,MatSnackBarModule,MatSortModule,MatTableModule,
+    MatTabsModule,MatToolbarModule,MatTooltipModule,
+    //----------------Material----------------//
   ],
   declarations: [
     HeaderComponent,
@@ -86,7 +105,8 @@ import { WindowRefService } from './services/window-ref.service'
     TabsComponent,
     TimepickerComponent,
     TooltipComponent,
-    HelpComponent
+    HelpComponent,
+    ConfirmDialogComponent
   ],
   providers: [],
   exports: [
@@ -96,6 +116,15 @@ import { WindowRefService } from './services/window-ref.service'
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
+    //----------------Material----------------//
+    MatAutocompleteModule,MatButtonModule,MatButtonToggleModule,
+    MatCardModule,MatCheckboxModule,MatChipsModule,MatStepperModule,MatDatepickerModule,
+    MatDialogModule,MatExpansionModule,MatGridListModule,MatIconModule,MatInputModule,MatListModule,
+    MatMenuModule,MatNativeDateModule,MatPaginatorModule,MatProgressBarModule,
+    MatProgressSpinnerModule,MatRadioModule,MatRippleModule,MatSelectModule,MatSidenavModule,
+    MatSliderModule,MatSlideToggleModule,MatSnackBarModule,MatSortModule,MatTableModule,
+    MatTabsModule,MatToolbarModule,MatTooltipModule,
+    //----------------Material----------------//
     OnlyNumberDirective,
     AlertComponent,
     ButtonsComponent,
@@ -113,7 +142,7 @@ import { WindowRefService } from './services/window-ref.service'
     HelpComponent
   ],
   entryComponents: [
-
+    ConfirmDialogComponent
   ]
 })
 export class CoreModule {
