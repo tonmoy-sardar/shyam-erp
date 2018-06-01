@@ -135,7 +135,8 @@ export class StatesComponent implements OnInit {
     let state;
 
     state = {
-      id: id
+      id: id,
+      is_deleted: true
     };
 
     this.statesService.deleteState(state).subscribe(
