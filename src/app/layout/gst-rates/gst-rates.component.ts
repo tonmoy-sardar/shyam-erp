@@ -5,7 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-gst-rates',
   templateUrl: './gst-rates.component.html',
@@ -23,12 +24,14 @@ export class GstRatesComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private router: Router,
     private gstRatesService: GstRatesService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
 
@@ -58,7 +61,7 @@ export class GstRatesComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
 
-  getGstList(){
+  getGstList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
@@ -68,10 +71,10 @@ export class GstRatesComponent implements OnInit {
         this.gstRatesList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalGstRatesList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalGstRatesList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalGstRatesList
         }
         this.spinner.hide();
@@ -129,27 +132,38 @@ export class GstRatesComponent implements OnInit {
   };
 
   deleteGST(id) {
-    this.spinner.show();
-    let gstRate;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    gstRate = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let gstRate;
 
-    this.gstRatesService.deleteGST(gstRate).subscribe(
-      response => {
-        this.toastr.success('GST rate deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getGstList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        gstRate = {
+          id: id
+        };
+
+        this.gstRatesService.deleteGST(gstRate).subscribe(
+          response => {
+            this.toastr.success('GST rate deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getGstList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

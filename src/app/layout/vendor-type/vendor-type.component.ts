@@ -3,17 +3,17 @@ import { Router } from '@angular/router';
 import { VendorTypeService } from '../../core/services/vendor-type.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-vendor-type',
   templateUrl: './vendor-type.component.html',
   styleUrls: ['./vendor-type.component.scss']
 })
 export class VendorTypeComponent implements OnInit {
-  vendorTypeList = [];  
+  vendorTypeList = [];
   defaultPagination: number;
   totalVendorTypeList: number;
   search_key = '';
@@ -24,13 +24,14 @@ export class VendorTypeComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
-
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private vendorTypeService: VendorTypeService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -65,17 +66,17 @@ export class VendorTypeComponent implements OnInit {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     params.set('search', this.search_key.toString());
-    this.vendorTypeService.getVendorTypeList(params).subscribe( 
+    this.vendorTypeService.getVendorTypeList(params).subscribe(
       (data: any[]) => {
         this.totalVendorTypeList = data['count'];
         this.vendorTypeList = data['results'];
-       
+
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalVendorTypeList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalVendorTypeList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalVendorTypeList
         }
         this.spinner.hide();
@@ -133,27 +134,38 @@ export class VendorTypeComponent implements OnInit {
   };
 
   deleteVendorType(id) {
-    this.spinner.show();
-    let vendorType;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    vendorType = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let vendorType;
 
-    this.vendorTypeService.deleteVendorType(vendorType).subscribe(
-      response => {
-        this.toastr.success('Vendor type deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getVendorTypeList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        vendorType = {
+          id: id
+        };
+
+        this.vendorTypeService.deleteVendorType(vendorType).subscribe(
+          response => {
+            this.toastr.success('Vendor type deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getVendorTypeList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

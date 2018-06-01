@@ -5,7 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -13,7 +14,7 @@ import * as Globals from '../../core/globals';
 })
 export class EmployeesComponent implements OnInit {
 
-  employeeList = [];  
+  employeeList = [];
   defaultPagination: number;
   totalEmployeeList: number;
   search_key = '';
@@ -24,12 +25,14 @@ export class EmployeesComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private employeesService: EmployeesService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -70,16 +73,16 @@ export class EmployeesComponent implements OnInit {
         // console.log(this.employeeList)
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalEmployeeList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalEmployeeList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalEmployeeList
         }
         this.spinner.hide();
         // console.log(data)
       },
-      error =>{
+      error => {
         this.spinner.hide();
       }
     );
@@ -137,28 +140,39 @@ export class EmployeesComponent implements OnInit {
   };
 
   deleteEmployee(id) {
-    this.spinner.show();
-    let employee;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    employee = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let employee;
 
-    this.employeesService.deleteEmployee(employee).subscribe(
-      response => {
-        this.toastr.success('Employee deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getEmployeeList();
-      },
-      error => {
-        this.spinner.hide();
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        employee = {
+          id: id
+        };
+
+        this.employeesService.deleteEmployee(employee).subscribe(
+          response => {
+            this.toastr.success('Employee deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getEmployeeList();
+          },
+          error => {
+            this.spinner.hide();
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

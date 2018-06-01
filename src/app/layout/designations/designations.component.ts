@@ -5,7 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-designations',
   templateUrl: './designations.component.html',
@@ -13,7 +14,7 @@ import * as Globals from '../../core/globals';
 })
 export class DesignationsComponent implements OnInit {
 
-  designationList = [];  
+  designationList = [];
   defaultPagination: number;
   totalDesignationList: number;
   search_key = '';
@@ -24,12 +25,14 @@ export class DesignationsComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private designationsService: DesignationsService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -70,10 +73,10 @@ export class DesignationsComponent implements OnInit {
         // console.log(this.designationList)
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalDesignationList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalDesignationList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalDesignationList
         }
         this.spinner.hide();
@@ -132,27 +135,38 @@ export class DesignationsComponent implements OnInit {
   };
 
   deleteDesignation(id) {
-    this.spinner.show();
-    let department;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    department = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let department;
 
-    this.designationsService.deleteDesignation(department).subscribe(
-      response => {
-        this.toastr.success('Department deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getDesignationList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        department = {
+          id: id
+        };
+
+        this.designationsService.deleteDesignation(department).subscribe(
+          response => {
+            this.toastr.success('Department deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getDesignationList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

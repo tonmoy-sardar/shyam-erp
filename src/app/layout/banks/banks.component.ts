@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { BanksService } from '../../core/services/banks.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-banks',
   templateUrl: './banks.component.html',
@@ -24,12 +24,14 @@ export class BanksComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private router: Router,
     private banksService: BanksService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -129,27 +131,38 @@ export class BanksComponent implements OnInit {
   };
 
   deleteBank(id) {
-    this.spinner.show();
-    let bank;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    bank = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let bank;
 
-    this.banksService.deleteBank(bank).subscribe(
-      response => {
-        this.toastr.success('Bank deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getBankList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        bank = {
+          id: id
+        };
+
+        this.banksService.deleteBank(bank).subscribe(
+          response => {
+            this.toastr.success('Bank deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getBankList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

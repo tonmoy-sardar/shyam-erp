@@ -5,14 +5,15 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-states',
   templateUrl: './states.component.html',
   styleUrls: ['./states.component.scss']
 })
 export class StatesComponent implements OnInit {
-  stateList = [];  
+  stateList = [];
   defaultPagination: number;
   totalStateList: number;
   search_key = '';
@@ -23,12 +24,14 @@ export class StatesComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private statesService: StatesService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
 
@@ -69,10 +72,10 @@ export class StatesComponent implements OnInit {
         this.stateList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalStateList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalStateList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalStateList
         }
         this.spinner.hide();
@@ -131,27 +134,38 @@ export class StatesComponent implements OnInit {
   };
 
   deleteState(id) {
-    this.spinner.show();
-    let state;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    state = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let state;
 
-    this.statesService.deleteState(state).subscribe(
-      response => {
-        this.toastr.success('State deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getStateList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        state = {
+          id: id
+        };
+
+        this.statesService.deleteState(state).subscribe(
+          response => {
+            this.toastr.success('State deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getStateList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

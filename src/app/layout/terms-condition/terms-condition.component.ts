@@ -188,17 +188,17 @@ export class TermsConditionComponent implements OnInit {
   };
 
 
-  openConfirmationDialog() {
-    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      disableClose: false
-    });
-    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
+  // openConfirmationDialog() {
+  //   this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  //     disableClose: false
+  //   });
+  //   this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log("delete")
-      }
-      this.dialogRef = null;
-    });
-  }
+  //   this.dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       console.log("delete")
+  //     }
+  //     this.dialogRef = null;
+  //   });
+  // }
 }
