@@ -3,21 +3,19 @@ import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
-import { VendorService } from '../../../core/services/vendor.service';
+import { ContractorsService } from '../../../core/services/contractors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 
 @Component({
-  selector: 'app-vendor-add',
-  templateUrl: './vendor-add.component.html',
-  styleUrls: ['./vendor-add.component.scss']
+  selector: 'app-contractors-add',
+  templateUrl: './contractors-add.component.html',
+  styleUrls: ['./contractors-add.component.scss']
 })
-export class VendorAddComponent implements OnInit {
+export class ContractorsAddComponent implements OnInit {
   form: FormGroup;
-  vendor_address: any[] = [];
-  vendor_account: any[] = [];
+  contractor_account: any[] = [];
   stateList = [];
-  vendorTypeList = [];
   help_heading = "";
   help_description = "";
   constructor(
@@ -25,42 +23,39 @@ export class VendorAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private statesService: StatesService,
-    private vendorService: VendorService,
+    private contractorService: ContractorsService,
     private spinner: NgxSpinnerService,
     private helpService: HelpService
+
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
+    //this.spinner.show();
     this.form = this.formBuilder.group({
-      vendor_fullname: ['', Validators.required],
-      vendor_type: ['', Validators.required],
+      contractor_name: ['', Validators.required],
       pan_no: [''],
-      cin_no: [''],
       gst_no: [''],
-      // amount_credit: ['', Validators.required],
-      // amount_debit: ['', Validators.required],
-      vendor_address: this.formBuilder.array([this.createContactInfo()]),
-      vendor_account: this.formBuilder.array([this.createBankInfo()])
+      email: ['', Validators.required],
+      mobile: ['', Validators.required],
+      address: ['', Validators.required],
+      state: ['', Validators.required],
+      city: ['', Validators.required],
+      pincode: ['', Validators.required],
+      contractor_account: this.formBuilder.array([this.createBankInfo()])
     });
-    this.getVendorTypeList()
+    
     this.getStateList()
     this.getHelp();
   }
 
   getHelp() {
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.vendorAdd.heading;
-      this.help_description = res.data.vendorAdd.desc;
+      //this.help_heading = res.data.contractorAdd.heading;
+      //this.help_description = res.data.contractorAdd.desc;
     })
   }
 
-  getVendorTypeList() {
-    this.vendorService.getVendorTypeList().subscribe(res => {
-      this.vendorTypeList = res.results;
-      this.spinner.hide();
-    })
-  }
+  
   getStateList() {
     this.statesService.getStateActiveList().subscribe(res => {
       this.stateList = res;
@@ -68,18 +63,6 @@ export class VendorAddComponent implements OnInit {
     }
     );
   };
-  createContactInfo() {
-    return this.formBuilder.group({
-      email: [''],
-      mobile: ['', Validators.required],
-      contact_person: [''],
-      designation: [''],
-      address: ['', Validators.required],
-      state: ['', Validators.required],
-      city: ['', Validators.required],
-      pincode: ['', Validators.required]
-    });
-  }
 
   createBankInfo() {
     return this.formBuilder.group({
@@ -90,28 +73,16 @@ export class VendorAddComponent implements OnInit {
     });
   }
 
-  getContact(form) {
-    return form.get('vendor_address').controls
-  }
-  addContact() {
-    const control = <FormArray>this.form.controls['vendor_address'];
-    control.push(this.createContactInfo());
-  }
-
-  deleteContact(index: number) {
-    const control = <FormArray>this.form.controls['vendor_address'];
-    control.removeAt(index);
-  }
-
+ 
   getBank(form) {
-    return form.get('vendor_account').controls
+    return form.get('contractor_account').controls
   }
   addBank() {
-    const control = <FormArray>this.form.controls['vendor_account'];
+    const control = <FormArray>this.form.controls['contractor_account'];
     control.push(this.createBankInfo());
   }
   deleteBank(index: number) {
-    const control = <FormArray>this.form.controls['vendor_account'];
+    const control = <FormArray>this.form.controls['contractor_account'];
     control.removeAt(index);
   }
   btnClickNav(toNav) {
@@ -120,20 +91,23 @@ export class VendorAddComponent implements OnInit {
   goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
-  addVendor() {
+
+  addContractor() {
     if (this.form.valid) {
       this.spinner.show();
-      this.vendorService.addNewVendor(this.form.value).subscribe(
+      console.log(this.form.value);
+      this.contractorService.addNewContractor(this.form.value).subscribe(
         response => {
-          // console.log(response)
-          this.toastr.success('Vendor added successfully', '', {
+         
+          this.toastr.success('Contractor added successfully', '', {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('vendor');
+          this.goToList('contractors');
         },
         error => {
           console.log('error', error)
+          this.spinner.hide();
           // this.toastr.error('everything is broken', '', {
           //   timeOut: 3000,
           // });
@@ -164,5 +138,6 @@ export class VendorAddComponent implements OnInit {
       'is-valid': this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched)
     };
   }
+
 
 }

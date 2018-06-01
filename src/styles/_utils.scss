@@ -180,3 +180,30 @@
     margin-top: 0;
     border: none;
 }
+
+// 28-05-2018
+.info {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 12px;
+    font-size: 10px;
+    cursor: pointer;
+    color: #000;
+}
+.form-control.ng-select{
+    padding: 0;
+}
+.ng-select.ng-select-single .ng-select-container{
+    border: none;
+    height: calc(1.875rem + 2px);
+    min-height: calc(1.875rem + 2px);
+}
+
+.mat-dialog-container .modal-footer{
+    border: none;
+}

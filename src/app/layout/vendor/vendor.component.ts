@@ -5,7 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-vendor',
   templateUrl: './vendor.component.html',
@@ -23,12 +24,14 @@ export class VendorComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private router: Router,
     private vendorService: VendorService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -48,7 +51,7 @@ export class VendorComponent implements OnInit {
   }
 
   btnClickNav(toNav) {
-    this.router.navigateByUrl('/'+toNav);
+    this.router.navigateByUrl('/' + toNav);
   };
 
   dataSearch() {
@@ -56,7 +59,7 @@ export class VendorComponent implements OnInit {
     this.defaultPagination = 1;
     this.getVendorList();
   }
-  
+
   getVendorList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
@@ -67,17 +70,17 @@ export class VendorComponent implements OnInit {
         this.vendorList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalVendorList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalVendorList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalVendorList
         }
         this.spinner.hide();
       }
     );
   };
-  
+
   activeState(id) {
     this.spinner.show();
     let vendor;
@@ -128,27 +131,38 @@ export class VendorComponent implements OnInit {
   };
 
   deleteVendor(id) {
-    this.spinner.show();
-    let vendor;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    vendor = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let vendor;
 
-    this.vendorService.deleteVendor(vendor).subscribe(
-      response => {
-        this.toastr.success('Transporter deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getVendorList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        vendor = {
+          id: id
+        };
+
+        this.vendorService.deleteVendor(vendor).subscribe(
+          response => {
+            this.toastr.success('Transporter deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getVendorList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

@@ -6,7 +6,8 @@ import { CompanyService } from '../../core/services/company.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-terms-condition',
   templateUrl: './terms-condition.component.html',
@@ -25,13 +26,15 @@ export class TermsConditionComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private termsConditionService: TermsConditionService,
     private companyService: CompanyService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -77,12 +80,12 @@ export class TermsConditionComponent implements OnInit {
       (data: any[]) => {
         this.totalTermsList = data['count'];
         this.termsList = data['results'];
-        this.itemNo = (this.defaultPagination - 1) *  this.itemPerPage;
+        this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalTermsList >  this.itemPerPage*this.defaultPagination){
-          this.upper_count =  this.itemPerPage*this.defaultPagination
+        if (this.totalTermsList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalTermsList
         }
         this.spinner.hide();
@@ -146,31 +149,56 @@ export class TermsConditionComponent implements OnInit {
   };
 
   deleteTerm(id) {
-    this.spinner.show();
-    let terms;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    terms = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let terms;
 
-    this.termsConditionService.deleteTerms(terms).subscribe(
-      response => {
-        this.toastr.success('Terms deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getTermsList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        terms = {
+          id: id
+        };
+
+        this.termsConditionService.deleteTerms(terms).subscribe(
+          response => {
+            this.toastr.success('Terms deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getTermsList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
   };
 
   pagination() {
     this.spinner.show();
     this.getTermsList();
   };
+
+
+  // openConfirmationDialog() {
+  //   this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  //     disableClose: false
+  //   });
+  //   this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
+
+  //   this.dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       console.log("delete")
+  //     }
+  //     this.dialogRef = null;
+  //   });
+  // }
 }

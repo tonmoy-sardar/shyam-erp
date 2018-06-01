@@ -5,14 +5,15 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
-
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-departments',
   templateUrl: './departments.component.html',
   styleUrls: ['./departments.component.scss']
 })
 export class DepartmentsComponent implements OnInit {
-  departmentList = [];  
+  departmentList = [];
   defaultPagination: number;
   totalDepartmentList: number;
   search_key = '';
@@ -23,12 +24,14 @@ export class DepartmentsComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  dialogRef: MatDialogRef<ConfirmDialogComponent>;
   constructor(
     private departmentsService: DepartmentsService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -69,10 +72,10 @@ export class DepartmentsComponent implements OnInit {
         // console.log(this.departmentList)
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalDepartmentList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalDepartmentList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalDepartmentList
         }
         this.spinner.hide();
@@ -131,27 +134,38 @@ export class DepartmentsComponent implements OnInit {
   };
 
   deleteDepartment(id) {
-    this.spinner.show();
-    let department;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
 
-    department = {
-      id: id
-    };
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner.show();
+        let department;
 
-    this.departmentsService.deleteDepartment(department).subscribe(
-      response => {
-        this.toastr.success('Department deleted successfully', '', {
-          timeOut: 3000,
-        });
-        this.getdepartmentList();
-      },
-      error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        department = {
+          id: id
+        };
+
+        this.departmentsService.deleteDepartment(department).subscribe(
+          response => {
+            this.toastr.success('Department deleted successfully', '', {
+              timeOut: 3000,
+            });
+            this.getdepartmentList();
+          },
+          error => {
+            console.log('error', error)
+            // this.toastr.error('everything is broken', '', {
+            //   timeOut: 3000,
+            // });
+          }
+        );
       }
-    );
+      this.dialogRef = null;
+    });
+
   };
 
   pagination() {

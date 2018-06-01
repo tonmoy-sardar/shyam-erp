@@ -1,31 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
-import { VendorService } from '../../../core/services/vendor.service';
+import { ContractorsService } from '../../../core/services/contractors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 
 @Component({
-  selector: 'app-vendor-add',
-  templateUrl: './vendor-add.component.html',
-  styleUrls: ['./vendor-add.component.scss']
+  selector: 'app-contractors-edit',
+  templateUrl: './contractors-edit.component.html',
+  styleUrls: ['./contractors-edit.component.scss']
 })
-export class VendorAddComponent implements OnInit {
+export class ContractorsEditComponent implements OnInit {
   form: FormGroup;
-  vendor_address: any[] = [];
-  vendor_account: any[] = [];
+  contractor_account: any[] = [];
   stateList = [];
-  vendorTypeList = [];
+  contractor_details;
   help_heading = "";
   help_description = "";
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private statesService: StatesService,
-    private vendorService: VendorService,
+    private contractorsService: ContractorsService,
     private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
@@ -33,34 +33,51 @@ export class VendorAddComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.form = this.formBuilder.group({
-      vendor_fullname: ['', Validators.required],
-      vendor_type: ['', Validators.required],
+      contractor_name: ['', Validators.required],
       pan_no: [''],
-      cin_no: [''],
       gst_no: [''],
-      // amount_credit: ['', Validators.required],
-      // amount_debit: ['', Validators.required],
-      vendor_address: this.formBuilder.array([this.createContactInfo()]),
-      vendor_account: this.formBuilder.array([this.createBankInfo()])
+      email: ['', Validators.required],
+      mobile: ['', Validators.required],
+      address: ['', Validators.required],
+      state: ['', Validators.required],
+      city: ['', Validators.required],
+      pincode: ['', Validators.required],
+      contractor_account: this.formBuilder.array([])
     });
-    this.getVendorTypeList()
+    this.contractor_details = {
+      id: '',
+      contractor_name: '',
+      pan_no: '',
+      gst_no: '',
+      email: '',
+      mobile: '',
+      address: '',
+      state: '',
+      city: '',
+      pincode: '',
+      
+      contractor_account: [
+        {
+          bank_name: '',
+          branch_name: '',
+          account_no: '',
+          ifsc_code: ''
+        }
+      ]
+    }
     this.getStateList()
+    this.getContractorDetails(this.route.snapshot.params['id']);
     this.getHelp();
   }
+  
 
   getHelp() {
     this.helpService.getHelp().subscribe(res => {
-      this.help_heading = res.data.vendorAdd.heading;
-      this.help_description = res.data.vendorAdd.desc;
+      //this.help_heading = res.data.contractorEdit.heading;
+      //this.help_description = res.data.contractorEdit.desc;
     })
   }
 
-  getVendorTypeList() {
-    this.vendorService.getVendorTypeList().subscribe(res => {
-      this.vendorTypeList = res.results;
-      this.spinner.hide();
-    })
-  }
   getStateList() {
     this.statesService.getStateActiveList().subscribe(res => {
       this.stateList = res;
@@ -68,17 +85,16 @@ export class VendorAddComponent implements OnInit {
     }
     );
   };
-  createContactInfo() {
-    return this.formBuilder.group({
-      email: [''],
-      mobile: ['', Validators.required],
-      contact_person: [''],
-      designation: [''],
-      address: ['', Validators.required],
-      state: ['', Validators.required],
-      city: ['', Validators.required],
-      pincode: ['', Validators.required]
-    });
+  getContractorDetails(id) {
+    this.contractorsService.getContractorDetails(id).subscribe(res => {
+      this.contractor_details = res;
+      console.log(this.contractor_details);
+      const account_control = <FormArray>this.form.controls['contractor_account'];
+      this.contractor_details.contractor_account.forEach( x => {
+        account_control.push(this.createBankInfo());
+      })
+      this.spinner.hide();
+    })
   }
 
   createBankInfo() {
@@ -90,28 +106,25 @@ export class VendorAddComponent implements OnInit {
     });
   }
 
-  getContact(form) {
-    return form.get('vendor_address').controls
-  }
-  addContact() {
-    const control = <FormArray>this.form.controls['vendor_address'];
-    control.push(this.createContactInfo());
-  }
-
-  deleteContact(index: number) {
-    const control = <FormArray>this.form.controls['vendor_address'];
-    control.removeAt(index);
-  }
-
-  getBank(form) {
-    return form.get('vendor_account').controls
+  getBank(form){
+    return form.get('contractor_account').controls
   }
   addBank() {
-    const control = <FormArray>this.form.controls['vendor_account'];
+    var contractor_accnt = {
+      bank_name: '',
+      branch_name: '',
+      account_no: '',
+      ifsc_code: ''
+    }
+    this.contractor_details.contractor_account.push(contractor_accnt)
+    const control = <FormArray>this.form.controls['contractor_account'];
     control.push(this.createBankInfo());
   }
   deleteBank(index: number) {
-    const control = <FormArray>this.form.controls['vendor_account'];
+    if (index > -1) {
+      this.contractor_details.contractor_account.splice(index, 1)
+    }
+    const control = <FormArray>this.form.controls['contractor_account'];
     control.removeAt(index);
   }
   btnClickNav(toNav) {
@@ -120,17 +133,17 @@ export class VendorAddComponent implements OnInit {
   goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
-  addVendor() {
+  updateContractor() {
     if (this.form.valid) {
       this.spinner.show();
-      this.vendorService.addNewVendor(this.form.value).subscribe(
+      this.contractorsService.updateContractor(this.contractor_details).subscribe(
         response => {
           // console.log(response)
-          this.toastr.success('Vendor added successfully', '', {
+          this.toastr.success('Contractor updated successfully', '', {
             timeOut: 3000,
           });
           this.spinner.hide();
-          this.goToList('vendor');
+          this.goToList('contractors');
         },
         error => {
           console.log('error', error)
@@ -153,7 +166,6 @@ export class VendorAddComponent implements OnInit {
       }
     });
   }
-
   reSet() {
     this.form.reset();
   }
