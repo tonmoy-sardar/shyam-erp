@@ -38,13 +38,8 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>Company</th>
-              <th>PO INV No <span class="info" ngbTooltip="Purchase Order Invoice Number">i</span></th>
-              <th>Grn No</th>
-              <th>PO No <span class="info" ngbTooltip="Purchase Order Number">i</span></th>
-              <th>Goods Recd ON</th>
-              <th>Goods Received BY</th>
-              <th>Status</th>
+              <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span *ngIf="headerTh.has_tooltip == true" class="info" ngbTooltip="{{headerTh.tooltip_msg}}">i</span> <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
+              <!-- <th>Status</th> -->
               <th>Apporve</th>
               <th>Action</th>
             </tr>
@@ -58,7 +53,7 @@
               <td>{{pInvoice.po_order_no[0].purchase_order_no}}</td>
               <td>{{pInvoice.grn.created_at | date:'dd-MM-yyyy'}}</td>
               <td>{{pInvoice.grn.created_by.first_name}}</td>
-              <td>
+              <!-- <td>
                 <label *ngIf="pInvoice.is_finalised == 1">Finalised</label>
                 <label *ngIf="pInvoice.status && pInvoice.is_finalised == 0">Active</label>
                 <label *ngIf="!pInvoice.status && pInvoice.is_finalised == 0">Inactive</label>
@@ -67,7 +62,7 @@
                   <option value='0'>Cancel</option>
                   <option value='1'>Active</option>
                 </select>
-              </td>
+              </td> -->
               <td>
                 <label *ngIf="pInvoice.is_finalised == 1">Finalised</label>
                 <label *ngIf="pInvoice.is_approve == 0 && pInvoice.is_finalised == 0">None</label>

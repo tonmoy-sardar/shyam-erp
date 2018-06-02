@@ -38,8 +38,7 @@
           <thead>
               <tr>
                   <th>Sl.No.</th>
-                  <th>Type</th>
-                  <th>Name</th>
+                  <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
                   <th>UOM<small> (Purchase)</small> </th>
                   <th>UOM<small> (Sale)</small></th>
                   <th>Tax<small> (Purchase % IGST,CGST,SGST,HSN)</small></th>

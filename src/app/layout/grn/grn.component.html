@@ -38,21 +38,8 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>Grn No</th>
-              <th>Po No
-                <span class="info" ngbTooltip="Purchase Order Number">i</span>
-              </th>
-              <th>Company</th>
-              <th>P Org
-                <span class="info" ngbTooltip="Purchase Organisation">i</span>
-              </th>
-              <th>P Group
-                <span class="info" ngbTooltip="Purchase Group">i</span>
-              </th>
-              <th>Vendor</th>
-              <th>Vendor Address</th>
-              <th>GRN Raised Date</th>
-              <th>Status</th>
+              <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span *ngIf="headerTh.has_tooltip == true" class="info" ngbTooltip="{{headerTh.tooltip_msg}}">i</span> <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
+              <!-- <th>Status</th> -->
               <th>Action</th>
             </tr>
           </thead>
@@ -67,7 +54,7 @@
               <td>{{grn.vendor.vendor_fullname}}</td>
               <td>{{grn.vendor_address.address}}</td>
               <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
-              <td>
+              <!-- <td>
                 <label *ngIf="grn.is_finalised == 1">Finalised</label>
                 <label *ngIf="grn.status && grn.is_finalised == 0">Active</label>
                 <label *ngIf="!grn.status && grn.is_finalised == 0">Inactive</label>
@@ -76,7 +63,7 @@
                   <option value='0'>Cancel</option>
                   <option value='1'>Active</option>
                 </select>
-              </td>
+              </td> -->
               <td>
                 <label *ngIf="grn.is_finalised == 1">Finalised</label>
                 <label *ngIf="grn.is_approve == 0 && grn.is_finalised == 0">None</label>

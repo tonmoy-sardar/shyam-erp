@@ -28,6 +28,10 @@ export class StorageLocationListComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
@@ -39,6 +43,24 @@ export class StorageLocationListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Storage Location",
+        code: "storage_address",
+        sort_type:''
+      },
+      {  
+        name: "Contact",
+        code: "storage_contact_no",
+        sort_type:''
+      },
+      {  
+        name: "Email",
+        code: "storage_email",
+        sort_type:''
+      }
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -95,7 +117,19 @@ export class StorageLocationListComponent implements OnInit {
   getCompanyStorageList(id) {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.companyService.getCompanyStorageList(id,params).subscribe(
       (data: any[]) => {
         this.totalCompanyStorageList = data['count'];
@@ -123,6 +157,34 @@ export class StorageLocationListComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getCompanyStorageList(this.route.snapshot.params['id']);
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getCompanyStorageList(this.route.snapshot.params['id']);
   };
 

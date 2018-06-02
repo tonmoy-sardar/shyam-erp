@@ -17,6 +17,8 @@ export class MaterialComponent implements OnInit {
   defaultPagination: number;
   totalMaterialList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -25,6 +27,7 @@ export class MaterialComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
 
+  headerThOption = [];
   constructor(
     private materialService: MaterialService,
     private router: Router,
@@ -34,6 +37,20 @@ export class MaterialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "Type",
+        code: "material_type__material_type",
+        sort_type:''
+      },
+      {  
+        name: "Name",
+        code: "material_fullname",
+        sort_type:''
+      }
+    ];
+
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -58,7 +75,19 @@ export class MaterialComponent implements OnInit {
   getMaterialList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.materialService.getMaterialList(params).subscribe(
       (data: any[]) => {
         this.totalMaterialList = data['count'];
@@ -106,6 +135,34 @@ export class MaterialComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getMaterialList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getMaterialList();
   };
 }

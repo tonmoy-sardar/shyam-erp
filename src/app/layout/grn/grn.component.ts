@@ -36,6 +36,10 @@ export class GrnComponent implements OnInit {
     quantity: ''
   }
 
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -46,6 +50,66 @@ export class GrnComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "GRN. No.",
+        code: "grn_map__grn_no",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "PO. No.",
+        code: "purchase_order_no__purchase_order_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Number'
+      },
+      {  
+        name: "Company",
+        code: "company__company_name",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "P. Org.",
+        code: "pur_org__name",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Organisation'
+      },
+      {  
+        name: "P. Group",
+        code: "pur_grp__name",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Group'
+      },
+      {  
+        name: "Vendor",
+        code: "vendor__vendor_fullname",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Vendor Address",
+        code: "vendor_address__address",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "GRN Raised Date",
+        code: "created_at",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -75,7 +139,19 @@ export class GrnComponent implements OnInit {
   getGrnList(){
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.grnService.getGrnList(params).subscribe(
       (data: any[]) => {
         this.totalGrnList = data['count'];
@@ -191,6 +267,34 @@ export class GrnComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getGrnList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getGrnList();
   };
 

@@ -29,6 +29,10 @@ export class StorageBinListComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
 
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
+
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
@@ -40,6 +44,23 @@ export class StorageBinListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Bin No.",
+        code: "bin_no",
+        sort_type:''
+      },
+      {  
+        name: "Capacity",
+        code: "bin_volume",
+        sort_type:''
+      },
+      {  
+        name: "UOM",
+        code: "uom__name",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -95,7 +116,19 @@ export class StorageBinListComponent implements OnInit {
   getCompanyStorageBinList(id) {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.companyService.getCompanyStorageBinList(id,params).subscribe(
       (data: any[]) => {
         this.companyStorageBinList = data['results'];
@@ -122,6 +155,34 @@ export class StorageBinListComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getCompanyStorageBinList(this.route.snapshot.params['id']);
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getCompanyStorageBinList(this.route.snapshot.params['id']);
   };
 

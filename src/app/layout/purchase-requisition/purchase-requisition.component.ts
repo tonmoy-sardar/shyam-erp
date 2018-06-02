@@ -24,6 +24,11 @@ export class PurchaseRequisitionComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
+
   constructor(
     private router: Router,
     private purchaseRequisitionService: PurchaseRequisitionService,
@@ -33,6 +38,52 @@ export class PurchaseRequisitionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "PR No.",
+        code: "requisition_map__requisition_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Requisition Number'
+      },
+      {  
+        name: "Company",
+        code: "company__company_name",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "P. Org.",
+        code: "purchase_org__name",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Organisation'
+      },
+      {  
+        name: "P. Group",
+        code: "purchase_grp__name",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Group'
+      },
+      {  
+        name: "PR Raised Date",
+        code: "created_at",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Requisition Raised Date'
+      },
+      {  
+        name: "PR Raised By",
+        code: "created_by__first_name",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Requisition Raised By'
+      }
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -56,7 +107,19 @@ export class PurchaseRequisitionComponent implements OnInit {
   getPurchaseRequisitionList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.purchaseRequisitionService.getPurchaseRequisitionList(params).subscribe(
       (data: any[]) => {
         this.totalPurchaseRequisitionList = data['count'];
@@ -145,4 +208,33 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.spinner.show();
     this.getPurchaseRequisitionList();
   };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
+    this.getPurchaseRequisitionList();
+  };
+
 }
