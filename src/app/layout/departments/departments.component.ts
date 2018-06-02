@@ -17,6 +17,8 @@ export class DepartmentsComponent implements OnInit {
   defaultPagination: number;
   totalDepartmentList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -25,6 +27,7 @@ export class DepartmentsComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  headerThOption = [];
   constructor(
     private departmentsService: DepartmentsService,
     private router: Router,
@@ -35,6 +38,23 @@ export class DepartmentsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Department",
+        code: "department_name",
+        sort_type:''
+      },
+      {  
+        name: "Company",
+        code: "company.company_name",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -64,7 +84,19 @@ export class DepartmentsComponent implements OnInit {
   getdepartmentList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.departmentsService.getDepartmentList(params).subscribe(
       (data: any[]) => {
         this.totalDepartmentList = data['count'];
@@ -173,5 +205,34 @@ export class DepartmentsComponent implements OnInit {
     this.spinner.show();
     this.getdepartmentList();
   };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
+    this.getdepartmentList();
+  };
+
 
 }
