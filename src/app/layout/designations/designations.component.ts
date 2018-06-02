@@ -47,12 +47,12 @@ export class DesignationsComponent implements OnInit {
       },
       {  
         name: "Department",
-        code: "departments.department_name",
+        code: "departments__department_name",
         sort_type:''
       },
       {  
         name: "Company",
-        code: "company.company_name",
+        code: "company__company_name",
         sort_type:''
       },
       {  

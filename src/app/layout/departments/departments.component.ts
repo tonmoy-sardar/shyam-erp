@@ -46,7 +46,7 @@ export class DepartmentsComponent implements OnInit {
       },
       {  
         name: "Company",
-        code: "company.company_name",
+        code: "company__company_name",
         sort_type:''
       },
       {  
