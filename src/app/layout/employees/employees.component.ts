@@ -18,6 +18,8 @@ export class EmployeesComponent implements OnInit {
   defaultPagination: number;
   totalEmployeeList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -26,6 +28,8 @@ export class EmployeesComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  headerThOption = [];
+
   constructor(
     private employeesService: EmployeesService,
     private router: Router,
@@ -36,6 +40,48 @@ export class EmployeesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "First Name",
+        code: "first_name",
+        sort_type:''
+      },
+      {  
+        name: "Last Name",
+        code: "last_name",
+        sort_type:''
+      },
+      {  
+        name: "Email",
+        code: "email",
+        sort_type:''
+      },
+      {  
+        name: "Contact",
+        code: "Contact",
+        sort_type:''
+      },
+      {  
+        name: "Company",
+        code: "company.company_name",
+        sort_type:''
+      },
+      {  
+        name: "Department",
+        code: "departments.department_name",
+        sort_type:''
+      },
+      {  
+        name: "Designation",
+        code: "designation.designation_name",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -65,7 +111,19 @@ export class EmployeesComponent implements OnInit {
   getEmployeeList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.employeesService.getEmployeeList(params).subscribe(
       (data: any[]) => {
         this.totalEmployeeList = data['count'];
@@ -177,6 +235,34 @@ export class EmployeesComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getEmployeeList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getEmployeeList();
   };
 
