@@ -17,6 +17,8 @@ export class TransportComponent implements OnInit {
   defaultPagination: number;
   totalTransportList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -25,6 +27,7 @@ export class TransportComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  headerThOption = [];
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -35,6 +38,23 @@ export class TransportComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Transport",
+        code: "transporter_name",
+        sort_type:''
+      },
+      {  
+        name: "Created Date",
+        code: "created_at",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -63,7 +83,19 @@ export class TransportComponent implements OnInit {
   getTransportList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.transportService.getTransporterList(params).subscribe(
       (data: any[]) => {
 
@@ -169,6 +201,34 @@ export class TransportComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getTransportList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getTransportList();
   };
 }
