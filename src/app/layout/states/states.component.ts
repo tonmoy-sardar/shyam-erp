@@ -7,6 +7,7 @@ import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-states',
   templateUrl: './states.component.html',
@@ -17,6 +18,8 @@ export class StatesComponent implements OnInit {
   defaultPagination: number;
   totalStateList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -25,6 +28,8 @@ export class StatesComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+
+  headerThOption = [];
   constructor(
     private statesService: StatesService,
     private router: Router,
@@ -32,10 +37,35 @@ export class StatesComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
+
+    
   ) { }
 
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "State",
+        code: "state_name",
+        sort_type:''
+      },
+      {  
+        name: "Tin",
+        code: "tin_number",
+        sort_type:''
+      },
+      {  
+        name: "State Code",
+        code: "state_code",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -65,7 +95,19 @@ export class StatesComponent implements OnInit {
   getStateList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.statesService.getStateList(params).subscribe(
       (data: any[]) => {
         this.totalStateList = data['count'];
@@ -175,5 +217,32 @@ export class StatesComponent implements OnInit {
     this.getStateList();
   };
 
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
+    this.getStateList();
+  };
 
 }

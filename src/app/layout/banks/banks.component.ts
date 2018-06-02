@@ -142,7 +142,8 @@ export class BanksComponent implements OnInit {
         let bank;
 
         bank = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.banksService.deleteBank(bank).subscribe(

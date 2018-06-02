@@ -81,7 +81,7 @@ export class VendorComponent implements OnInit {
     );
   };
 
-  activeState(id) {
+  activeVendor(id) {
     this.spinner.show();
     let vendor;
 
@@ -105,7 +105,7 @@ export class VendorComponent implements OnInit {
     );
   };
 
-  inactiveState(id) {
+  inactiveVendor(id) {
     this.spinner.show();
     let vendor;
 
@@ -142,7 +142,8 @@ export class VendorComponent implements OnInit {
         let vendor;
 
         vendor = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.vendorService.deleteVendor(vendor).subscribe(

@@ -99,7 +99,7 @@ export class TermsConditionComponent implements OnInit {
       return data.company_name
     }
   }
-  activeState(id) {
+  activeTerm(id) {
     this.spinner.show();
     let terms;
 
@@ -123,7 +123,7 @@ export class TermsConditionComponent implements OnInit {
     );
   };
 
-  inactiveState(id) {
+  inactiveTerm(id) {
     this.spinner.show();
     let terms;
 
@@ -160,7 +160,8 @@ export class TermsConditionComponent implements OnInit {
         let terms;
 
         terms = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.termsConditionService.deleteTerms(terms).subscribe(

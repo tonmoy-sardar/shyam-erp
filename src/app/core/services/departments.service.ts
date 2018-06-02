@@ -35,19 +35,19 @@ export class DepartmentsService {
   }
 
   updateDepartment(data): Observable<any>{
-    return this.http.put(environment.apiEndpoint+'departments/'+data.id+'/',data, {
+    return this.http.put(environment.apiEndpoint+'departments_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   activeInactiveDepartment(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'departments/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'departments_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   deleteDepartment(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'departments/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'departments_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

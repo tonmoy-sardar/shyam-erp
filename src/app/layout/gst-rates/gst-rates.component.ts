@@ -7,6 +7,7 @@ import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-gst-rates',
   templateUrl: './gst-rates.component.html',
@@ -69,6 +70,7 @@ export class GstRatesComponent implements OnInit {
       (data: any[]) => {
         this.totalGstRatesList = data['count'];
         this.gstRatesList = data['results'];
+        console.log(this.gstRatesList);
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
         if (this.totalGstRatesList > this.itemPerPage * this.defaultPagination) {
@@ -143,7 +145,8 @@ export class GstRatesComponent implements OnInit {
         let gstRate;
 
         gstRate = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.gstRatesService.deleteGST(gstRate).subscribe(

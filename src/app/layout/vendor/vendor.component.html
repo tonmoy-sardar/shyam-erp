@@ -56,9 +56,9 @@
               <td>{{vendor.vendor_address[0].email}}</td>
               <td>{{vendor.vendor_address[0].mobile}}</td>
               <td>
-                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(vendor.id)" *ngIf="vendor.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveVendor(vendor.id)" *ngIf="vendor.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(vendor.id)" *ngIf="vendor.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeVendor(vendor.id)" *ngIf="vendor.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>

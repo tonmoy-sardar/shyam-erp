@@ -40,7 +40,7 @@ export class BanksService {
   }
 
   deleteBank(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'banks/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'banks/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

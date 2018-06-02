@@ -82,7 +82,7 @@ export class TransportComponent implements OnInit {
     );
   };
 
-  activeState(id) {
+  activeTransport(id) {
     this.spinner.show();
     let transporter;
 
@@ -106,7 +106,7 @@ export class TransportComponent implements OnInit {
     );
   };
 
-  inactiveState(id) {
+  inactiveTransport(id) {
     this.spinner.show();
     let transporter;
 
@@ -131,7 +131,7 @@ export class TransportComponent implements OnInit {
     );
   };
 
-  deletetransport(id) {
+  deleteTransport(id) {
     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
       disableClose: false
     });
@@ -143,7 +143,8 @@ export class TransportComponent implements OnInit {
         let transporter;
 
         transporter = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.transportService.deleteTransporter(transporter).subscribe(

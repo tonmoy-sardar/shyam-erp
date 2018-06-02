@@ -41,7 +41,7 @@ export class TransportService {
   }
 
   deleteTransporter(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'transporter/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'transporter/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

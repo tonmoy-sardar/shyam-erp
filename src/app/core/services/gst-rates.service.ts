@@ -46,7 +46,7 @@ export class GstRatesService {
   }
 
   deleteGST(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'gst_rates/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'gst_rates/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

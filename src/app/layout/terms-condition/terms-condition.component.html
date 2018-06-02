@@ -52,9 +52,9 @@
               <td>{{getCompanyName(term.company)}}</td>
               <td>{{term.created_at | date:'dd-MM-yyyy'}}</td>
               <td>
-                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(term.id)" *ngIf="term.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveTerm(term.id)" *ngIf="term.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(term.id)" *ngIf="term.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeTerm(term.id)" *ngIf="term.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>

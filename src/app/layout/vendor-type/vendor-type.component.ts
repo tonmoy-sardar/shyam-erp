@@ -145,7 +145,8 @@ export class VendorTypeComponent implements OnInit {
         let vendorType;
 
         vendorType = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.vendorTypeService.deleteVendorType(vendorType).subscribe(

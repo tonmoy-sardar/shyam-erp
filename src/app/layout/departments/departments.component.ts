@@ -84,7 +84,7 @@ export class DepartmentsComponent implements OnInit {
     );
   };
 
-  activeState(id) {
+  activeDepartment(id) {
     this.spinner.show();
     let department;
 
@@ -108,7 +108,7 @@ export class DepartmentsComponent implements OnInit {
     );
   };
 
-  inactiveState(id) {
+  inactiveDepartment(id) {
     this.spinner.show();
     let department;
 
@@ -145,7 +145,8 @@ export class DepartmentsComponent implements OnInit {
         let department;
 
         department = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.departmentsService.deleteDepartment(department).subscribe(
