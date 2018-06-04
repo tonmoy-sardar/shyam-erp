@@ -18,6 +18,8 @@ export class DesignationsComponent implements OnInit {
   defaultPagination: number;
   totalDesignationList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -26,6 +28,7 @@ export class DesignationsComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  headerThOption = [];
   constructor(
     private designationsService: DesignationsService,
     private router: Router,
@@ -36,6 +39,28 @@ export class DesignationsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Designation",
+        code: "designation_name",
+        sort_type:''
+      },
+      {  
+        name: "Department",
+        code: "departments__department_name",
+        sort_type:''
+      },
+      {  
+        name: "Company",
+        code: "company__company_name",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -65,7 +90,19 @@ export class DesignationsComponent implements OnInit {
   getDesignationList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.designationsService.getDesignationList(params).subscribe(
       (data: any[]) => {
         this.totalDesignationList = data['count'];
@@ -85,7 +122,7 @@ export class DesignationsComponent implements OnInit {
     );
   };
 
-  activeState(id) {
+  activeDesignation(id) {
     this.spinner.show();
     let designation;
 
@@ -109,7 +146,7 @@ export class DesignationsComponent implements OnInit {
     );
   };
 
-  inactiveState(id) {
+  inactiveDesignation(id) {
     this.spinner.show();
     let designation;
 
@@ -146,7 +183,8 @@ export class DesignationsComponent implements OnInit {
         let department;
 
         department = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.designationsService.deleteDesignation(department).subscribe(
@@ -171,6 +209,34 @@ export class DesignationsComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getDesignationList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getDesignationList();
   };
 

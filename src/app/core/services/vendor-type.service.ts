@@ -46,7 +46,7 @@ export class VendorTypeService {
   }
 
   deleteVendorType(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'all_vendor_type/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'all_vendor_type/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

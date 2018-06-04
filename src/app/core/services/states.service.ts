@@ -46,7 +46,7 @@ export class StatesService {
   }
 
   deleteState(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'states/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'states/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

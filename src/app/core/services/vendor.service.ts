@@ -52,7 +52,7 @@ export class VendorService {
   }
 
   deleteVendor(data): Observable<any> {
-    return this.http.delete(environment.apiEndpoint + 'vendor_master/' + data.id + '/', {
+    return this.http.patch(environment.apiEndpoint + 'vendor_master_status/' + data.id + '/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token ' + localStorage.getItem('logedUserToken'))
     })
   }

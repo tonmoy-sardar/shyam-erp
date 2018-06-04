@@ -46,7 +46,7 @@ export class DesignationsService {
   }
 
   deleteDesignation(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'designation/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'designation/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

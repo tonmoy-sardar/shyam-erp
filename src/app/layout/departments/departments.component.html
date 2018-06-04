@@ -37,9 +37,7 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>Department</th>
-              <th>Company</th>
-              <th>Status</th>
+              <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
               <th>Action</th>
             </tr>
           </thead>
@@ -49,9 +47,9 @@
               <td>{{dept.department_name}}</td>
               <td>{{dept.company.company_name}}</td>
               <td>
-                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveState(dept.id)" *ngIf="dept.status==true">
+                <a href="javascript:void(0);" class="anchor-action" title="Active" name="Active" (click)="inactiveDepartment(dept.id)" *ngIf="dept.status==true">
                   <i class="fa fa-thumbs-up"></i> Active</a>
-                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeState(dept.id)" *ngIf="dept.status==false">
+                <a href="javascript:void(0);" class="anchor-action" title="Inactive" name="Inactive" (click)="activeDepartment(dept.id)" *ngIf="dept.status==false">
                   <i class="fa fa-thumbs-down"></i> Inactive</a>
               </td>
               <td>

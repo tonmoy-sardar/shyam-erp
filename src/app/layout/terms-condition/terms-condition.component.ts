@@ -19,6 +19,8 @@ export class TermsConditionComponent implements OnInit {
   defaultPagination: number;
   totalTermsList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   companyList = [];
   itemNo: number;
   help_heading = "";
@@ -28,6 +30,7 @@ export class TermsConditionComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  headerThOption = [];
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -40,6 +43,28 @@ export class TermsConditionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Terms & Condition",
+        code: "term_text",
+        sort_type:''
+      },
+      {  
+        name: "Company Name",
+        code: "getCompanyName(term.company)",
+        sort_type:''
+      },
+      {  
+        name: "Created Date",
+        code: "created_at",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -77,7 +102,19 @@ export class TermsConditionComponent implements OnInit {
   getTermsList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.termsConditionService.getTermsList(params).subscribe(
       (data: any[]) => {
         this.totalTermsList = data['count'];
@@ -101,7 +138,7 @@ export class TermsConditionComponent implements OnInit {
       return data.company_name
     }
   }
-  activeState(id) {
+  activeTerm(id) {
     this.spinner.show();
     let terms;
 
@@ -125,7 +162,7 @@ export class TermsConditionComponent implements OnInit {
     );
   };
 
-  inactiveState(id) {
+  inactiveTerm(id) {
     this.spinner.show();
     let terms;
 
@@ -162,7 +199,8 @@ export class TermsConditionComponent implements OnInit {
         let terms;
 
         terms = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.termsConditionService.deleteTerms(terms).subscribe(
@@ -189,6 +227,33 @@ export class TermsConditionComponent implements OnInit {
     this.getTermsList();
   };
 
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
+    this.getTermsList();
+  };
 
   // openConfirmationDialog() {
   //   this.dialogRef = this.dialog.open(ConfirmDialogComponent, {

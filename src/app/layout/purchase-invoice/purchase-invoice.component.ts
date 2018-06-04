@@ -25,6 +25,10 @@ export class PurchaseInvoiceComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
 
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -35,12 +39,57 @@ export class PurchaseInvoiceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "Company",
+        code: "company__company_name",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "PO. INV. No.",
+        code: "pur_invoice_map__purchase_inv_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Invoice Number'
+      },
+      {  
+        name: "GRN No.",
+        code: "grn_number__grn_no",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "PO. No.",
+        code: "po_order_no__purchase_order_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Number'
+      },
+      {  
+        name: "Goods Recd ON",
+        code: "grn__created_at",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Goods Received BY",
+        code: "grn__created_by__first_name",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      }
+    ];
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
-    this.getpurchaseInvoiceList();
+    this.getPurchaseInvoiceList();
     this.getHelp();
   }
 
@@ -57,13 +106,25 @@ export class PurchaseInvoiceComponent implements OnInit {
 
   dataSearch() {
     this.defaultPagination = 1;
-    this.getpurchaseInvoiceList();
+    this.getPurchaseInvoiceList();
   }
 
-  getpurchaseInvoiceList() {
+  getPurchaseInvoiceList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.purchaseInvoiceService.getPurchaseInvoiceList(params).subscribe(
       (data: any[]) => {
         this.totalPurchaseInvoiceList = data['count'];
@@ -103,7 +164,7 @@ export class PurchaseInvoiceComponent implements OnInit {
           this.toastr.success('Status changed successfully', '', {
             timeOut: 3000,
           });
-          this.getpurchaseInvoiceList();
+          this.getPurchaseInvoiceList();
         },
         error => {
           console.log('error', error)
@@ -134,7 +195,7 @@ export class PurchaseInvoiceComponent implements OnInit {
             this.toastr.success('Purchase invoice approve status changed successfully', '', {
               timeOut: 3000,
             });
-            this.getpurchaseInvoiceList();
+            this.getPurchaseInvoiceList();
           }
         },
         error => {
@@ -166,7 +227,7 @@ export class PurchaseInvoiceComponent implements OnInit {
         this.toastr.success('Purchase invoice approve status changed successfully', '', {
           timeOut: 3000,
         });
-        this.getpurchaseInvoiceList();
+        this.getPurchaseInvoiceList();
       },
       error => {
         console.log('error', error)
@@ -178,7 +239,35 @@ export class PurchaseInvoiceComponent implements OnInit {
   }
 
   pagination() {
-    this.getpurchaseInvoiceList();
+    this.getPurchaseInvoiceList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
+    this.getPurchaseInvoiceList();
   };
 
 }

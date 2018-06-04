@@ -45,7 +45,7 @@ export class TermsConditionService {
   }
 
   deleteTerms(data): Observable<any>{
-    return this.http.delete(environment.apiEndpoint+'terms_conditions/'+data.id+'/', {
+    return this.http.patch(environment.apiEndpoint+'terms_conditions/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

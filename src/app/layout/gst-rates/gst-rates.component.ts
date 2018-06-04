@@ -7,6 +7,7 @@ import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-gst-rates',
   templateUrl: './gst-rates.component.html',
@@ -20,11 +21,16 @@ export class GstRatesComponent implements OnInit {
   itemNo: number;
   help_heading = "";
   help_description = "";
+  sort_by = '';
+  sort_type= '';
   lower_count: number;
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+
+  headerThOption = [];
+
   constructor(
     private router: Router,
     private gstRatesService: GstRatesService,
@@ -36,6 +42,40 @@ export class GstRatesComponent implements OnInit {
 
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "Identifiable Name",
+        code: "gst_pattern",
+        sort_type:''
+      },
+      {  
+        name: "CGST(%)",
+        code: "cgst",
+        sort_type:''
+      },
+      {  
+        name: "SGST(%)",
+        code: "sgst",
+        sort_type:''
+      },
+      {  
+        name: "IGST(%)",
+        code: "igst",
+        sort_type:''
+      },
+      {  
+        name: "Created at",
+        code: "created_at",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
+
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -64,11 +104,25 @@ export class GstRatesComponent implements OnInit {
   getGstList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
+
     this.gstRatesService.getGSTList(params).subscribe(
       (data: any[]) => {
         this.totalGstRatesList = data['count'];
         this.gstRatesList = data['results'];
+        console.log(this.gstRatesList);
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
         if (this.totalGstRatesList > this.itemPerPage * this.defaultPagination) {
@@ -143,7 +197,8 @@ export class GstRatesComponent implements OnInit {
         let gstRate;
 
         gstRate = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.gstRatesService.deleteGST(gstRate).subscribe(
@@ -168,6 +223,34 @@ export class GstRatesComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getGstList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getGstList();
   };
 

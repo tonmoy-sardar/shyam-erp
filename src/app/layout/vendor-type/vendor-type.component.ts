@@ -17,6 +17,8 @@ export class VendorTypeComponent implements OnInit {
   defaultPagination: number;
   totalVendorTypeList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -25,6 +27,7 @@ export class VendorTypeComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  headerThOption = [];
   constructor(
     private vendorTypeService: VendorTypeService,
     private router: Router,
@@ -35,6 +38,23 @@ export class VendorTypeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Vendor Type",
+        code: "vendor_type",
+        sort_type:''
+      },
+      {  
+        name: "Created Date",
+        code: "created_at",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -65,7 +85,19 @@ export class VendorTypeComponent implements OnInit {
   getVendorTypeList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.vendorTypeService.getVendorTypeList(params).subscribe(
       (data: any[]) => {
         this.totalVendorTypeList = data['count'];
@@ -145,7 +177,8 @@ export class VendorTypeComponent implements OnInit {
         let vendorType;
 
         vendorType = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.vendorTypeService.deleteVendorType(vendorType).subscribe(
@@ -170,6 +203,34 @@ export class VendorTypeComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getVendorTypeList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getVendorTypeList();
   };
 

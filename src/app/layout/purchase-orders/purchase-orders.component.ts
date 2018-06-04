@@ -27,6 +27,10 @@ export class PurchaseOrdersComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
 
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -37,6 +41,66 @@ export class PurchaseOrdersComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "PO. No.",
+        code: "purchase_order_map__purchase_order_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Number'
+      },
+      {  
+        name: "PR. No.",
+        code: "requisition_no__requisition_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Requisition Number'
+      },
+      {  
+        name: "PO. Amount",
+        code: "grand_total",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Amount'
+      },
+      {  
+        name: "Company",
+        code: "company__company_name",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Branch",
+        code: "purchase_order_detail__company_branch__branch_address",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Storage",
+        code: "purchase_order_detail__storage_location__storage_address",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Bin",
+        code: "purchase_order_detail__storage_bin__bin_no",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "PO. Raised Date",
+        code: "quotation_date",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Raised Date'
+      },
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -74,7 +138,19 @@ export class PurchaseOrdersComponent implements OnInit {
   getPurchaseOrderList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.purchaseOrdersService.getPurchaseOrderList(params).subscribe(
       (data: any[]) => {
         this.totalPurchaseOrderList = data['count'];
@@ -157,6 +233,34 @@ export class PurchaseOrdersComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getPurchaseOrderList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getPurchaseOrderList();
   };
 

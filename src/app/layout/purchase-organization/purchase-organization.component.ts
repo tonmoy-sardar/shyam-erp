@@ -24,6 +24,11 @@ export class PurchaseOrganizationComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
 
+  sort_by = '';
+  sort_type= '';
+
+  headerThOption = [];
+
   constructor(
     private purchaseOrganizationService: PurchaseOrganizationService,
      private router: Router,
@@ -33,6 +38,25 @@ export class PurchaseOrganizationComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "Organization Name",
+        code: "name",
+        sort_type:''
+      },
+      {  
+        name: "Organization Description",
+        code: "description",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -62,7 +86,19 @@ export class PurchaseOrganizationComponent implements OnInit {
   getPurchaseOrganizationList(){
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.purchaseOrganizationService.getPurchaseOrganizationList(params).subscribe(
       (data: any[]) =>{
         this.purchaseOrganizationList = data['results'];
@@ -132,6 +168,34 @@ export class PurchaseOrganizationComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getPurchaseOrganizationList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getPurchaseOrganizationList();
   };
 

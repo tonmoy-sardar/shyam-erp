@@ -36,13 +36,7 @@
             <thead>
               <tr>
                 <th>Sl.No.</th>
-                <th>Unit</th>
-                <th>Unit Location</th>
-                <th>Contact No.</th>
-                <th>Email</th>
-                <th>GST</th>
-                <th>PAN</th>
-                <th>CIN</th>
+                <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
                 <th>Action</th>
               </tr>
             </thead>

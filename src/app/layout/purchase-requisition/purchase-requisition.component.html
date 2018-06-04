@@ -38,23 +38,8 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>PR No
-                <span class="info" ngbTooltip="Purchase Requisition Number">i</span>
-              </th>
-              <th>Company</th>
-              <th>P. Org.
-                <span class="info" ngbTooltip="Purchase Organisation">i</span>
-              </th>
-              <th>P. Group
-                <span class="info" ngbTooltip="Purchase Group">i</span>
-              </th>
-              <th>PR Raised Date
-                <span class="info" ngbTooltip="Purchase Requisition Raised Date">i</span>
-              </th>
-              <th>PR Raised By
-                <span class="info" ngbTooltip="Purchase Requisition Raised By">i</span>
-              </th>
-              <th>Status</th>
+              <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span *ngIf="headerTh.has_tooltip == true" class="info" ngbTooltip="{{headerTh.tooltip_msg}}">i</span> <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
+              <!-- <th>Status</th> -->
               <th>Is approved</th>
               <th>Action</th>
             </tr>
@@ -68,7 +53,7 @@
               <td>{{purchaseRequisition.purchase_grp.name}}</td>
               <td>{{purchaseRequisition.created_at | date: 'dd-MM-yyyy'}}</td>
               <td>{{purchaseRequisition.created_by.first_name}}</td>
-              <td>
+              <!-- <td>
                 <label *ngIf="purchaseRequisition.is_finalised == 1">Finalised</label>
                 <label *ngIf="purchaseRequisition.status && purchaseRequisition.is_finalised == 0">Active</label>
                 <label *ngIf="!purchaseRequisition.status && purchaseRequisition.is_finalised == 0">Inactive</label>
@@ -77,7 +62,7 @@
                   <option value='0'>Cancel</option>
                   <option value='1'>Active</option>
                 </select>
-              </td>
+              </td> -->
               <td>
                 <label *ngIf="purchaseRequisition.is_finalised == 1">Finalised</label>
                 <label *ngIf="purchaseRequisition.is_approve == 0 && purchaseRequisition.is_finalised == 0">None</label>

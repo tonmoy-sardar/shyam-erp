@@ -17,6 +17,8 @@ export class BanksComponent implements OnInit {
   defaultPagination: number;
   totalBankList: number;
   search_key = '';
+  sort_by = '';
+  sort_type= '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -25,6 +27,7 @@ export class BanksComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  headerThOption = [];
   constructor(
     private router: Router,
     private banksService: BanksService,
@@ -35,6 +38,33 @@ export class BanksComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.headerThOption = [
+      {  
+        name: "Company",
+        code: "company.company_name",
+        sort_type:''
+      },
+      {  
+        name: "Bank",
+        code: "bank_branch",
+        sort_type:''
+      },
+      {  
+        name: "Branch",
+        code: "bank_name",
+        sort_type:''
+      },
+      {  
+        name: "IFSC",
+        code: "bank_ifsc",
+        sort_type:''
+      },
+      {  
+        name: "Status",
+        code: "status",
+        sort_type:''
+      }
+    ];
     this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -63,7 +93,19 @@ export class BanksComponent implements OnInit {
   getBankList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.banksService.getBankList(params).subscribe(
       (data: any[]) => {
         this.totalBankList = data['count'];
@@ -142,7 +184,8 @@ export class BanksComponent implements OnInit {
         let bank;
 
         bank = {
-          id: id
+          id: id,
+          is_deleted: true
         };
 
         this.banksService.deleteBank(bank).subscribe(
@@ -167,6 +210,34 @@ export class BanksComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getBankList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getBankList();
   };
 
