@@ -45,11 +45,11 @@ export class ExpensesComponent implements OnInit {
   //   })
   // }
 
-  // dataSearch() {
-  //   this.spinner.show();
-  //   this.defaultPagination = 1;
-  //   this.getExpensesList();
-  // }
+  dataSearch() {
+    this.spinner.show();
+    this.defaultPagination = 1;
+    // this.getExpensesList();
+  }
 
   btnClickNav = function (toNav) {
     this.router.navigateByUrl('/' + toNav);

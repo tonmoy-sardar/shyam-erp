@@ -1,11 +1,11 @@
 <div>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6" *ngxPermissionsOnly="['Admin', 'Staff']">
       <h4 class="page-header">Terms & Condition List</h4>
     </div>
     <div class="col-md-6 pull-right" style="text-align: right">
       <app-help [heading]="help_heading" [description]="help_description"></app-help>
-      <button type="button" class="btn btn-primary" (click)="btnClickNav('terms-condition/add')">
+      <button type="button" *ngxPermissionsOnly="['Admin']" class="btn btn-primary" (click)="btnClickNav('terms-condition/add')">
         <i class="fa fa-plus"></i> New Terms & Condition</button>
     </div>
     <div class="clearfix"></div>
@@ -58,7 +58,7 @@
                 <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" [routerLink]="['/terms-condition/edit', term.id]">
                   <i class="fa fa-edit"></i>
                 </a>&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0);" class="anchor-action" title="Delete" name="Delete" (click)="deleteTerm(term.id)">
+                <a href="javascript:void(0);" *ngxPermissionsOnly="['Admin']" class="anchor-action" title="Delete" name="Delete" (click)="deleteTerm(term.id)">
                   <i class="fa fa-trash-o"></i>
                 </a>
               </td>

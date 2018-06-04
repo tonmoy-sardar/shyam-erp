@@ -8,6 +8,7 @@ import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { NgxPermissionsService } from 'ngx-permissions';
 @Component({
   selector: 'app-terms-condition',
   templateUrl: './terms-condition.component.html',
@@ -37,7 +38,8 @@ export class TermsConditionComponent implements OnInit {
     private companyService: CompanyService,
     private spinner: NgxSpinnerService,
     private helpService: HelpService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private permissionsService: NgxPermissionsService
   ) { }
 
   ngOnInit() {

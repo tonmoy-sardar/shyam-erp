@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +11,10 @@ export class HeaderComponent implements OnInit {
 
   pushRightClass: string = 'push-right';
 
-  constructor(public router: Router) {
+  constructor(
+    public router: Router,
+    private permissionsService: NgxPermissionsService
+  ) {
     this.router.events.subscribe(val => {
       if (
         val instanceof NavigationEnd &&
@@ -23,7 +26,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    
+  }
+
 
   isToggled(): boolean {
     const dom: Element = document.querySelector('body');
@@ -42,6 +48,11 @@ export class HeaderComponent implements OnInit {
 
   onLoggedout() {
     localStorage.removeItem('isLoggedin');
+    localStorage.removeItem('logedUserEmail');
+    localStorage.removeItem('logedUserToken');
+    localStorage.removeItem('logedUserUserId');
+    localStorage.removeItem('logedUserUserName');
+    localStorage.removeItem('userRole');
   }
 
 

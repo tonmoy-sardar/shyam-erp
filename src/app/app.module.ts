@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 
 // core
 import { CoreModule } from "./core/core.module";
-
+import { NgxPermissionsModule } from 'ngx-permissions';
 @NgModule({
   declarations: [
     AppComponent
@@ -21,7 +21,8 @@ import { CoreModule } from "./core/core.module";
     AppRoutingModule,
     CoreModule,
     CoreModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    NgxPermissionsModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

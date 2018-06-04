@@ -122,7 +122,7 @@
                     <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/vendor-type']">
                         <i class="fa fa-user-circle-o" aria-hidden="true"></i> Vendor Type
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/terms-condition']">
+                    <a class="dropdown-item" *ngxPermissionsOnly="['Admin', 'Staff']" href="javascript:void(0)" [routerLink]="['/terms-condition']">
                         <i class="fa fa-info-circle" aria-hidden="true"></i> Terms & Conditions
                     </a>
                     <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/transport']">
