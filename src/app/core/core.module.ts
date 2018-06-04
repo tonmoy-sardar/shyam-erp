@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 import { HeaderComponent } from './component/header/header.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -79,6 +80,7 @@ import { WindowRefService } from './services/window-ref.service';
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
+    NgxPermissionsModule,
     //----------------Material----------------//
     MatAutocompleteModule,MatButtonModule,MatButtonToggleModule,
     MatCardModule,MatCheckboxModule,MatChipsModule,MatStepperModule,MatDatepickerModule,
@@ -116,6 +118,7 @@ import { WindowRefService } from './services/window-ref.service';
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
+    NgxPermissionsModule,
     //----------------Material----------------//
     MatAutocompleteModule,MatButtonModule,MatButtonToggleModule,
     MatCardModule,MatCheckboxModule,MatChipsModule,MatStepperModule,MatDatepickerModule,

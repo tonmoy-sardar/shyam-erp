@@ -51,4 +51,8 @@ export class ExpensesAddComponent implements OnInit {
     this.form.reset();
   }
 
+  addNewExpense(){
+    
+  }
+
 }

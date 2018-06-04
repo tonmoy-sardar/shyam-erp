@@ -1,17 +1,28 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout.component';
+import { NgxPermissionsGuard } from 'ngx-permissions';
 const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent,
+    component: LayoutComponent,   
     children: [
       { path: '', redirectTo: 'dashboard' },
       { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
       { path: 'states', loadChildren: './states/states.module#StatesModule' },
       { path: 'gst-rates', loadChildren: './gst-rates/gst-rates.module#GstRatesModule' },
       { path: 'vendor', loadChildren: './vendor/vendor.module#VendorModule' },
-      { path: 'terms-condition', loadChildren: './terms-condition/terms-condition.module#TermsConditionModule' },
+      {
+        path: 'terms-condition',
+        canLoad: [NgxPermissionsGuard],        
+        data: {
+          permissions: {
+            only: ['Admin', 'Staff'],
+            redirectTo: '/dashboard'
+          }
+        },
+        loadChildren: './terms-condition/terms-condition.module#TermsConditionModule'
+      },
       { path: 'banks', loadChildren: './banks/banks.module#BanksModule' },
       { path: 'material', loadChildren: './material/material.module#MaterialModule' },
       { path: 'transport', loadChildren: './transport/transport.module#TransportModule' },
@@ -21,7 +32,7 @@ const routes: Routes = [
       { path: 'sale-group', loadChildren: './sale-group/sale-group.module#SaleGroupModule' },
       { path: 'company', loadChildren: './company/company.module#CompanyModule' },
       { path: 'purchase-requisition', loadChildren: './purchase-requisition/purchase-requisition.module#PurchaseRequisitionModule' },
-      { path: 'purchase-orders', loadChildren: './purchase-orders/purchase-orders.module#PurchaseOrdersModule' },      
+      { path: 'purchase-orders', loadChildren: './purchase-orders/purchase-orders.module#PurchaseOrdersModule' },
       { path: 'grn', loadChildren: './grn/grn.module#GrnModule' },
       { path: 'purchase-invoice', loadChildren: './purchase-invoice/purchase-invoice.module#PurchaseInvoiceModule' },
       { path: 'stocks', loadChildren: './stocks/stocks.module#StocksModule' },
