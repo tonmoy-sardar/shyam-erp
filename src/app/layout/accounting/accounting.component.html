@@ -36,18 +36,7 @@
           <thead>
             <tr>
               <th>Sl.No.</th>
-              <th>Company</th>
-              <th>Payment No</th>
-              <th>PO INV No
-                <span class="info" ngbTooltip="Purchase Order Invoice Number">i</span>
-              </th>
-              <th>PO No
-                <span class="info" ngbTooltip="Purchase Order Number">i</span>
-              </th>
-              <th>Party Name</th>
-              <th>Created At</th>
-              <th>Created By</th>
-              <th>Amount</th>
+              <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span *ngIf="headerTh.has_tooltip == true" class="info" ngbTooltip="{{headerTh.tooltip_msg}}">i</span> <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
               <th>Action</th>
             </tr>
           </thead>
@@ -58,7 +47,7 @@
               <td>{{payment.payment_map[0].payment_no}}</td>
               <td>{{payment.purchase_inv_no}}</td>
               <td>{{payment.po_order_no}}</td>
-              <td>{{payment.company.company_name}}</td>
+              <td>{{payment.vendor}}</td>
               <td>{{payment.created_at | date: 'dd-MM-yyyy'}}</td>
               <td>{{payment.created_by.first_name}}</td>
               <td>{{payment.total_amount}}</td>

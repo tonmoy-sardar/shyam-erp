@@ -49,7 +49,7 @@ export class TermsConditionComponent implements OnInit {
       },
       {  
         name: "Company Name",
-        code: "getCompanyName(term.company)",
+        code: "company__company_name",
         sort_type:''
       },
       {  
@@ -68,6 +68,7 @@ export class TermsConditionComponent implements OnInit {
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
     this.getTermsList();
+    
     this.getCompanyDropdownList();
     this.getHelp();
   }
@@ -117,6 +118,7 @@ export class TermsConditionComponent implements OnInit {
       (data: any[]) => {
         this.totalTermsList = data['count'];
         this.termsList = data['results'];
+        
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
         if (this.totalTermsList > this.itemPerPage * this.defaultPagination) {

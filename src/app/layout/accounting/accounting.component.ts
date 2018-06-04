@@ -25,6 +25,11 @@ export class AccountingComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -34,12 +39,73 @@ export class AccountingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "Company",
+        code: "company__company_name",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Payment No",
+        code: "payment_map__payment_no",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "PO. INV. No.",
+        code: "purchase_inv_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Invoice Number'
+      },
+      {  
+        name: "PO No.",
+        code: "po_order_no",
+        sort_type:'',
+        has_tooltip:true,
+        tooltip_msg:'Purchase Order Number'
+      },
+      {  
+        name: "Vendor Name",
+        code: "vendor",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Created At",
+        code: "created_at",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Created By",
+        code: "created_by__first_name",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      },
+      {  
+        name: "Amount",
+        code: "total_amount",
+        sort_type:'',
+        has_tooltip:false,
+        tooltip_msg:''
+      }
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
     this.getPaymentList();
+
     this.getHelp();
   }
 
@@ -63,11 +129,24 @@ export class AccountingComponent implements OnInit {
   getPaymentList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.paymentService.getPaymentList(params).subscribe(
       (data: any[]) => {
         this.totalPaymentList = data['count'];
         this.paymentList = data['results'];
+        
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
         if (this.totalPaymentList > this.itemPerPage * this.defaultPagination) {
@@ -85,6 +164,34 @@ export class AccountingComponent implements OnInit {
 
   pagination() {
     this.spinner.show();
+    this.getPaymentList();
+  };
+
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
     this.getPaymentList();
   };
 

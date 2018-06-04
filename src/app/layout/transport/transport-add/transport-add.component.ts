@@ -38,7 +38,6 @@ export class TransportAddComponent implements OnInit {
     this.form = new FormGroup({
       transporter_name: new FormControl('', Validators.required),
       email: new FormControl('', [
-        Validators.required,
         Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
       ]),
       phone: new FormControl('', [
@@ -50,11 +49,11 @@ export class TransportAddComponent implements OnInit {
       storage: new FormControl('', Validators.required),
       state: new FormControl('', Validators.required),
       city: new FormControl('', Validators.required),
-      pan: new FormControl('', Validators.required),
       pin: new FormControl('', Validators.required),
-      gstin: new FormControl('', Validators.required),
-      amount_credit: new FormControl('', Validators.required),
-      amount_debit: new FormControl('', Validators.required)
+      pan: new FormControl(''),
+      gstin: new FormControl(''),
+      // amount_credit: new FormControl('', Validators.required),
+      // amount_debit: new FormControl('', Validators.required)
     });
     this.getCompanyList();
     this.getStateList();

@@ -38,7 +38,6 @@ export class TransportEditComponent implements OnInit {
     this.form = new FormGroup({
       transporter_name: new FormControl('', Validators.required),
       email: new FormControl('', [
-        Validators.required,
         Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
       ]),
       phone: new FormControl('', [
@@ -50,11 +49,11 @@ export class TransportEditComponent implements OnInit {
       storage: new FormControl('', Validators.required),
       state: new FormControl('', Validators.required),
       city: new FormControl('', Validators.required),
-      pan: new FormControl('', Validators.required),
       pin: new FormControl('', Validators.required),
-      gstin: new FormControl('', Validators.required),
-      amount_credit: new FormControl('', Validators.required),
-      amount_debit: new FormControl('', Validators.required)
+      pan: new FormControl(''),
+      gstin: new FormControl(''),
+      // amount_credit: new FormControl('', Validators.required),
+      // amount_debit: new FormControl('', Validators.required)
     });
     this.getCompanyList();
     this.getStorageList();
@@ -69,9 +68,9 @@ export class TransportEditComponent implements OnInit {
       city: '',
       pan: '',
       pin: '',
-      gstin: '',
-      amount_credit: '',
-      amount_debit: ''
+      // gstin: '',
+      // amount_credit: '',
+      // amount_debit: ''
     };
     this.getHelp();
   }

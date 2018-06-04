@@ -23,6 +23,11 @@ export class StocksComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+
+  sort_by = '';
+  sort_type= '';
+  headerThOption = [];
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -32,6 +37,40 @@ export class StocksComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.headerThOption = [
+      {  
+        name: "Company",
+        code: "company__company_name",
+        sort_type:''
+      },
+      {  
+        name: "Branch",
+        code: "branch__branch_name",
+        sort_type:''
+      },
+      {  
+        name: "Storage Location",
+        code: "storage_location__storage_address",
+        sort_type:''
+      },
+      {  
+        name: "Storage Bin",
+        code: "storage_bin__bin_no",
+        sort_type:''
+      },
+      {  
+        name: "Material",
+        code: "material__material_fullname",
+        sort_type:''
+      },
+      {  
+        name: "Available Qty",
+        code: "quantity",
+        sort_type:''
+      }
+    ];
+
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
@@ -59,7 +98,19 @@ export class StocksComponent implements OnInit {
   getStockList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    params.set('search', this.search_key.toString());
+    if(this.search_key !='')
+    {
+      params.set('search', this.search_key.toString());
+    }
+    if(this.sort_by !='')
+    {
+      params.set('field_name', this.sort_by.toString());
+    }
+
+    if(this.sort_type !='')
+    {
+      params.set('order_by', this.sort_type.toString());
+    }
     this.stocksService.getStockList(params).subscribe(res => {
       this.totalStockList = res['count'];
       this.stockList = res['results'];
@@ -82,4 +133,31 @@ export class StocksComponent implements OnInit {
     this.getStockList();
   };
 
+  sortTable(value)
+  {
+    let type = '';
+    this.headerThOption.forEach(function (optionValue) {
+      if(optionValue.code == value)
+      {
+        if(optionValue.sort_type =='desc')
+        {
+          type = 'asc';
+        }
+        else
+        {
+          type = 'desc';
+        }
+        optionValue.sort_type = type;
+      }
+      else{
+        optionValue.sort_type = '';
+      }
+    });
+
+    this.sort_by = value;
+    this.sort_type = type;
+    this.spinner.show();
+    this.defaultPagination = 1;
+    this.getStockList();
+  };
 }

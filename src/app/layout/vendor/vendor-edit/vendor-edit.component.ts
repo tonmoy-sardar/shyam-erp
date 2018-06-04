@@ -56,6 +56,7 @@ export class VendorEditComponent implements OnInit {
       // amount_debit: '',
       vendor_address: [
         {
+          id: null,
           email: '',
           mobile: '',
           contact_person: '',
@@ -68,6 +69,7 @@ export class VendorEditComponent implements OnInit {
       ],
       vendor_account: [
         {
+          id: null,
           bank_name: '',
           branch_name: '',
           account_no: '',
@@ -116,9 +118,10 @@ export class VendorEditComponent implements OnInit {
   }
   createContactInfo() {
     return this.formBuilder.group({
+      id:null,
       email: [''],
       mobile: ['', Validators.required],
-      contact_person: [''],
+      contact_person: ['',Validators.required],
       designation: [''],
       address: ['', Validators.required],
       state: ['', Validators.required],
@@ -129,6 +132,7 @@ export class VendorEditComponent implements OnInit {
 
   createBankInfo() {
     return this.formBuilder.group({
+      id:null,
       bank_name: ['', Validators.required],
       branch_name: ['', Validators.required],
       account_no: ['', Validators.required],
@@ -142,6 +146,7 @@ export class VendorEditComponent implements OnInit {
 
   addContact() {
     var vndr_addrs = {
+      id: null,
       email: '',
       mobile: '',
       contact_person: '',
@@ -170,6 +175,7 @@ export class VendorEditComponent implements OnInit {
   }
   addBank() {
     var vndr_accnt = {
+      id:null,
       bank_name: '',
       branch_name: '',
       account_no: '',

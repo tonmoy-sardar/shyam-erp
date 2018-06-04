@@ -72,7 +72,7 @@ export class VendorAddComponent implements OnInit {
     return this.formBuilder.group({
       email: [''],
       mobile: ['', Validators.required],
-      contact_person: [''],
+      contact_person: ['', Validators.required],
       designation: [''],
       address: ['', Validators.required],
       state: ['', Validators.required],

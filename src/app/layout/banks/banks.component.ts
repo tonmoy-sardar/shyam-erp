@@ -41,7 +41,7 @@ export class BanksComponent implements OnInit {
     this.headerThOption = [
       {  
         name: "Company",
-        code: "company.company_name",
+        code: "company__company_name",
         sort_type:''
       },
       {  

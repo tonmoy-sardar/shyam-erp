@@ -79,7 +79,13 @@
                         <div class="form-group col-md-3">
                           <label>Contact Person</label>
                           <input class="form-control" placeholder="Contact Person" name="contact_person" [(ngModel)]="vendor_details.vendor_address[i].contact_person"
-                            formControlName="contact_person">
+                            formControlName="contact_person" [ngClass]="{
+                              'is-invalid': contact.get('contact_person').invalid && (contact.get('contact_person').dirty || contact.get('contact_person').touched),
+                              'is-valid': contact.get('contact_person').valid && (contact.get('contact_person').dirty || contact.get('contact_person').touched)
+                            }">
+                            <div class="invalid-feedback" *ngIf="contact.get('contact_person').touched && contact.get('contact_person').hasError('required')">
+                              Please enter Contact Person
+                            </div>
                         </div>
                         <div class="form-group col-md-3">
                           <label>Designation</label>
