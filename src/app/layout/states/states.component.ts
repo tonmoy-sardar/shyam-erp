@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatesService } from '../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-states',
@@ -19,7 +19,7 @@ export class StatesComponent implements OnInit {
   totalStateList: number;
   search_key = '';
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -28,45 +28,43 @@ export class StatesComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
-
+  loading: LoadingState = LoadingState.NotReady;
   headerThOption = [];
   constructor(
     private statesService: StatesService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
 
-    
+
   ) { }
 
 
   ngOnInit() {
     this.headerThOption = [
-      {  
+      {
         name: "State",
         code: "state_name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Tin",
         code: "tin_number",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "State Code",
         code: "state_code",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Status",
         code: "status",
-        sort_type:''
+        sort_type: ''
       }
     ];
 
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -83,7 +81,7 @@ export class StatesComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getStateList();
   }
@@ -95,17 +93,14 @@ export class StatesComponent implements OnInit {
   getStateList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
     this.statesService.getStateList(params).subscribe(
@@ -120,14 +115,20 @@ export class StatesComponent implements OnInit {
         else {
           this.upper_count = this.totalStateList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
-    );
+    )
   };
 
   activeState(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let state;
 
     state = {
@@ -143,15 +144,16 @@ export class StatesComponent implements OnInit {
       },
       error => {
         console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveState(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let state;
 
     state = {
@@ -167,16 +169,16 @@ export class StatesComponent implements OnInit {
         this.getStateList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   deleteState(id) {
-  
+
     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
       disableClose: false
     });
@@ -184,7 +186,7 @@ export class StatesComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let state;
 
         state = {
@@ -200,10 +202,10 @@ export class StatesComponent implements OnInit {
             this.getStateList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -213,34 +215,30 @@ export class StatesComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getStateList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getStateList();
   };
