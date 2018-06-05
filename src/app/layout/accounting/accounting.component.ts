@@ -155,7 +155,7 @@ export class AccountingComponent implements OnInit {
         else {
           this.upper_count = this.totalPaymentList
         }
-        // console.log(this.paymentList)
+        console.log(this.paymentList)
         this.spinner.hide();
       }
     );
