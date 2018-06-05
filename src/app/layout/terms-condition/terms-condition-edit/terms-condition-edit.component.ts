@@ -4,8 +4,8 @@ import { CompanyService } from '../../../core/services/company.service';
 import { TermsConditionService } from '../../../core/services/terms-condition.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-terms-condition-edit',
@@ -18,18 +18,17 @@ export class TermsConditionEditComponent implements OnInit {
   companyList = [];
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private termsConditionService: TermsConditionService,
     private companyService: CompanyService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = new FormGroup({
       term_type: new FormControl('', Validators.required),
       company: new FormControl('', Validators.required),
@@ -56,7 +55,6 @@ export class TermsConditionEditComponent implements OnInit {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
       }
     );
   };
@@ -64,7 +62,13 @@ export class TermsConditionEditComponent implements OnInit {
     this.termsConditionService.getTermsDetails(id).subscribe(
       (data: any[]) => {
         this.termsCondition = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
 
@@ -78,21 +82,21 @@ export class TermsConditionEditComponent implements OnInit {
   };
   updateTerms () {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.termsConditionService.updateTerms(this.termsCondition).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Terms and services updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('terms-condition');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

@@ -137,7 +137,8 @@ export class PurchaseOrdersAddComponent implements OnInit {
     const order_freight_control = <FormArray>this.form.controls['purchase_order_freight'];
     const order_detail_control = <FormArray>this.form.controls['purchase_order_detail'];
     const order_terms_control = <FormArray>this.form.controls['purchase_order_terms'];
-    if (id) {      
+    if (id) {
+      this.visible_key = false;      
       this.clearFormArray(order_freight_control)
       this.requisition_details = '';
       this.material_details_list = [];

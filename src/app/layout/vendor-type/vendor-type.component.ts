@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { VendorTypeService } from '../../core/services/vendor-type.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
+
 @Component({
   selector: 'app-vendor-type',
   templateUrl: './vendor-type.component.html',
@@ -28,11 +29,11 @@ export class VendorTypeComponent implements OnInit {
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
   headerThOption = [];
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private vendorTypeService: VendorTypeService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
   ) { }
@@ -55,7 +56,7 @@ export class VendorTypeComponent implements OnInit {
         sort_type:''
       }
     ];
-    this.spinner.show();
+
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -73,7 +74,7 @@ export class VendorTypeComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getVendorTypeList();
   }
@@ -111,13 +112,19 @@ export class VendorTypeComponent implements OnInit {
         else {
           this.upper_count = this.totalVendorTypeList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeVendorType(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let vendorType;
 
     vendorType = {
@@ -132,16 +139,16 @@ export class VendorTypeComponent implements OnInit {
         this.getVendorTypeList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveVendorType(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let vendorType;
 
     vendorType = {
@@ -157,10 +164,10 @@ export class VendorTypeComponent implements OnInit {
         this.getVendorTypeList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -173,7 +180,7 @@ export class VendorTypeComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let vendorType;
 
         vendorType = {
@@ -189,10 +196,10 @@ export class VendorTypeComponent implements OnInit {
             this.getVendorTypeList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -202,7 +209,7 @@ export class VendorTypeComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getVendorTypeList();
   };
 
@@ -229,7 +236,7 @@ export class VendorTypeComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getVendorTypeList();
   };

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BanksService } from '../../core/services/banks.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
+
 @Component({
   selector: 'app-banks',
   templateUrl: './banks.component.html',
@@ -18,7 +19,7 @@ export class BanksComponent implements OnInit {
   totalBankList: number;
   search_key = '';
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -27,45 +28,45 @@ export class BanksComponent implements OnInit {
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
+  loading: LoadingState = LoadingState.NotReady;
   headerThOption = [];
   constructor(
     private router: Router,
     private banksService: BanksService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.headerThOption = [
-      {  
+      {
         name: "Company",
         code: "company__company_name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Bank",
         code: "bank_branch",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Branch",
         code: "bank_name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "IFSC",
         code: "bank_ifsc",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Status",
         code: "status",
-        sort_type:''
+        sort_type: ''
       }
     ];
-    this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -81,7 +82,7 @@ export class BanksComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getBankList();
   }
@@ -93,17 +94,14 @@ export class BanksComponent implements OnInit {
   getBankList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
     this.banksService.getBankList(params).subscribe(
@@ -118,13 +116,19 @@ export class BanksComponent implements OnInit {
         else {
           this.upper_count = this.totalBankList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeBank(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let gstRate;
 
     gstRate = {
@@ -139,16 +143,16 @@ export class BanksComponent implements OnInit {
         this.getBankList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveBank(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let gstRate;
 
     gstRate = {
@@ -164,10 +168,10 @@ export class BanksComponent implements OnInit {
         this.getBankList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -180,7 +184,7 @@ export class BanksComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let bank;
 
         bank = {
@@ -196,10 +200,10 @@ export class BanksComponent implements OnInit {
             this.getBankList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -209,34 +213,30 @@ export class BanksComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getBankList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getBankList();
   };

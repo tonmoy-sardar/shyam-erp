@@ -54,6 +54,12 @@ export class GstRatesEditComponent implements OnInit {
       (data: any[]) => {
         this.gstRates = data;
         this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }

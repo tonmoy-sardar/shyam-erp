@@ -100,6 +100,12 @@ export class ContractorsEditComponent implements OnInit {
         account_control.push(this.createBankInfo());
       })
       this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 

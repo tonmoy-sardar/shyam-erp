@@ -3,12 +3,13 @@ import { Router } from '@angular/router';
 import { TermsConditionService } from '../../core/services/terms-condition.service';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../../core/services/company.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
 import { NgxPermissionsService } from 'ngx-permissions';
+import { LoadingState } from '../../core/component/loading/loading.component';
+
 @Component({
   selector: 'app-terms-condition',
   templateUrl: './terms-condition.component.html',
@@ -20,7 +21,7 @@ export class TermsConditionComponent implements OnInit {
   totalTermsList: number;
   search_key = '';
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
   companyList = [];
   itemNo: number;
   help_heading = "";
@@ -31,12 +32,13 @@ export class TermsConditionComponent implements OnInit {
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
   headerThOption = [];
+  loading: LoadingState = LoadingState.NotReady;
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private termsConditionService: TermsConditionService,
     private companyService: CompanyService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog,
     private permissionsService: NgxPermissionsService
@@ -44,33 +46,33 @@ export class TermsConditionComponent implements OnInit {
 
   ngOnInit() {
     this.headerThOption = [
-      {  
+      {
         name: "Terms & Condition",
         code: "term_text",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Company Name",
         code: "company__company_name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Created Date",
         code: "created_at",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Status",
         code: "status",
-        sort_type:''
+        sort_type: ''
       }
     ];
-    this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
     this.getTermsList();
-    
+
     this.getCompanyDropdownList();
     this.getHelp();
   }
@@ -83,7 +85,7 @@ export class TermsConditionComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getTermsList();
   }
@@ -96,31 +98,28 @@ export class TermsConditionComponent implements OnInit {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
       }
     );
   };
+
   getTermsList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
     this.termsConditionService.getTermsList(params).subscribe(
       (data: any[]) => {
         this.totalTermsList = data['count'];
         this.termsList = data['results'];
-        
+
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
         if (this.totalTermsList > this.itemPerPage * this.defaultPagination) {
@@ -129,7 +128,13 @@ export class TermsConditionComponent implements OnInit {
         else {
           this.upper_count = this.totalTermsList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -141,7 +146,7 @@ export class TermsConditionComponent implements OnInit {
     }
   }
   activeTerm(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let terms;
 
     terms = {
@@ -156,16 +161,16 @@ export class TermsConditionComponent implements OnInit {
         this.getTermsList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveTerm(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let terms;
 
     terms = {
@@ -181,10 +186,10 @@ export class TermsConditionComponent implements OnInit {
         this.getTermsList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -197,7 +202,7 @@ export class TermsConditionComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let terms;
 
         terms = {
@@ -213,10 +218,10 @@ export class TermsConditionComponent implements OnInit {
             this.getTermsList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -225,49 +230,32 @@ export class TermsConditionComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getTermsList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getTermsList();
   };
 
-  // openConfirmationDialog() {
-  //   this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-  //     disableClose: false
-  //   });
-  //   this.dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
-
-  //   this.dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       console.log("delete")
-  //     }
-  //     this.dialogRef = null;
-  //   });
-  // }
 }
