@@ -40,13 +40,13 @@ export class DesignationsService {
   }
 
   activeInactiveDesignation(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'designation/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'designation_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }
 
   deleteDesignation(data): Observable<any>{
-    return this.http.patch(environment.apiEndpoint+'designation/'+data.id+'/',data, {
+    return this.http.patch(environment.apiEndpoint+'designation_status/'+data.id+'/',data, {
       headers: new HttpHeaders().set('Authorization', 'Token '+localStorage.getItem('logedUserToken'))
     })
   }

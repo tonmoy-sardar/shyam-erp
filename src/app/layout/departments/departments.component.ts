@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DepartmentsService } from '../../core/services/departments.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
+
 @Component({
   selector: 'app-departments',
   templateUrl: './departments.component.html',
@@ -18,7 +19,7 @@ export class DepartmentsComponent implements OnInit {
   totalDepartmentList: number;
   search_key = '';
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
   itemNo: number;
   help_heading = "";
   help_description = "";
@@ -28,34 +29,33 @@ export class DepartmentsComponent implements OnInit {
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
   headerThOption = [];
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private departmentsService: DepartmentsService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.headerThOption = [
-      {  
+      {
         name: "Department",
         code: "department_name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Company",
         code: "company__company_name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Status",
         code: "status",
-        sort_type:''
+        sort_type: ''
       }
     ];
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -72,7 +72,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getdepartmentList();
   }
@@ -84,17 +84,14 @@ export class DepartmentsComponent implements OnInit {
   getdepartmentList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
     this.departmentsService.getDepartmentList(params).subscribe(
@@ -110,14 +107,20 @@ export class DepartmentsComponent implements OnInit {
         else {
           this.upper_count = this.totalDepartmentList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeDepartment(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let department;
 
     department = {
@@ -132,16 +135,16 @@ export class DepartmentsComponent implements OnInit {
         this.getdepartmentList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveDepartment(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let department;
 
     department = {
@@ -157,10 +160,10 @@ export class DepartmentsComponent implements OnInit {
         this.getdepartmentList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -173,7 +176,7 @@ export class DepartmentsComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let department;
 
         department = {
@@ -189,10 +192,10 @@ export class DepartmentsComponent implements OnInit {
             this.getdepartmentList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -202,34 +205,30 @@ export class DepartmentsComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getdepartmentList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getdepartmentList();
   };

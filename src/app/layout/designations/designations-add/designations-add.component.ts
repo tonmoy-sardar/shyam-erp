@@ -5,8 +5,8 @@ import { CompanyService } from '../../../core/services/company.service';
 import { DesignationsService } from '../../../core/services/designations.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-designations-add',
@@ -14,12 +14,12 @@ import { HelpService } from '../../../core/services/help.service';
   styleUrls: ['./designations-add.component.scss']
 })
 export class DesignationsAddComponent implements OnInit {
-
   company_list: any[] = [];
   department_list: any[] = [];
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
@@ -27,12 +27,10 @@ export class DesignationsAddComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
       departments: ['', Validators.required],
@@ -52,7 +50,13 @@ export class DesignationsAddComponent implements OnInit {
   getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(res => {
       this.company_list = res;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
@@ -74,20 +78,20 @@ export class DesignationsAddComponent implements OnInit {
 
   addDesignation() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.designationsService.addNewDesignation(this.form.value).subscribe(
         response => {
           this.toastr.success('Designation added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('designations');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

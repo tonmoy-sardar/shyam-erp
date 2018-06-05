@@ -4,9 +4,9 @@ import { CompanyService } from '../../../core/services/company.service';
 import { BanksService } from '../../../core/services/banks.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-banks-edit',
@@ -20,6 +20,7 @@ export class BanksEditComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private banksService: BanksService,
@@ -27,12 +28,10 @@ export class BanksEditComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       company: [null, Validators.required],
       bank_branch: [null, Validators.required],
@@ -63,7 +62,13 @@ export class BanksEditComponent implements OnInit {
     this.banksService.getBankDetails(id).subscribe(
       (data: any[]) => {
         this.banks = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
@@ -72,7 +77,6 @@ export class BanksEditComponent implements OnInit {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
       }
     );
   };
@@ -101,20 +105,20 @@ export class BanksEditComponent implements OnInit {
 
   updateBank() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.banksService.updateBank(this.banks).subscribe(
         response => {
           this.toastr.success('Bank updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('banks');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

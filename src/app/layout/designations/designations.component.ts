@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DesignationsService } from '../../core/services/designations.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
+
 @Component({
   selector: 'app-designations',
   templateUrl: './designations.component.html',
@@ -29,11 +30,11 @@ export class DesignationsComponent implements OnInit {
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
   headerThOption = [];
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private designationsService: DesignationsService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
   ) { }
@@ -61,7 +62,6 @@ export class DesignationsComponent implements OnInit {
         sort_type:''
       }
     ];
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -78,7 +78,7 @@ export class DesignationsComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getDesignationList();
   }
@@ -116,14 +116,20 @@ export class DesignationsComponent implements OnInit {
         else {
           this.upper_count = this.totalDesignationList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeDesignation(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let designation;
 
     designation = {
@@ -138,16 +144,16 @@ export class DesignationsComponent implements OnInit {
         this.getDesignationList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveDesignation(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let designation;
 
     designation = {
@@ -163,10 +169,10 @@ export class DesignationsComponent implements OnInit {
         this.getDesignationList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -179,7 +185,7 @@ export class DesignationsComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let department;
 
         department = {
@@ -195,10 +201,10 @@ export class DesignationsComponent implements OnInit {
             this.getDesignationList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -208,7 +214,7 @@ export class DesignationsComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getDesignationList();
   };
 
@@ -235,7 +241,7 @@ export class DesignationsComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getDesignationList();
   };

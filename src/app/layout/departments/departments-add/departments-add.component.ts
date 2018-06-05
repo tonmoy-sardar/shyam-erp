@@ -4,8 +4,8 @@ import { DepartmentsService } from '../../../core/services/departments.service';
 import { CompanyService } from '../../../core/services/company.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-departments-add',
@@ -17,18 +17,17 @@ export class DepartmentsAddComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
       department_name: ['', Validators.required]
@@ -47,8 +46,14 @@ export class DepartmentsAddComponent implements OnInit {
   getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(res => {
       this.company_list = res;
-      this.spinner.hide();
-    })
+      this.loading = LoadingState.Ready;
+    },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
+      })
   }
 
   goToList(toNav) {
@@ -57,20 +62,20 @@ export class DepartmentsAddComponent implements OnInit {
 
   addDepartment() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.departmentsService.addNewDepartment(this.form.value).subscribe(
         response => {
           this.toastr.success('Department added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('departments');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
