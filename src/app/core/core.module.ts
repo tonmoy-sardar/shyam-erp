@@ -28,6 +28,7 @@ import { TimepickerComponent } from './component/timepicker/timepicker.component
 import { TooltipComponent } from './component/tooltip/tooltip.component';
 import { HelpComponent } from './component/help/help.component';
 import { ConfirmDialogComponent } from './component/confirm-dialog/confirm-dialog.component';
+import { LoadingComponent } from './component/loading/loading.component';
 //----------------Material----------------//
 import {
   MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule,
@@ -69,6 +70,7 @@ import { ExpensesService } from './services/expenses.service';
 import { ContractorsService } from './services/contractors.service';
 import { WindowRefService } from './services/window-ref.service';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -108,7 +110,8 @@ import { WindowRefService } from './services/window-ref.service';
     TimepickerComponent,
     TooltipComponent,
     HelpComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    LoadingComponent
   ],
   providers: [],
   exports: [
@@ -142,7 +145,8 @@ import { WindowRefService } from './services/window-ref.service';
     TabsComponent,
     TimepickerComponent,
     TooltipComponent,
-    HelpComponent
+    HelpComponent,
+    LoadingComponent
   ],
   entryComponents: [
     ConfirmDialogComponent

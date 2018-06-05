@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-states-edit',
@@ -17,18 +17,17 @@ export class StatesEditComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.states = {
       id: '',
       state_name: '',
@@ -44,7 +43,7 @@ export class StatesEditComponent implements OnInit {
     this.getHelp();
   }
 
-  getHelp(){
+  getHelp() {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.stateEdit.heading;
       this.help_description = res.data.stateEdit.desc;
@@ -55,7 +54,7 @@ export class StatesEditComponent implements OnInit {
     this.statesService.getStateDetails(id).subscribe(
       (data: any[]) => {
         this.states = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       }
     );
   }
@@ -67,20 +66,20 @@ export class StatesEditComponent implements OnInit {
 
   updateState() {
     if (this.form.valid) {
-      this.spinner.show();      
+      this.loading = LoadingState.Processing;
       this.statesService.updateState(this.states).subscribe(
         response => {
           this.toastr.success('State updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('states');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
@@ -88,7 +87,7 @@ export class StatesEditComponent implements OnInit {
         const control = this.form.get(field);
         control.markAsTouched({ onlySelf: true });
       });
-    }    
+    }
   }
 
   btnClickNav(toNav) {
