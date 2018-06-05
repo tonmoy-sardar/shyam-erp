@@ -5,9 +5,9 @@ import { CompanyService } from '../../../core/services/company.service';
 import { TransportService } from '../../../core/services/transport.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-transport-edit',
@@ -22,6 +22,7 @@ export class TransportEditComponent implements OnInit {
   stateList = [];
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -29,12 +30,10 @@ export class TransportEditComponent implements OnInit {
     private transportService: TransportService,
     private companyService: CompanyService,
     private statesService: StatesService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = new FormGroup({
       transporter_name: new FormControl('', Validators.required),
       email: new FormControl('', [
@@ -51,9 +50,7 @@ export class TransportEditComponent implements OnInit {
       city: new FormControl('', Validators.required),
       pin: new FormControl('', Validators.required),
       pan: new FormControl(''),
-      gstin: new FormControl(''),
-      // amount_credit: new FormControl('', Validators.required),
-      // amount_debit: new FormControl('', Validators.required)
+      gstin: new FormControl('')
     });
     this.getCompanyList();
     this.getStorageList();
@@ -68,9 +65,7 @@ export class TransportEditComponent implements OnInit {
       city: '',
       pan: '',
       pin: '',
-      // gstin: '',
-      // amount_credit: '',
-      // amount_debit: ''
+      gstin: ''
     };
     this.getHelp();
   }
@@ -88,28 +83,31 @@ export class TransportEditComponent implements OnInit {
   getStateList() {
     this.statesService.getStateActiveList().subscribe(res => {
       this.stateList = res;
-      // console.log(this.stateList);
     }
     );
   };
   getStorageList() {
     this.companyService.getStorageList().subscribe(res => {
       this.storageList = res.results;
-      // console.log(this.storageList)
     })
   }
   getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        // console.log(this.companyList);
       }
     );
   };
   getTransport(id) {
     this.transportService.getTransporterDetails(id).subscribe(res => {
       this.transport = res;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
   btnClickNav(toNav) {
@@ -117,21 +115,21 @@ export class TransportEditComponent implements OnInit {
   };
   updateTransport() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.transportService.updateTransporter(this.transport).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Transporter updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('transport');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

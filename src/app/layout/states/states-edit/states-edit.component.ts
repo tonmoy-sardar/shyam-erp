@@ -55,6 +55,12 @@ export class StatesEditComponent implements OnInit {
       (data: any[]) => {
         this.states = data;
         this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
