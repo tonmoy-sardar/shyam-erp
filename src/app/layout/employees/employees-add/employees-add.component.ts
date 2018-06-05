@@ -50,7 +50,10 @@ export class EmployeesAddComponent implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(12)
       ]],
-      alt_contact: [''],
+      alt_contact: ['',[
+        Validators.minLength(10),
+        Validators.maxLength(12)
+      ]],
       dob: ['', Validators.required],
       blood_group: [''],
       pan: [''],

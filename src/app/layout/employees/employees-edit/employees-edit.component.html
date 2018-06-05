@@ -59,7 +59,14 @@
                   </div>
                   <div class="form-group col-md-4">
                     <label>Alternate Contact No.</label>
-                    <input type="text" appOnlyNumber class="form-control" name="alt_contact" placeholder="Alternate Contact No." formControlName="alt_contact" [(ngModel)]="employee_details.alt_contact">
+                    <input type="text" appOnlyNumber class="form-control" name="alt_contact" placeholder="Alternate Contact No." formControlName="alt_contact" [(ngModel)]="employee_details.alt_contact" [ngClass]="displayFieldCss('alt_contact')">
+
+                    <div class="invalid-feedback" *ngIf="form.controls['alt_contact'].hasError('minlength') && !form.controls['alt_contact'].hasError('required')">
+                      Please enter at least 10 digit
+                    </div>
+                    <div class="invalid-feedback" *ngIf="form.controls['alt_contact'].hasError('maxlength') && !form.controls['alt_contact'].hasError('required')">
+                      Phone number should be less then 13 digit
+                    </div>
                   </div>
                   <div class="form-group col-md-4">
                     <label>DOB</label>
