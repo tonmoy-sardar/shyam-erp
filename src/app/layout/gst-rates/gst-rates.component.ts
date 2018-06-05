@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GstRatesService } from '../../core/services/gst-rates.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-gst-rates',
@@ -22,20 +22,19 @@ export class GstRatesComponent implements OnInit {
   help_heading = "";
   help_description = "";
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
   lower_count: number;
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
-
+  loading: LoadingState = LoadingState.NotReady;
   headerThOption = [];
 
   constructor(
     private router: Router,
     private gstRatesService: GstRatesService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
   ) { }
@@ -44,39 +43,38 @@ export class GstRatesComponent implements OnInit {
   ngOnInit() {
 
     this.headerThOption = [
-      {  
+      {
         name: "Identifiable Name",
         code: "gst_pattern",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "CGST(%)",
         code: "cgst",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "SGST(%)",
         code: "sgst",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "IGST(%)",
         code: "igst",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Created at",
         code: "created_at",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Status",
         code: "status",
-        sort_type:''
+        sort_type: ''
       }
     ];
-
-    this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -92,7 +90,7 @@ export class GstRatesComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getGstList();
   }
@@ -104,17 +102,14 @@ export class GstRatesComponent implements OnInit {
   getGstList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
 
@@ -122,7 +117,7 @@ export class GstRatesComponent implements OnInit {
       (data: any[]) => {
         this.totalGstRatesList = data['count'];
         this.gstRatesList = data['results'];
-        console.log(this.gstRatesList);
+        // console.log(this.gstRatesList);
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
         if (this.totalGstRatesList > this.itemPerPage * this.defaultPagination) {
@@ -131,13 +126,19 @@ export class GstRatesComponent implements OnInit {
         else {
           this.upper_count = this.totalGstRatesList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeGst(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let gstRate;
 
     gstRate = {
@@ -152,16 +153,16 @@ export class GstRatesComponent implements OnInit {
         this.getGstList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveGst(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let gstRate;
 
     gstRate = {
@@ -177,10 +178,10 @@ export class GstRatesComponent implements OnInit {
         this.getGstList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -193,7 +194,7 @@ export class GstRatesComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let gstRate;
 
         gstRate = {
@@ -209,10 +210,10 @@ export class GstRatesComponent implements OnInit {
             this.getGstList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -222,34 +223,30 @@ export class GstRatesComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getGstList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getGstList();
   };

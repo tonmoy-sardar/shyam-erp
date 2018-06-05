@@ -4,8 +4,8 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
 import { VendorService } from '../../../core/services/vendor.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-vendor-edit',
@@ -22,6 +22,7 @@ export class VendorEditComponent implements OnInit {
   vendor_details;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -29,20 +30,16 @@ export class VendorEditComponent implements OnInit {
     private toastr: ToastrService,
     private statesService: StatesService,
     private vendorService: VendorService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       vendor_fullname: ['', Validators.required],
       vendor_type: ['', Validators.required],
       pan_no: [''],
       cin_no: [''],
       gst_no: [''],
-      // amount_credit: ['', Validators.required],
-      // amount_debit: ['', Validators.required],
       vendor_address: this.formBuilder.array([]),
       vendor_account: this.formBuilder.array([])
     });
@@ -52,8 +49,6 @@ export class VendorEditComponent implements OnInit {
       vendor_type: '',
       pan_no: '',
       cin_no: '',
-      // amount_credit: '',
-      // amount_debit: '',
       vendor_address: [
         {
           id: null,
@@ -98,7 +93,6 @@ export class VendorEditComponent implements OnInit {
   getStateList() {
     this.statesService.getStateActiveList().subscribe(res => {
       this.stateList = res;
-      // console.log(this.stateList);
     }
     );
   };
@@ -107,21 +101,27 @@ export class VendorEditComponent implements OnInit {
       this.vendor_details = res;
       const address_control = <FormArray>this.form.controls['vendor_address'];
       const account_control = <FormArray>this.form.controls['vendor_account'];
-      this.vendor_details.vendor_address.forEach( x => {
+      this.vendor_details.vendor_address.forEach(x => {
         address_control.push(this.createContactInfo());
       })
-      this.vendor_details.vendor_account.forEach( x => {
+      this.vendor_details.vendor_account.forEach(x => {
         account_control.push(this.createBankInfo());
       })
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
     })
   }
   createContactInfo() {
     return this.formBuilder.group({
-      id:null,
-      email: [''],
-      mobile: ['', Validators.required],
-      contact_person: ['',Validators.required],
+      id: null,
+      email: ['', [
+        Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
+      ]],
+      mobile: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(12)
+      ]],
+      contact_person: ['', Validators.required],
       designation: [''],
       address: ['', Validators.required],
       state: ['', Validators.required],
@@ -132,7 +132,7 @@ export class VendorEditComponent implements OnInit {
 
   createBankInfo() {
     return this.formBuilder.group({
-      id:null,
+      id: null,
       bank_name: ['', Validators.required],
       branch_name: ['', Validators.required],
       account_no: ['', Validators.required],
@@ -140,7 +140,7 @@ export class VendorEditComponent implements OnInit {
     });
   }
 
-  getContact(form){
+  getContact(form) {
     return form.get('vendor_address').controls
   }
 
@@ -170,12 +170,12 @@ export class VendorEditComponent implements OnInit {
 
   }
 
-  getBank(form){
+  getBank(form) {
     return form.get('vendor_account').controls
   }
   addBank() {
     var vndr_accnt = {
-      id:null,
+      id: null,
       bank_name: '',
       branch_name: '',
       account_no: '',
@@ -185,6 +185,7 @@ export class VendorEditComponent implements OnInit {
     const control = <FormArray>this.form.controls['vendor_account'];
     control.push(this.createBankInfo());
   }
+
   deleteBank(index: number) {
     if (index > -1) {
       this.vendor_details.vendor_account.splice(index, 1)
@@ -192,29 +193,32 @@ export class VendorEditComponent implements OnInit {
     const control = <FormArray>this.form.controls['vendor_account'];
     control.removeAt(index);
   }
+
   btnClickNav(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
+
   goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
+
   updateVendor() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.vendorService.updateVendor(this.vendor_details).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Vendor updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('vendor');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

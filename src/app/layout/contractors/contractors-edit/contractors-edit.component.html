@@ -1,4 +1,5 @@
-<div>
+<loading [state]="loading">
+  <div>
     <div class="row">
       <div class="col-md-6">
         <h4 class="page-header">Contractor Edit</h4>
@@ -30,67 +31,81 @@
                           Please enter contractor name
                         </div>
                       </div>
-                      
+
                       <div class="form-group col-md-2">
                         <label>PAN</label>
                         <input type="text" class="form-control" [(ngModel)]="contractor_details.pan_no" name="pan_no" placeholder="Pan" formControlName="pan_no">
                       </div>
-                      
+
                       <div class="form-group col-md-2">
                         <label>GSTIN</label>
                         <input type="text" class="form-control" [(ngModel)]="contractor_details.gst_no" name="gst_no" placeholder="GSTIN" formControlName="gst_no">
                       </div>
                       <div class="form-group col-md-2">
-                          <label>Email</label>
-                          <input type="text" class="form-control" name="email" [(ngModel)]="contractor_details.email" placeholder="Email" formControlName="email" [ngClass]="displayFieldCss('email')">
-                          <div class="invalid-feedback" *ngIf="form.controls['email'].hasError('required')">
-                            Please enter Email
-                          </div>
+                        <label>Email</label>
+                        <input type="text" class="form-control" name="email" [(ngModel)]="contractor_details.email" placeholder="Email" formControlName="email"
+                          [ngClass]="displayFieldCss('email')">
+                        <div class="invalid-feedback" *ngIf="form.controls['email'].hasError('pattern') && !form.controls['email'].hasError('required')">
+                          Please enter a valid email address
                         </div>
-                        <div class="form-group col-md-2">
-                          <label>Contact No.</label>
-                          <input type="text" class="form-control" name="mobile" [(ngModel)]="contractor_details.mobile" placeholder="Contact No." formControlName="mobile" [ngClass]="displayFieldCss('mobile')">
-                          <div class="invalid-feedback" *ngIf="form.controls['mobile'].hasError('required')">
-                            Please enter Mobile
-                          </div>
+                        <div class="invalid-feedback" *ngIf="form.controls['email'].hasError('required')">
+                          Please enter Email
                         </div>
-                        
-                        <div class="form-group col-md-6">
-                          <label>Address</label>
-                          <textarea class="form-control" rows="1" placeholder="Address" name="address" [(ngModel)]="contractor_details.address" formControlName="address" [ngClass]="displayFieldCss('address')"></textarea>
-                          <div class="invalid-feedback" *ngIf="form.controls['address'].hasError('required')">
-                            Please enter address
-                          </div>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label>Contact No.</label>
+                        <input type="text" appOnlyNumber class="form-control" name="mobile" [(ngModel)]="contractor_details.mobile" placeholder="Contact No."
+                          formControlName="mobile" [ngClass]="displayFieldCss('mobile')">
+                        <div class="invalid-feedback" *ngIf="form.controls['mobile'].hasError('minlength') && !form.controls['mobile'].hasError('required')">
+                          Please enter at least 10 digit
                         </div>
-                        <div class="form-group col-md-2">
-                          <label>State</label>
-                          <select class="form-control" name="state" [(ngModel)]="contractor_details.state" formControlName="state" [ngClass]="displayFieldCss('state')">
-                            <option value="">Select State</option>
-                            <option value="{{state.id}}" *ngFor="let state of stateList">{{state.state_name}}</option>
-                            
-                          </select>
-                          <div class="invalid-feedback" *ngIf="form.controls['state'].hasError('required')">
-                            Please select state
-                          </div>
+                        <div class="invalid-feedback" *ngIf="form.controls['mobile'].hasError('maxlength') && !form.controls['mobile'].hasError('required')">
+                          Phone number should be less then 13 digit
                         </div>
-                        <div class="form-group col-md-2">
-                          <label>City</label>
-                          <input type="text" class="form-control" name="city" [(ngModel)]="contractor_details.city" placeholder="City" formControlName="city" [ngClass]="displayFieldCss('city')">
-                          <div class="invalid-feedback" *ngIf="form.controls['city'].hasError('required')">
-                            Please enter City
-                          </div>
+                        <div class="invalid-feedback" *ngIf="form.controls['mobile'].hasError('required')">
+                          Please enter phone
                         </div>
-                        <div class="form-group col-md-2">
-                          <label>Pin</label>
-                          <input type="text" class="form-control" name="pincode" [(ngModel)]="contractor_details.pincode" placeholder="Pincode" formControlName="pincode" [ngClass]="displayFieldCss('pincode')">
-                          <div class="invalid-feedback" *ngIf="form.controls['pincode'].hasError('required')">
-                            Please enter Pincode
-                          </div>
-                        </div> 
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label>Address</label>
+                        <textarea class="form-control" rows="1" placeholder="Address" name="address" [(ngModel)]="contractor_details.address" formControlName="address"
+                          [ngClass]="displayFieldCss('address')"></textarea>
+                        <div class="invalid-feedback" *ngIf="form.controls['address'].hasError('required')">
+                          Please enter address
+                        </div>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label>State</label>
+                        <select class="form-control" name="state" [(ngModel)]="contractor_details.state" formControlName="state" [ngClass]="displayFieldCss('state')">
+                          <option value="">Select State</option>
+                          <option value="{{state.id}}" *ngFor="let state of stateList">{{state.state_name}}</option>
+
+                        </select>
+                        <div class="invalid-feedback" *ngIf="form.controls['state'].hasError('required')">
+                          Please select state
+                        </div>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label>City</label>
+                        <input type="text" class="form-control" name="city" [(ngModel)]="contractor_details.city" placeholder="City" formControlName="city"
+                          [ngClass]="displayFieldCss('city')">
+                        <div class="invalid-feedback" *ngIf="form.controls['city'].hasError('required')">
+                          Please enter City
+                        </div>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label>Pin</label>
+                        <input type="text" class="form-control" name="pincode" [(ngModel)]="contractor_details.pincode" placeholder="Pincode" formControlName="pincode"
+                          [ngClass]="displayFieldCss('pincode')">
+                        <div class="invalid-feedback" *ngIf="form.controls['pincode'].hasError('required')">
+                          Please enter Pincode
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-             
+
                 <div class="card bg-light mb-3">
                   <div class="card-header">Banking Information</div>
                   <div class="card-body">
@@ -165,4 +180,4 @@
       </div>
     </div>
   </div>
-  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
+</loading>

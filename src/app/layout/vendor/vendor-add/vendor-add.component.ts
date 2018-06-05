@@ -4,8 +4,8 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { StatesService } from '../../../core/services/states.service';
 import { VendorService } from '../../../core/services/vendor.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-vendor-add',
@@ -20,26 +20,23 @@ export class VendorAddComponent implements OnInit {
   vendorTypeList = [];
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private statesService: StatesService,
     private vendorService: VendorService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       vendor_fullname: ['', Validators.required],
       vendor_type: ['', Validators.required],
       pan_no: [''],
       cin_no: [''],
       gst_no: [''],
-      // amount_credit: ['', Validators.required],
-      // amount_debit: ['', Validators.required],
       vendor_address: this.formBuilder.array([this.createContactInfo()]),
       vendor_account: this.formBuilder.array([this.createBankInfo()])
     });
@@ -58,20 +55,26 @@ export class VendorAddComponent implements OnInit {
   getVendorTypeList() {
     this.vendorService.getVendorTypeList().subscribe(res => {
       this.vendorTypeList = res.results;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
     })
   }
+
   getStateList() {
     this.statesService.getStateActiveList().subscribe(res => {
       this.stateList = res;
-      // console.log(this.stateList);
-    }
-    );
+    });
   };
+
   createContactInfo() {
     return this.formBuilder.group({
-      email: [''],
-      mobile: ['', Validators.required],
+      email: ['', [
+        Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
+      ]],
+      mobile: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(12)
+      ]],
       contact_person: ['', Validators.required],
       designation: [''],
       address: ['', Validators.required],
@@ -120,23 +123,24 @@ export class VendorAddComponent implements OnInit {
   goToList(toNav) {
     this.router.navigateByUrl('/' + toNav);
   };
+  
   addVendor() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.vendorService.addNewVendor(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Vendor added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('vendor');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

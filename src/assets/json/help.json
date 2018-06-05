@@ -303,6 +303,18 @@
         "purchaseInvoiceDetails": {
             "heading": "Purchase Invoice Details",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "contractor": {
+            "heading": "Contractor",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "contractorAdd": {
+            "heading": "Contractor Add",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        "contractorEdit": {
+            "heading": "Contractor Edit",
+            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
         }
 
     }

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { VendorService } from '../../core/services/vendor.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
+
 @Component({
   selector: 'app-vendor',
   templateUrl: './vendor.component.html',
@@ -28,11 +29,11 @@ export class VendorComponent implements OnInit {
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
   headerThOption = [];
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private vendorService: VendorService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
   ) { }
@@ -56,12 +57,12 @@ export class VendorComponent implements OnInit {
       },
       {  
         name: "Email",
-        code: "vendor_address[0].email",
+        code: "vendor_address__email",
         sort_type:''
       },
       {  
         name: "Contact No",
-        code: "vendor_address[0].mobile",
+        code: "vendor_address__mobile",
         sort_type:''
       },
       {  
@@ -70,7 +71,7 @@ export class VendorComponent implements OnInit {
         sort_type:''
       }
     ];
-    this.spinner.show();
+    this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -90,7 +91,7 @@ export class VendorComponent implements OnInit {
   };
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getVendorList();
   }
@@ -123,13 +124,19 @@ export class VendorComponent implements OnInit {
         else {
           this.upper_count = this.totalVendorList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeVendor(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let vendor;
 
     vendor = {
@@ -144,16 +151,16 @@ export class VendorComponent implements OnInit {
         this.getVendorList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveVendor(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let vendor;
 
     vendor = {
@@ -169,10 +176,10 @@ export class VendorComponent implements OnInit {
         this.getVendorList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -185,7 +192,7 @@ export class VendorComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let vendor;
 
         vendor = {
@@ -201,10 +208,10 @@ export class VendorComponent implements OnInit {
             this.getVendorList();
           },
           error => {
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -214,7 +221,7 @@ export class VendorComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getVendorList();
   };
 
@@ -241,7 +248,7 @@ export class VendorComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getVendorList();
   };
