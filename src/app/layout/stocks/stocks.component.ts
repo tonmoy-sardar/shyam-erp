@@ -74,6 +74,8 @@ export class StocksComponent implements OnInit {
     this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
+    this.paginationMaxSize = Globals.paginationMaxSize;
+    this.itemPerPage = Globals.itemPerPage;
     this.getStockList();
     this.getHelp();
   }
