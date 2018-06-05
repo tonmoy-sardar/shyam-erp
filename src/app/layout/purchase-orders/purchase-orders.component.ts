@@ -52,7 +52,7 @@ export class PurchaseOrdersComponent implements OnInit {
       },
       {  
         name: "PR. No.",
-        code: "requisition_no__requisition_no",
+        code: "requisition__requisition_map__requisition_no",
         sort_type:'',
         has_tooltip:true,
         tooltip_msg:'Purchase Requisition Number'
