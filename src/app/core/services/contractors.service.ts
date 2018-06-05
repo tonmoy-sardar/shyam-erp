@@ -39,11 +39,11 @@ export class ContractorsService {
     })
   }
 
-  // activeInactiveContractor(data): Observable<any> {
-  //   return this.http.patch(environment.apiEndpoint + 'contractor_master_status/' + data.id + '/', data, {
-  //     headers: new HttpHeaders().set('Authorization', 'Token ' + localStorage.getItem('logedUserToken'))
-  //   })
-  // }
+  activeInactiveContractor(data): Observable<any> {
+    return this.http.patch(environment.apiEndpoint + 'contractor_master_status/' + data.id + '/', data, {
+      headers: new HttpHeaders().set('Authorization', 'Token ' + localStorage.getItem('logedUserToken'))
+    })
+  }
 
   deleteContractor(data): Observable<any> {
     return this.http.delete(environment.apiEndpoint + 'contractor_master/' + data.id + '/', {
