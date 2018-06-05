@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { GstRatesService } from '../../../core/services/gst-rates.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-gst-rates-add',
@@ -15,16 +15,15 @@ export class GstRatesAddComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private gstRatesService: GstRatesService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = new FormGroup({
       gst_pattern: new FormControl('', Validators.required),
       igst: new FormControl(0, Validators.required),
@@ -38,7 +37,7 @@ export class GstRatesAddComponent implements OnInit {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.gstAdd.heading;
       this.help_description = res.data.gstAdd.desc;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
     })
   }
 
@@ -59,21 +58,21 @@ export class GstRatesAddComponent implements OnInit {
   }
   addNewGstRate() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.gstRatesService.addNewGST(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('GST rates added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('gst-rates');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
