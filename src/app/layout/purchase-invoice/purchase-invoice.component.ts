@@ -57,14 +57,14 @@ export class PurchaseInvoiceComponent implements OnInit {
       },
       {  
         name: "GRN No.",
-        code: "grn_number__grn_no",
+        code: "grn__grn_map__grn_no",
         sort_type:'',
         has_tooltip:false,
         tooltip_msg:''
       },
       {  
         name: "PO. No.",
-        code: "po_order_no__purchase_order_no",
+        code: "po_order__purchase_order_map__purchase_order_no",
         sort_type:'',
         has_tooltip:true,
         tooltip_msg:'Purchase Order Number'
