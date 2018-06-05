@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import { PaymentService } from '../../../core/services/payment.service';
 import { CompanyService } from '../../../core/services/company.service';
 import { VendorService } from '../../../core/services/vendor.service';
 import { ReportsService } from '../../../core/services/reports.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-payment-reports',
@@ -40,11 +40,11 @@ export class PaymentReportsComponent implements OnInit {
   paid = '';
   from_date: any;
   to_date: any;
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     private companyService: CompanyService,
     private vendorService: VendorService,
@@ -53,7 +53,6 @@ export class PaymentReportsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -76,23 +75,32 @@ export class PaymentReportsComponent implements OnInit {
       res => {
         this.payment_list = res;
         // console.log(res)
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       },
       error => {
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     )
   }
 
   paymentChange(id) {
     if (id) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.paymentService.getPaymentInfoDetails(id).subscribe(res => {
         this.paymentDetails = res;
         // console.log(this.paymentDetails)
         this.payment_details_key = true;
         this.Search_payment_list_key = false;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       })
     }
     else {
@@ -127,7 +135,7 @@ export class PaymentReportsComponent implements OnInit {
 
   getSearchPaymentList() {
     this.Search_payment_list_key = true;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     if (this.company > 0) {
@@ -159,11 +167,14 @@ export class PaymentReportsComponent implements OnInit {
         else {
           this.upper_count = this.totalSearchPaymentList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
       },
       error => {
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };

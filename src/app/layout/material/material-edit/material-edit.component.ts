@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { FormBuilder, FormGroup, FormArray, Validators, } from '@angular/forms';
-
 import { CompanyService } from '../../../core/services/company.service';
 import { PurchaseOrganizationService } from '../../../core/services/purchase-organization.service';
 import { PurchaseGroupService } from '../../../core/services/purchase-group.service';
 import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-material-edit',
@@ -29,7 +26,7 @@ export class MaterialEditComponent implements OnInit {
   visible_key: boolean;
   help_heading = "";
   help_description = "";
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private materialService: MaterialService,
     private purchaseOrganizationService: PurchaseOrganizationService,
@@ -39,12 +36,10 @@ export class MaterialEditComponent implements OnInit {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       material_type: [null, Validators.required],
       material_code: [null, Validators.required],
@@ -103,6 +98,13 @@ export class MaterialEditComponent implements OnInit {
           material_purchase_grp_arr.push(k.pur_group);
         })
         this.material.material_purchase_grp = material_purchase_grp_arr;
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
@@ -145,7 +147,7 @@ export class MaterialEditComponent implements OnInit {
       sgst: '',
       hsn: ''
     }
-    if (val.currentTarget.checked) {      
+    if (val.currentTarget.checked) {
       this.material.material_uom.push(mat_uom)
       this.addMaterialUom(2);
       if (this.form.value.is_taxable == true) {
@@ -155,10 +157,10 @@ export class MaterialEditComponent implements OnInit {
     }
     else {
       this.deleteMaterialUom(1);
-      this.material.material_uom.splice(1,1)
+      this.material.material_uom.splice(1, 1)
       if (this.form.value.is_taxable == true) {
         this.deleteMaterialTax(1);
-        this.material.material_tax.splice(1,1)
+        this.material.material_tax.splice(1, 1)
       }
     }
   }
@@ -215,7 +217,7 @@ export class MaterialEditComponent implements OnInit {
         }
         this.material.material_tax.splice(1, 0, mat_tax2)
         this.addMateriaTax(2);
-       
+
       }
       this.is_taxable_value = true;
     }
@@ -261,7 +263,6 @@ export class MaterialEditComponent implements OnInit {
     this.purchaseOrganizationService.getPurchaseOrganizationActiveList().subscribe(
       (data: any[]) => {
         this.purchaseOrganizationList = data;
-        this.spinner.hide();
       }
     );
   }
@@ -278,7 +279,7 @@ export class MaterialEditComponent implements OnInit {
 
   updateMaterial() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       let material_purchase_org_arr = [];
       this.form.value.material_purchase_org.forEach(x => {
         material_purchase_org_arr.push({ pur_org: x });
@@ -300,14 +301,14 @@ export class MaterialEditComponent implements OnInit {
           this.toastr.success('Material updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('material');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

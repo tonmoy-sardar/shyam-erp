@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseInvoiceService } from '../../core/services/purchase-invoice.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { PaymentService } from '../../core/services/payment.service';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-invoice',
@@ -28,12 +28,11 @@ export class PurchaseInvoiceComponent implements OnInit {
   sort_by = '';
   sort_type= '';
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private purchaseInvoiceService: PurchaseInvoiceService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     private paymentService: PaymentService
   ) { }
@@ -84,7 +83,6 @@ export class PurchaseInvoiceComponent implements OnInit {
         tooltip_msg:''
       }
     ];
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -105,6 +103,7 @@ export class PurchaseInvoiceComponent implements OnInit {
   };
 
   dataSearch() {
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseInvoiceList();
   }
@@ -137,14 +136,20 @@ export class PurchaseInvoiceComponent implements OnInit {
         else {
           this.upper_count = this.totalPurchaseInvoiceList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(this.purchaseInvoiceList)        
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
 
   changeStatus(value, id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let PurchaseInvoice;
     if (value != "") {
       if (value == 0) {
@@ -167,10 +172,10 @@ export class PurchaseInvoiceComponent implements OnInit {
           this.getPurchaseInvoiceList();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -178,7 +183,7 @@ export class PurchaseInvoiceComponent implements OnInit {
 
   changeApproveStatus(value, pInvoice) {
     if (value > 0) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       let PurchaseInvoice;
 
       PurchaseInvoice = {
@@ -199,10 +204,10 @@ export class PurchaseInvoiceComponent implements OnInit {
           }
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -230,15 +235,16 @@ export class PurchaseInvoiceComponent implements OnInit {
         this.getPurchaseInvoiceList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
 
   pagination() {
+    this.loading = LoadingState.Processing;
     this.getPurchaseInvoiceList();
   };
 
@@ -265,7 +271,7 @@ export class PurchaseInvoiceComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseInvoiceList();
   };

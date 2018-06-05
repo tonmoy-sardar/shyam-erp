@@ -4,10 +4,9 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { GrnService } from '../../../core/services/grn.service';
 import { PurchaseOrdersService } from '../../../core/services/purchase-orders.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-grn-add',
@@ -26,18 +25,17 @@ export class GrnAddComponent implements OnInit {
   total_rest_quantity: number = 0;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private purchaseOrdersService: PurchaseOrdersService,
     private grnService: GrnService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       po_order: ['', Validators.required],
       pur_org: ['', Validators.required],
@@ -79,12 +77,18 @@ export class GrnAddComponent implements OnInit {
   getPurchaseOrderList() {
     this.purchaseOrdersService.getPurchaseOrderListWithoutPagination().subscribe(res => {
       this.purchaseOrderList = res;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
   purchaseOrderChange(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     const grn_detail_control = <FormArray>this.form.controls['grn_detail'];
     if (id) {
       this.clearFormArray(grn_detail_control)
@@ -116,14 +120,14 @@ export class GrnAddComponent implements OnInit {
           vendor_address: this.purchase_order_details.vendor_address.id,
         })
         this.visible_key = true;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       })
     }
     else {
       this.clearFormArray(grn_detail_control);
       this.material_details_list = [];
       this.visible_key = false;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
     }
 
   }
@@ -204,7 +208,7 @@ export class GrnAddComponent implements OnInit {
       if(Math.round(this.form.value.grn_detail[0].receive_quantity) == this.total_rest_quantity){
         this.orderFinalize()
       }
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       var challanDate = new Date(this.form.value.challan_date.year,this.form.value.challan_date.month-1,this.form.value.challan_date.day)
       this.form.patchValue({
         challan_date: challanDate.toISOString()
@@ -216,14 +220,14 @@ export class GrnAddComponent implements OnInit {
           this.toastr.success('GNR added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('grn');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
@@ -242,10 +246,10 @@ export class GrnAddComponent implements OnInit {
         console.log(response)
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }

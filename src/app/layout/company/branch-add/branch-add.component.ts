@@ -4,9 +4,9 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-branch-add',
@@ -22,6 +22,7 @@ export class BranchAddComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
@@ -29,15 +30,13 @@ export class BranchAddComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       branch_name: [null, Validators.required],
-      branch_email: [null, [Validators.required,Validators.email]],
+      branch_email: [null, [Validators.required, Validators.email]],
       branch_contact_no: [null, Validators.required],
       branch_address: [null, Validators.required],
       branch_state: [null, Validators.required],
@@ -73,20 +72,20 @@ export class BranchAddComponent implements OnInit {
 
   addNewCompanyBranch() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.companyService.addNewCompanyBranch(this.companyBranch).subscribe(
         response => {
           this.toastr.success('Branch added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.showBranchList.emit();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
@@ -95,7 +94,7 @@ export class BranchAddComponent implements OnInit {
         control.markAsTouched({ onlySelf: true });
       });
     }
-    
+
   }
 
   btnClickNav() {
@@ -106,7 +105,13 @@ export class BranchAddComponent implements OnInit {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };

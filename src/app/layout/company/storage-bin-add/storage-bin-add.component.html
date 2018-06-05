@@ -1,80 +1,81 @@
-<div>
-    <div style="padding-top: 20px;">
-        <div class="col-md-6 offset-md-6 pull-right" style="text-align: right">
-            <app-help [heading]="help_heading" [description]="help_description"></app-help>
-            <button type="button" class="btn btn-primary" (click)="btnClickNav()">
-                <i class="fa fa-arrow-left"></i> Back</button>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-    <hr/>
+<loading [state]="loading">
     <div>
-        <div class="row">
-            <div class="col-md-12">
-                <form role="form" [formGroup]="form">
-                    <div class="card bg-light mb-3">
-                        <div class="card-header" style="background-color:#868e96; color: #fff;">Company Storage Bin Add</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label>Branch</label>
-                                    <select class="form-control" [(ngModel)]="companyStorageBin.branch" name="storagebin_branch" formControlName="branch" [ngClass]="displayFieldCss('branch')">
-                                        <option value="">Select Branch</option>
-                                        <option *ngFor="let companyBranch of companyBranchList;" value="{{companyBranch.id}}">{{companyBranch.branch_name}}</option>
-                                    </select>
-                                    <div class="invalid-feedback" *ngIf="isFieldValid('branch')">
-                                        Please select branch
+        <div style="padding-top: 20px;">
+            <div class="col-md-6 offset-md-6 pull-right" style="text-align: right">
+                <app-help [heading]="help_heading" [description]="help_description"></app-help>
+                <button type="button" class="btn btn-primary" (click)="btnClickNav()">
+                    <i class="fa fa-arrow-left"></i> Back</button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <hr/>
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form role="form" [formGroup]="form">
+                        <div class="card bg-light mb-3">
+                            <div class="card-header" style="background-color:#868e96; color: #fff;">Company Storage Bin Add</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label>Branch</label>
+                                        <select class="form-control" [(ngModel)]="companyStorageBin.branch" name="storagebin_branch" formControlName="branch" [ngClass]="displayFieldCss('branch')">
+                                            <option value="">Select Branch</option>
+                                            <option *ngFor="let companyBranch of companyBranchList;" value="{{companyBranch.id}}">{{companyBranch.branch_name}}</option>
+                                        </select>
+                                        <div class="invalid-feedback" *ngIf="isFieldValid('branch')">
+                                            Please select branch
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Storage</label>
-                                    <select class="form-control" [(ngModel)]="companyStorageBin.storage" name="storagebin_storage" formControlName="storage"
-                                        [ngClass]="displayFieldCss('storage')">
-                                        <option value="">Select Storage</option>
-                                        <option *ngFor="let companyStorage of companyStorageList;" value="{{companyStorage.id}}">{{companyStorage.storage_address}}</option>
-                                    </select>
-                                    <div class="invalid-feedback" *ngIf="isFieldValid('storage')">
-                                        Please select storage
+                                    <div class="form-group col-md-3">
+                                        <label>Storage</label>
+                                        <select class="form-control" [(ngModel)]="companyStorageBin.storage" name="storagebin_storage" formControlName="storage"
+                                            [ngClass]="displayFieldCss('storage')">
+                                            <option value="">Select Storage</option>
+                                            <option *ngFor="let companyStorage of companyStorageList;" value="{{companyStorage.id}}">{{companyStorage.storage_address}}</option>
+                                        </select>
+                                        <div class="invalid-feedback" *ngIf="isFieldValid('storage')">
+                                            Please select storage
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Bin Number</label>
-                                    <input type="text" class="form-control" [(ngModel)]="companyStorageBin.bin_no" name="bin_no" placeholder="Bin Number" formControlName="bin_no"
-                                        [ngClass]="displayFieldCss('bin_no')">
-                                    <div class="invalid-feedback" *ngIf="isFieldValid('bin_no')">
-                                        Please enter bin number
+                                    <div class="form-group col-md-2">
+                                        <label>Bin Number</label>
+                                        <input type="text" class="form-control" [(ngModel)]="companyStorageBin.bin_no" name="bin_no" placeholder="Bin Number" formControlName="bin_no"
+                                            [ngClass]="displayFieldCss('bin_no')">
+                                        <div class="invalid-feedback" *ngIf="isFieldValid('bin_no')">
+                                            Please enter bin number
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Bin Volume</label>
-                                    <input type="text" appOnlyNumber class="form-control" [(ngModel)]="companyStorageBin.bin_volume" name="bin_volume" placeholder="Bin Volume"
-                                        formControlName="bin_volume" [ngClass]="displayFieldCss('bin_volume')">
-                                    <div class="invalid-feedback" *ngIf="isFieldValid('bin_volume')">
-                                        Please enter bin volume
+                                    <div class="form-group col-md-2">
+                                        <label>Bin Volume</label>
+                                        <input type="text" appOnlyNumber class="form-control" [(ngModel)]="companyStorageBin.bin_volume" name="bin_volume" placeholder="Bin Volume"
+                                            formControlName="bin_volume" [ngClass]="displayFieldCss('bin_volume')">
+                                        <div class="invalid-feedback" *ngIf="isFieldValid('bin_volume')">
+                                            Please enter bin volume
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group col-md-2">
-                                    <label>Material UOM</label>
-                                    <select class="form-control" [(ngModel)]="companyStorageBin.uom" name="storagebin_uom" formControlName="uom" [ngClass]="displayFieldCss('uom')">
-                                        <option value="">Select UOM</option>
-                                        <option *ngFor="let uom of UOMList;" value="{{uom.id}}">{{uom.name}}</option>
-                                    </select>
-                                    <div class="invalid-feedback" *ngIf="isFieldValid('uom')">
-                                        Please select UMO
+                                    <div class="form-group col-md-2">
+                                        <label>Material UOM</label>
+                                        <select class="form-control" [(ngModel)]="companyStorageBin.uom" name="storagebin_uom" formControlName="uom" [ngClass]="displayFieldCss('uom')">
+                                            <option value="">Select UOM</option>
+                                            <option *ngFor="let uom of UOMList;" value="{{uom.id}}">{{uom.name}}</option>
+                                        </select>
+                                        <div class="invalid-feedback" *ngIf="isFieldValid('uom')">
+                                            Please select UMO
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group col-md-12" style="text-align: right">
-                                    <button type="submit" class="btn btn-primary" (click)="addNewCompanyStorageBin()">Submit</button>
-                                    <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                    <div class="form-group col-md-12" style="text-align: right">
+                                        <button type="submit" class="btn btn-primary" (click)="addNewCompanyStorageBin()">Submit</button>
+                                        <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
+</loading>

@@ -5,7 +5,7 @@ import { LoginService } from '../core/services/login.service';
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { LoadingState } from '../core/component/loading/loading.component';
 
 @Component({
     selector: 'app-login',
@@ -15,12 +15,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class LoginComponent implements OnInit {
 
     form: FormGroup;
+    loading: LoadingState = LoadingState.NotReady;
     constructor(
         private loginService: LoginService,
         public router: Router,
         private formBuilder: FormBuilder,
-        private toastr: ToastrService,
-        private spinner: NgxSpinnerService
+        private toastr: ToastrService
     ) { }
 
     ngOnInit() {
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
             username: [null, Validators.required],
             password: [null, Validators.required]
         });
+        this.loading = LoadingState.Ready;
     }
 
     goToPage = function (toNav) {
@@ -36,10 +37,10 @@ export class LoginComponent implements OnInit {
 
     onLoggedin() {
         if (this.form.valid) {
-            this.spinner.show();
+            this.loading = LoadingState.Processing;
             this.loginService.login(this.form.value).subscribe(
                 response => {
-                    this.spinner.hide();
+                    this.loading = LoadingState.Ready;
                     this.toastr.success('Login successfully', '', {
                         timeOut: 3000,
                     });
@@ -53,7 +54,7 @@ export class LoginComponent implements OnInit {
                 },
                 error => {
                     // console.log('error', error)
-                    this.spinner.hide();
+                    this.loading = LoadingState.Ready;
                     this.toastr.error(error.error.non_field_errors[0], '', {
                         timeOut: 3000,
                     });

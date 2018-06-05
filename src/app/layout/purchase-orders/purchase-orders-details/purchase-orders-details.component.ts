@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { PurchaseOrdersService } from '../../../core/services/purchase-orders.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-orders-details',
@@ -18,17 +16,15 @@ export class PurchaseOrdersDetailsComponent implements OnInit {
   visible_key: boolean;
   help_heading = "";
   help_description = "";
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private purchaseOrdersService: PurchaseOrdersService,
-    private router: Router, 
+    private router: Router,
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.getPurchaseOrderDetails(this.route.snapshot.params['id']);
     this.getHelp();
   }
@@ -42,19 +38,22 @@ export class PurchaseOrdersDetailsComponent implements OnInit {
 
   getPurchaseOrderDetails(id) {
     this.purchaseOrdersService.getPurchaseOrderDetails(id).subscribe(
-      (data: any[]) =>{
+      (data: any[]) => {
         this.purchaseOrder = data;
         this.visible_key = true
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
       }
-     );
+    );
   }
 
   btnClickNav(toNav) {
-    this.router.navigateByUrl('/'+toNav);
+    this.router.navigateByUrl('/' + toNav);
   };
 
-  getRequisitionDate(date){
+  getRequisitionDate(date) {
     var PrDate = date.split('/')
     return PrDate[0]
   }

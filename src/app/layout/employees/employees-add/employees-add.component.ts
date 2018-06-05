@@ -6,9 +6,9 @@ import { DesignationsService } from '../../../core/services/designations.service
 import { EmployeesService } from '../../../core/services/employees.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import { StatesService } from '../../../core/services/states.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-employees-add',
@@ -23,6 +23,7 @@ export class EmployeesAddComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
@@ -31,13 +32,11 @@ export class EmployeesAddComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     private statesService: StatesService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
@@ -78,7 +77,6 @@ export class EmployeesAddComponent implements OnInit {
   getStateList() {
     this.statesService.getStateActiveList().subscribe(res => {
       this.stateList = res;
-      // console.log(this.stateList);
     });
   };
 
@@ -92,7 +90,13 @@ export class EmployeesAddComponent implements OnInit {
   getCompanyList() {
     this.companyService.getCompanyDropdownList().subscribe(res => {
       this.company_list = res;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
@@ -126,7 +130,7 @@ export class EmployeesAddComponent implements OnInit {
 
   addEmployee() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       var date = new Date(this.form.value.dob.year, this.form.value.dob.month - 1, this.form.value.dob.day)
       this.form.patchValue({
         dob: date.toISOString()
@@ -137,14 +141,14 @@ export class EmployeesAddComponent implements OnInit {
           this.toastr.success('Employee added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('employees');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
@@ -165,13 +169,13 @@ export class EmployeesAddComponent implements OnInit {
   };
 
   isFieldValid(field: string) {
-    return !this.form.get(field).valid && this.form.get(field).touched;
+    return !this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched);
   }
 
   displayFieldCss(field: string) {
     return {
-      'is-invalid': !this.form.get(field).valid && this.form.get(field).touched,
-      'is-valid': this.form.get(field).valid
+      'is-invalid': this.form.get(field).invalid && (this.form.get(field).dirty || this.form.get(field).touched),
+      'is-valid': this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched)
     };
   }
 

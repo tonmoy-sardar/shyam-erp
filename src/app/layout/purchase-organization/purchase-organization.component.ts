@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseOrganizationService } from '../../core/services/purchase-organization.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-organization',
@@ -25,39 +25,37 @@ export class PurchaseOrganizationComponent implements OnInit {
   itemPerPage: number;
 
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
 
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private purchaseOrganizationService: PurchaseOrganizationService,
-     private router: Router,
-     private toastr: ToastrService,
-     private spinner: NgxSpinnerService,
-     private helpService: HelpService
-    ) { }
+    private router: Router,
+    private toastr: ToastrService,
+    private helpService: HelpService
+  ) { }
 
   ngOnInit() {
 
     this.headerThOption = [
-      {  
+      {
         name: "Organization Name",
         code: "name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Organization Description",
         code: "description",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Status",
         code: "status",
-        sort_type:''
+        sort_type: ''
       }
     ];
 
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -74,51 +72,54 @@ export class PurchaseOrganizationComponent implements OnInit {
   }
 
   btnClickNav(toNav) {
-    this.router.navigateByUrl('/'+toNav);
+    this.router.navigateByUrl('/' + toNav);
   };
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseOrganizationList();
   }
 
-  getPurchaseOrganizationList(){
+  getPurchaseOrganizationList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
     this.purchaseOrganizationService.getPurchaseOrganizationList(params).subscribe(
-      (data: any[]) =>{
+      (data: any[]) => {
         this.purchaseOrganizationList = data['results'];
         this.totalPurchaseOrganizationList = data['count'];
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalPurchaseOrganizationList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalPurchaseOrganizationList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalPurchaseOrganizationList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
-     );
+    );
   };
 
-  activePurchaseOrganization(id){
-    this.spinner.show();
+  activePurchaseOrganization(id) {
+    this.loading = LoadingState.Processing;
     let purchaseOrganization;
 
     purchaseOrganization = {
@@ -133,16 +134,16 @@ export class PurchaseOrganizationComponent implements OnInit {
         this.getPurchaseOrganizationList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
-  inactivePurchaseOrganization(id){
-    this.spinner.show();
+  inactivePurchaseOrganization(id) {
+    this.loading = LoadingState.Processing;
     let purchaseOrganization;
 
     purchaseOrganization = {
@@ -158,43 +159,39 @@ export class PurchaseOrganizationComponent implements OnInit {
         this.getPurchaseOrganizationList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getPurchaseOrganizationList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseOrganizationList();
   };

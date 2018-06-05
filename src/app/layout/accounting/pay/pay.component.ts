@@ -5,10 +5,9 @@ import { PaymentService } from '../../../core/services/payment.service';
 import { PurchaseInvoiceService } from '../../../core/services/purchase-invoice.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-pay',
@@ -25,6 +24,7 @@ export class PayComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private paymentService: PaymentService,
@@ -32,13 +32,11 @@ export class PayComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private purchaseInvoiceService: PurchaseInvoiceService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       company: [{value: null, disabled: true}],
       pur_inv: [{value: null, disabled: true}],
@@ -82,7 +80,13 @@ export class PayComponent implements OnInit {
       }
       this.getCompanyInvoiceList(this.payment.company);
       this.getCompanyBankList(this.payment.company);
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
@@ -126,7 +130,7 @@ export class PayComponent implements OnInit {
 
   Payment() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       var date = new Date(this.form.value.created_at.year, this.form.value.created_at.month - 1, this.form.value.created_at.day)      
       this.payment.created_at = date.toISOString();
       this.payment.is_paid = true;
@@ -135,10 +139,10 @@ export class PayComponent implements OnInit {
           this.purchaseInvoiceFinalize()
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
@@ -160,14 +164,14 @@ export class PayComponent implements OnInit {
         this.toastr.success('Payment successfully', '', {
           timeOut: 3000,
         });
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         this.goToList('payment');
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }

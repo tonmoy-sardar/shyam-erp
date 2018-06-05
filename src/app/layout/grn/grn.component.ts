@@ -3,10 +3,9 @@ import { Router } from '@angular/router';
 import { GrnService } from '../../core/services/grn.service';
 import { StocksService } from '../../core/services/stocks.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-grn',
@@ -39,12 +38,11 @@ export class GrnComponent implements OnInit {
   sort_by = '';
   sort_type= '';
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private grnService: GrnService,
-    private spinner: NgxSpinnerService,
     private stocksService: StocksService,
     private helpService: HelpService
   ) { }
@@ -110,7 +108,6 @@ export class GrnComponent implements OnInit {
       },
     ];
 
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -131,7 +128,7 @@ export class GrnComponent implements OnInit {
   };
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getGrnList();
   }
@@ -164,13 +161,19 @@ export class GrnComponent implements OnInit {
         else{
           this.upper_count = this.totalGrnList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
 
   changeStatus(value, id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let grn;
     if (value != "") {
       if (value == 0) {
@@ -193,10 +196,10 @@ export class GrnComponent implements OnInit {
           this.getGrnList();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -205,7 +208,7 @@ export class GrnComponent implements OnInit {
   changeApproveStatus(value, id) {    
     if (value > 0) {
 
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       let grn;
       grn = {
         id: id,
@@ -225,10 +228,10 @@ export class GrnComponent implements OnInit {
           }          
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -249,24 +252,24 @@ export class GrnComponent implements OnInit {
       }
       this.stocksService.addNewStock(this.stock).subscribe(
         response => {
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.toastr.success('GRN approved successfully', '', {
             timeOut: 3000,
           });
           this.getGrnList();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     })
   }
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getGrnList();
   };
 
@@ -293,7 +296,7 @@ export class GrnComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getGrnList();
   };

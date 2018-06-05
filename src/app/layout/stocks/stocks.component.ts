@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { StocksService } from '../../core/services/stocks.service';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-stocks',
@@ -27,11 +27,10 @@ export class StocksComponent implements OnInit {
   sort_by = '';
   sort_type= '';
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private stocksService: StocksService,
     private helpService: HelpService
   ) { }
@@ -70,8 +69,6 @@ export class StocksComponent implements OnInit {
         sort_type:''
       }
     ];
-
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -88,7 +85,7 @@ export class StocksComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getStockList();
   }
@@ -124,14 +121,20 @@ export class StocksComponent implements OnInit {
       else {
         this.upper_count = this.totalStockList
       }
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
       // console.log(this.stockList)
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
   pagination() {
     this.itemNo = (this.defaultPagination - 1) * 10;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getStockList();
   };
 
@@ -158,7 +161,7 @@ export class StocksComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getStockList();
   };

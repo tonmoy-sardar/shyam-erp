@@ -1,50 +1,51 @@
-<div>
-    <div class="row">
-        <div class="col-md-6">
-            <h4 class="page-header">Purchase Organization Edit</h4>
-        </div>
-        <div class="col-md-6 pull-right" style="text-align: right">
-            <app-help [heading]="help_heading" [description]="help_description"></app-help>
-            <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-organization')">
-                <i class="fa fa-arrow-left"></i> Back</button>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-    <hr/>
+<loading [state]="loading">
     <div>
         <div class="row">
-            <div class="col-md-12">
-                <form role="form" [formGroup]="form">
-                    <div class="card bg-light mb-3">
-                        <div class="card-header" style="background-color:#868e96; color: #fff;">Pruchase Organization Edit</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label>Pruchase Organization Name</label>
-                                    <input class="form-control" placeholder="Pruchase Organization Name" [(ngModel)]="purchaseOrganization.name" name="name"
-                                        formControlName="name" [ngClass]="displayFieldCss('name')">
-                                    <div class="invalid-feedback" *ngIf="isFieldValid('name')">
-                                        Please enter Pruchase Organization name
+            <div class="col-md-6">
+                <h4 class="page-header">Purchase Organization Edit</h4>
+            </div>
+            <div class="col-md-6 pull-right" style="text-align: right">
+                <app-help [heading]="help_heading" [description]="help_description"></app-help>
+                <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-organization')">
+                    <i class="fa fa-arrow-left"></i> Back</button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <hr/>
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form role="form" [formGroup]="form">
+                        <div class="card bg-light mb-3">
+                            <div class="card-header" style="background-color:#868e96; color: #fff;">Pruchase Organization Edit</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label>Pruchase Organization Name</label>
+                                        <input class="form-control" placeholder="Pruchase Organization Name" [(ngModel)]="purchaseOrganization.name" name="name"
+                                            formControlName="name" [ngClass]="displayFieldCss('name')">
+                                        <div class="invalid-feedback" *ngIf="isFieldValid('name')">
+                                            Please enter Pruchase Organization name
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Organization Description</label>
-                                    <textarea class="form-control" rows="1" placeholder="Organization Description" [(ngModel)]="purchaseOrganization.description"
-                                        name="description" formControlName="description" [ngClass]="displayFieldCss('description')">{{purchaseOrganization.description}}</textarea>
-                                    <div class="invalid-feedback" *ngIf="isFieldValid('description')">
-                                        Please enter Organization Description
+                                    <div class="form-group col-md-6">
+                                        <label>Organization Description</label>
+                                        <textarea class="form-control" rows="1" placeholder="Organization Description" [(ngModel)]="purchaseOrganization.description"
+                                            name="description" formControlName="description" [ngClass]="displayFieldCss('description')">{{purchaseOrganization.description}}</textarea>
+                                        <div class="invalid-feedback" *ngIf="isFieldValid('description')">
+                                            Please enter Organization Description
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-md-12" style="text-align: right">
-                                    <button type="submit" class="btn btn-primary" (click)="updatePurchaseOrganization()">Submit</button>
-                                    <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                    <div class="form-group col-md-12" style="text-align: right">
+                                        <button type="submit" class="btn btn-primary" (click)="updatePurchaseOrganization()">Submit</button>
+                                        <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
+</loading>

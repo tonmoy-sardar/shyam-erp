@@ -1,202 +1,203 @@
-<div>
-    <div class="row">
-        <div class="col-md-6">
-            <h4 class="page-header">GRN Add</h4>
-        </div>
-        <div class="col-md-6 pull-right" style="text-align: right">
-            <app-help [heading]="help_heading" [description]="help_description"></app-help>
-            <button type="button" class="btn btn-primary" (click)="btnClickNav('grn')">
-                <i class="fa fa-arrow-left"></i> Back</button>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-    <hr/>
+<loading [state]="loading">
     <div>
         <div class="row">
-            <div class="col-md-12">
-                <form role="form" [formGroup]="form" novalidate>
-                    <div class="card bg-light mb-3">
-                        <div class="card-header" style="background-color:#868e96; color: #fff;">GRN Add</div>
-                        <div class="card-body">
-                            <div class="card bg-light mb-3">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="form-group col-md-3">
-                                            <label>Po No.</label>
-                                            <select class="form-control" (change)="purchaseOrderChange($event.target.value)" name="po_order" formControlName="po_order"
-                                                [ngClass]="displayFieldCss('po_order')">
-                                                <option value="">Select Po</option>
-                                                <option value="{{po.id}}" *ngFor="let po of purchaseOrderList">{{po.purchase_order_map[0].purchase_order_no}}</option>
-                                            </select>
-                                            <div class="invalid-feedback" *ngIf="form.controls['po_order'].hasError('required')">
-                                                Please select PO
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card bg-light mb-3" *ngIf="visible_key">
-                                <div class="card-header">Header Line</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <table class="card-body table table-sm ">
-                                            <thead>
-                                                <tr>
-                                                    <th>Purchase Organization</th>
-                                                    <th>Purchase Group</th>
-                                                    <th>PurchaseCompany</th>
-                                                    <th>PO Date</th>
-                                                    <th>Vendor</th>
-                                                    <th>Vendor Address</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>{{purchase_order_details.pur_org.name}}</td>
-                                                    <td>{{purchase_order_details.pur_grp.name}}</td>
-                                                    <td>{{purchase_order_details.company.company_name}}</td>
-                                                    <td>{{purchase_order_details.created_at | date:'dd-MM-yyyy'}}</td>
-                                                    <td>{{purchase_order_details.vendor.vendor_fullname}}</td>
-                                                    <td>{{purchase_order_details.vendor_address.address}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card bg-light mb-3" *ngIf="visible_key && previous_grn_list.length > 0">
-                                <div class="card-header">Previous GRN</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <table class="card-body table table-sm ">
-                                            <thead>
-                                                <tr>
-                                                    <th>Material</th>
-                                                    <th>PO. Qty.</th>
-                                                    <th>Qty. Taken</th>
-                                                    <th>Qty. Rest</th>
-                                                    <th>UOM</th>
-                                                    <th>Recieved At</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let grn of previous_grn_list">
-                                                    <td>{{grn.grn_detail[0].material.material_code}}</td>
-                                                    <td>{{grn.grn_detail[0].order_quantity}}</td>
-                                                    <td>{{grn.grn_detail[0].receive_quantity}}</td>
-                                                    <td>{{total_rest_quantity}}</td>
-                                                    <td>{{grn.grn_detail[0].uom.name}}</td>
-                                                    <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card bg-light mb-3" *ngIf="visible_key">
-                                <div class="card-header">Material Line</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <table class="card-body table  table-hover table-sm table-bordered ">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>Material</th>
-                                                    <th>Po. Quantity</th>
-                                                    <th>UOM</th>
-                                                    <th>Plant</th>
-                                                    <th>Storage</th>
-                                                    <th>Bin</th>
-                                                    <th>GRN Quantity</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let mat of purchase_order_details.purchase_order_detail; let k = index">
-                                                    <td>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" (change)="matCheck($event, mat)">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>{{mat.material.material_fullname}}</td>
-                                                    <td>{{mat.order_quantity}}</td>
-                                                    <td>CFT</td>
-                                                    <td>{{mat.company_branch.branch_address}}</td>
-                                                    <td>{{mat.storage_location.storage_address}}</td>
-                                                    <td>{{mat.storage_bin.bin_no}}</td>
-                                                    <td>
-                                                        <input appOnlyNumber type="text" class="form-control" placeholder="GRN Quantity" [(ngModel)]="material_details_list[k].receive_quantity"
-                                                            [ngModelOptions]="{standalone: true}" (keyup)="GnrQuantity(material_details_list[k].receive_quantity, k)">
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card bg-light mb-3" *ngIf="visible_key">
-                                <div class="card-header">Transport</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="form-group col-md-2">
-                                            <label>Way Bill No.</label>
-                                            <input class="form-control" placeholder="Way Bill No." name="waybill_no" formControlName="waybill_no" [ngClass]="displayFieldCss('waybill_no')">
-                                            <div class="invalid-feedback" *ngIf="form.controls['waybill_no'].hasError('required')">
-                                                Please enter waybill no
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Vehicle No.</label>
-                                            <input class="form-control" placeholder="Vehicle No." name="vehicle_no" formControlName="vehicle_no" [ngClass]="displayFieldCss('vehicle_no')">
-                                            <div class="invalid-feedback" *ngIf="form.controls['vehicle_no'].hasError('required')">
-                                                Please enter vehicle no
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Check Post</label>
-                                            <input class="form-control" placeholder="Check Post" name="check_post" formControlName="check_post" [ngClass]="displayFieldCss('check_post')">
-                                            <div class="invalid-feedback" *ngIf="form.controls['check_post'].hasError('required')">
-                                                Please enter check post
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Challan No.</label>
-                                            <input class="form-control" placeholder="Challan No." name="challan_no" formControlName="challan_no" [ngClass]="displayFieldCss('challan_no')">
-                                            <div class="invalid-feedback" *ngIf="form.controls['challan_no'].hasError('required')">
-                                                Please enter challan no
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Challan Date</label>
-                                            <div class="input-group">
-                                                <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="model" ngbDatepicker #c="ngbDatepicker" name="challan_date"
-                                                    formControlName="challan_date" [ngClass]="displayFieldCss('challan_date')">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary" (click)="c.toggle()" type="button">
-                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="invalid-feedback" *ngIf="form.controls['challan_date'].hasError('required')">
-                                                    Please enter challan date
+            <div class="col-md-6">
+                <h4 class="page-header">GRN Add</h4>
+            </div>
+            <div class="col-md-6 pull-right" style="text-align: right">
+                <app-help [heading]="help_heading" [description]="help_description"></app-help>
+                <button type="button" class="btn btn-primary" (click)="btnClickNav('grn')">
+                    <i class="fa fa-arrow-left"></i> Back</button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <hr/>
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form role="form" [formGroup]="form" novalidate>
+                        <div class="card bg-light mb-3">
+                            <div class="card-header" style="background-color:#868e96; color: #fff;">GRN Add</div>
+                            <div class="card-body">
+                                <div class="card bg-light mb-3">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <label>Po No.</label>
+                                                <select class="form-control" (change)="purchaseOrderChange($event.target.value)" name="po_order" formControlName="po_order"
+                                                    [ngClass]="displayFieldCss('po_order')">
+                                                    <option value="">Select Po</option>
+                                                    <option value="{{po.id}}" *ngFor="let po of purchaseOrderList">{{po.purchase_order_map[0].purchase_order_no}}</option>
+                                                </select>
+                                                <div class="invalid-feedback" *ngIf="form.controls['po_order'].hasError('required')">
+                                                    Please select PO
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12" style="text-align: right">
-                                    <button type="submit" class="btn btn-primary" (click)="addGrn()">Submit</button>
-                                    <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                <div class="card bg-light mb-3" *ngIf="visible_key">
+                                    <div class="card-header">Header Line</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <table class="card-body table table-sm ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Purchase Organization</th>
+                                                        <th>Purchase Group</th>
+                                                        <th>PurchaseCompany</th>
+                                                        <th>PO Date</th>
+                                                        <th>Vendor</th>
+                                                        <th>Vendor Address</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{purchase_order_details.pur_org.name}}</td>
+                                                        <td>{{purchase_order_details.pur_grp.name}}</td>
+                                                        <td>{{purchase_order_details.company.company_name}}</td>
+                                                        <td>{{purchase_order_details.created_at | date:'dd-MM-yyyy'}}</td>
+                                                        <td>{{purchase_order_details.vendor.vendor_fullname}}</td>
+                                                        <td>{{purchase_order_details.vendor_address.address}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card bg-light mb-3" *ngIf="visible_key && previous_grn_list.length > 0">
+                                    <div class="card-header">Previous GRN</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <table class="card-body table table-sm ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Material</th>
+                                                        <th>PO. Qty.</th>
+                                                        <th>Qty. Taken</th>
+                                                        <th>Qty. Rest</th>
+                                                        <th>UOM</th>
+                                                        <th>Recieved At</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let grn of previous_grn_list">
+                                                        <td>{{grn.grn_detail[0].material.material_code}}</td>
+                                                        <td>{{grn.grn_detail[0].order_quantity}}</td>
+                                                        <td>{{grn.grn_detail[0].receive_quantity}}</td>
+                                                        <td>{{total_rest_quantity}}</td>
+                                                        <td>{{grn.grn_detail[0].uom.name}}</td>
+                                                        <td>{{grn.created_at | date:'dd-MM-yyyy'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card bg-light mb-3" *ngIf="visible_key">
+                                    <div class="card-header">Material Line</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <table class="card-body table  table-hover table-sm table-bordered ">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Material</th>
+                                                        <th>Po. Quantity</th>
+                                                        <th>UOM</th>
+                                                        <th>Plant</th>
+                                                        <th>Storage</th>
+                                                        <th>Bin</th>
+                                                        <th>GRN Quantity</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let mat of purchase_order_details.purchase_order_detail; let k = index">
+                                                        <td>
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" (change)="matCheck($event, mat)">
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>{{mat.material.material_fullname}}</td>
+                                                        <td>{{mat.order_quantity}}</td>
+                                                        <td>CFT</td>
+                                                        <td>{{mat.company_branch.branch_address}}</td>
+                                                        <td>{{mat.storage_location.storage_address}}</td>
+                                                        <td>{{mat.storage_bin.bin_no}}</td>
+                                                        <td>
+                                                            <input appOnlyNumber type="text" class="form-control" placeholder="GRN Quantity" [(ngModel)]="material_details_list[k].receive_quantity"
+                                                                [ngModelOptions]="{standalone: true}" (keyup)="GnrQuantity(material_details_list[k].receive_quantity, k)">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card bg-light mb-3" *ngIf="visible_key">
+                                    <div class="card-header">Transport</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-2">
+                                                <label>Way Bill No.</label>
+                                                <input class="form-control" placeholder="Way Bill No." name="waybill_no" formControlName="waybill_no" [ngClass]="displayFieldCss('waybill_no')">
+                                                <div class="invalid-feedback" *ngIf="form.controls['waybill_no'].hasError('required')">
+                                                    Please enter waybill no
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Vehicle No.</label>
+                                                <input class="form-control" placeholder="Vehicle No." name="vehicle_no" formControlName="vehicle_no" [ngClass]="displayFieldCss('vehicle_no')">
+                                                <div class="invalid-feedback" *ngIf="form.controls['vehicle_no'].hasError('required')">
+                                                    Please enter vehicle no
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Check Post</label>
+                                                <input class="form-control" placeholder="Check Post" name="check_post" formControlName="check_post" [ngClass]="displayFieldCss('check_post')">
+                                                <div class="invalid-feedback" *ngIf="form.controls['check_post'].hasError('required')">
+                                                    Please enter check post
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Challan No.</label>
+                                                <input class="form-control" placeholder="Challan No." name="challan_no" formControlName="challan_no" [ngClass]="displayFieldCss('challan_no')">
+                                                <div class="invalid-feedback" *ngIf="form.controls['challan_no'].hasError('required')">
+                                                    Please enter challan no
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Challan Date</label>
+                                                <div class="input-group">
+                                                    <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="model" ngbDatepicker #c="ngbDatepicker" name="challan_date"
+                                                        formControlName="challan_date" [ngClass]="displayFieldCss('challan_date')">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-secondary" (click)="c.toggle()" type="button">
+                                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="invalid-feedback" *ngIf="form.controls['challan_date'].hasError('required')">
+                                                        Please enter challan date
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12" style="text-align: right">
+                                        <button type="submit" class="btn btn-primary" (click)="addGrn()">Submit</button>
+                                        <button type="reset" class="btn btn-secondary" (click)="reSet()">Reset</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
+</loading>

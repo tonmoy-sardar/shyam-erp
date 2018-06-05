@@ -3,10 +3,9 @@ import { Router } from '@angular/router';
 import { PurchaseOrdersService } from '../../core/services/purchase-orders.service';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../../core/services/company.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-orders',
@@ -30,13 +29,12 @@ export class PurchaseOrdersComponent implements OnInit {
   sort_by = '';
   sort_type= '';
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private purchaseOrdersService: PurchaseOrdersService,
     private companyService: CompanyService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
@@ -100,8 +98,6 @@ export class PurchaseOrdersComponent implements OnInit {
         tooltip_msg:'Purchase Order Raised Date'
       },
     ];
-
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -123,7 +119,7 @@ export class PurchaseOrdersComponent implements OnInit {
   };
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseOrderList();
   }
@@ -163,14 +159,20 @@ export class PurchaseOrdersComponent implements OnInit {
         else{
           this.upper_count = this.totalPurchaseOrderList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(this.purchaseOrderList)
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
   
   changeStatus(value, id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let PurchaseOrder;
     if (value != "") {
       if (value == 0) {
@@ -193,10 +195,10 @@ export class PurchaseOrdersComponent implements OnInit {
           this.getPurchaseOrderList();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -204,7 +206,7 @@ export class PurchaseOrdersComponent implements OnInit {
 
   changeApproveStatus(value, id) {
     if (value > 0) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       let PurchaseOrder;
 
       PurchaseOrder = {
@@ -220,10 +222,10 @@ export class PurchaseOrdersComponent implements OnInit {
           this.getPurchaseOrderList();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -232,7 +234,7 @@ export class PurchaseOrdersComponent implements OnInit {
 
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getPurchaseOrderList();
   };
 
@@ -259,7 +261,7 @@ export class PurchaseOrdersComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseOrderList();
   };

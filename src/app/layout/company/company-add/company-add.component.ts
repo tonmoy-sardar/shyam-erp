@@ -4,10 +4,9 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-company-add',
@@ -20,17 +19,16 @@ export class CompanyAddComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = new FormGroup({
       parent: new FormControl('', Validators.required),
       company_name: new FormControl('', Validators.required),
@@ -72,21 +70,21 @@ export class CompanyAddComponent implements OnInit {
 
   addNewCompany() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.companyService.addNewCompany(this.form.value).subscribe(
         response => {
           // console.log(response)
           this.toastr.success('Company added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('company');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {
@@ -102,7 +100,13 @@ export class CompanyAddComponent implements OnInit {
     this.statesService.getStateActiveList().subscribe(
       (data: any[]) => {
         this.stateList = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };

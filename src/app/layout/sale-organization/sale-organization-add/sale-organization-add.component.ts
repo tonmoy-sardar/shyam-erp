@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { SaleOrganizationService } from '../../../core/services/sale-organization.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-sale-organization-add',
@@ -16,22 +16,20 @@ export class SaleOrganizationAddComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private saleOrganizationService: SaleOrganizationService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       description: [null, Validators.required]
     });
-    this.spinner.hide();
     this.getHelp();
   }
 
@@ -39,6 +37,13 @@ export class SaleOrganizationAddComponent implements OnInit {
     this.helpService.getHelp().subscribe(res => {
       this.help_heading = res.data.saleOrganizationAdd.heading;
       this.help_description = res.data.saleOrganizationAdd.desc;
+      this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
@@ -48,20 +53,20 @@ export class SaleOrganizationAddComponent implements OnInit {
 
   addNewSaleOrganization() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.saleOrganizationService.addNewSaleOrganization(this.form.value).subscribe(
         response => {
           this.toastr.success('Sale organization added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('sale-organization');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

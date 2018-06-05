@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StocksService } from '../../../core/services/stocks.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-stocks-issue',
@@ -17,17 +17,16 @@ export class StocksIssueComponent implements OnInit {
   visible_key: boolean;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private stocksService: StocksService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       stock: ['', Validators.required],
       quantity: ['', Validators.required],
@@ -49,8 +48,14 @@ export class StocksIssueComponent implements OnInit {
       (data: any[]) => {
         this.stockDetails = data;
         this.visible_key = true;
-        console.log(this.stockDetails)
-        this.spinner.hide();
+        // console.log(this.stockDetails)
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
@@ -75,16 +80,16 @@ export class StocksIssueComponent implements OnInit {
     this.form.patchValue({
       stock: this.stockDetails.id
     })
-    if (this.form.valid) {      
-      this.spinner.show();
+    if (this.form.valid) {
+      this.loading = LoadingState.Processing;
       this.stocksService.addNewStockIssue(this.form.value).subscribe(res => {
         this.stockUpdate();
       },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       )
     } else {
@@ -108,14 +113,14 @@ export class StocksIssueComponent implements OnInit {
         this.toastr.success('Stock issued successfully', '', {
           timeOut: 3000,
         });
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         this.router.navigateByUrl('/stocks/issue-history/' + this.route.snapshot.params['id']);
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
@@ -139,11 +144,11 @@ export class StocksIssueComponent implements OnInit {
     };
   }
 
-  getAvlChek(val){
-    if(Math.round(val) > 0){
+  getAvlChek(val) {
+    if (Math.round(val) > 0) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   }

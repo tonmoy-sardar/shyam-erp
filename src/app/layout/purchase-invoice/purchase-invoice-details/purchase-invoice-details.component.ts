@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { PurchaseInvoiceService } from '../../../core/services/purchase-invoice.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-invoice-details',
@@ -17,16 +16,15 @@ export class PurchaseInvoiceDetailsComponent implements OnInit {
   visible_key: boolean;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private purchaseInvoiceService: PurchaseInvoiceService,
     private router: Router, 
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.getPurchaseInvoiceDetails(this.route.snapshot.params['id']);
     this.getHelp();
   }
@@ -45,7 +43,10 @@ export class PurchaseInvoiceDetailsComponent implements OnInit {
         this.purchaseInvoice = data;
         // console.log(this.purchaseInvoice)
         this.visible_key = true
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
       }
      );
   }

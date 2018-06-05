@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators, } from '@angular/forms';
-
 import { CompanyService } from '../../../core/services/company.service';
 import { PurchaseOrganizationService } from '../../../core/services/purchase-organization.service';
 import { PurchaseGroupService } from '../../../core/services/purchase-group.service';
 import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-material-add',
@@ -26,7 +25,7 @@ export class MaterialAddComponent implements OnInit {
   is_taxable_value = false;
   help_heading = "";
   help_description = "";
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private materialService: MaterialService,
     private purchaseOrganizationService: PurchaseOrganizationService,
@@ -35,12 +34,10 @@ export class MaterialAddComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       material_type: ['', Validators.required],
       material_code: [null, Validators.required],
@@ -94,15 +91,15 @@ export class MaterialAddComponent implements OnInit {
   }
 
   showHideMaterialUOM(val) {
-    if(val.currentTarget.checked){
+    if (val.currentTarget.checked) {
       this.addMaterialUom(2);
-      if(this.form.value.is_taxable == true){
+      if (this.form.value.is_taxable == true) {
         this.addMateriaTax(2);
       }
     }
-    else{
+    else {
       this.deleteMaterialUom(1);
-      if(this.form.value.is_taxable == true){
+      if (this.form.value.is_taxable == true) {
         this.deleteMaterialTax(1);
       }
     }
@@ -140,14 +137,14 @@ export class MaterialAddComponent implements OnInit {
   }
 
   showHideMaterialTax(val) {
-    if(val.currentTarget.checked){
+    if (val.currentTarget.checked) {
       this.addMateriaTax(1);
       if (this.form.value.is_sales == true) {
         this.addMateriaTax(2);
       }
       this.is_taxable_value = true;
     }
-    else{
+    else {
       const material_tax_control = <FormArray>this.form.controls['material_tax'];
       this.clearFormArray(material_tax_control);
       this.is_taxable_value = false;
@@ -170,7 +167,6 @@ export class MaterialAddComponent implements OnInit {
     this.companyService.getUOMList().subscribe(
       (data: any[]) => {
         this.UOMList = data['results'];
-
       }
     );
   };
@@ -188,14 +184,20 @@ export class MaterialAddComponent implements OnInit {
     this.purchaseOrganizationService.getPurchaseOrganizationActiveList().subscribe(
       (data: any[]) => {
         this.purchaseOrganizationList = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
 
-  getIgst(i){
+  getIgst(i) {
     const material_tax_control = <FormArray>this.form.controls['material_tax'];
-    if(this.form.value.material_tax[i].cgst != "" && this.form.value.material_tax[i].sgst != ""){
+    if (this.form.value.material_tax[i].cgst != "" && this.form.value.material_tax[i].sgst != "") {
       material_tax_control.at(i).patchValue({
         igst: parseFloat(this.form.value.material_tax[i].cgst) + parseFloat(this.form.value.material_tax[i].sgst)
       });
@@ -205,12 +207,12 @@ export class MaterialAddComponent implements OnInit {
 
   addMaterial() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       let material_purchase_org_arr = [];
       this.form.value.material_purchase_org.forEach(x => {
         material_purchase_org_arr.push({ pur_org: x });
       })
-      
+
       let material_purchase_grp_arr = [];
       this.form.value.material_purchase_grp.forEach(k => {
         material_purchase_grp_arr.push({ pur_group: k });
@@ -227,14 +229,14 @@ export class MaterialAddComponent implements OnInit {
           this.toastr.success('Material added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('material');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { StocksService } from '../../../core/services/stocks.service';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-stocks-issue-history',
@@ -24,17 +24,16 @@ export class StocksIssueHistoryComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private stocksService: StocksService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -51,7 +50,7 @@ export class StocksIssueHistoryComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getStockIssueList();
   }
@@ -75,14 +74,20 @@ export class StocksIssueHistoryComponent implements OnInit {
       else{
         this.upper_count = this.totalStockIssueList
       }
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
       // console.log(this.stockIssueList)
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
   pagination() {
     this.itemNo = (this.defaultPagination - 1) * 10;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getStockIssueList();
   };
 

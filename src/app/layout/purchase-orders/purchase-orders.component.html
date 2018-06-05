@@ -1,45 +1,52 @@
-<div>
-  <div class="row">
-    <div class="col-md-6">
-      <h4 class="page-header">Purchase Order List</h4>
+<loading [state]="loading">
+  <div>
+    <div class="row">
+      <div class="col-md-6">
+        <h4 class="page-header">Purchase Order List</h4>
+      </div>
+      <div class="col-md-6 pull-right" style="text-align: right">
+        <app-help [heading]="help_heading" [description]="help_description"></app-help>
+        <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-orders/add')">
+          <i class="fa fa-plus"></i> New Purchase Order</button>
+      </div>
+      <div class="clearfix"></div>
     </div>
-    <div class="col-md-6 pull-right" style="text-align: right">
-      <app-help [heading]="help_heading" [description]="help_description"></app-help>
-      <button type="button" class="btn btn-primary" (click)="btnClickNav('purchase-orders/add')">
-        <i class="fa fa-plus"></i> New Purchase Order</button>
-    </div>
-    <div class="clearfix"></div>
-  </div>
 
-  <hr/>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <div class="col-md-9">
-              <h5>Purchase Orders</h5>
-            </div>
-            <div class="col-md-3">
-              <form role="form" (ngSubmit)="dataSearch()">
-                <div class="input-group">
-                  <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
-                  <div class="input-group-append">
-                    <button class="btn btn-secondary" type="submit">
-                      <i class="fa fa-search"></i>
-                    </button>
+    <hr/>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-9">
+                <h5>Purchase Orders</h5>
+              </div>
+              <div class="col-md-3">
+                <form role="form" (ngSubmit)="dataSearch()">
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                    <div class="input-group-append">
+                      <button class="btn btn-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-        <table class="card-body table table-hover table-sm table-bordered">
-          <thead>
-            <tr>
-              <th>Sl.No.</th>
-              <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span *ngIf="headerTh.has_tooltip == true" class="info" ngbTooltip="{{headerTh.tooltip_msg}}">i</span> <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
-              <!-- <th>PO. No.
+          <table class="card-body table table-hover table-sm table-bordered">
+            <thead>
+              <tr>
+                <th>Sl.No.</th>
+                <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}}
+                  <span *ngIf="headerTh.has_tooltip == true" class="info" ngbTooltip="{{headerTh.tooltip_msg}}">i</span>
+                  <span class="pull-right">
+                    <i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i>
+                    <i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i>
+                  </span>
+                </th>
+                <!-- <th>PO. No.
                 <span class="info" ngbTooltip="Purchase Order Number">i</span>
               </th>
               <th>PR. No.</th>
@@ -53,23 +60,23 @@
               <th>Po Raised Date
                 <span class="info" ngbTooltip="Purchase Order Raised Date">i</span>
               </th> -->
-              <!-- <th>Status</th> -->
-              <th>Is approved</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let purchaseOrder of purchaseOrderList ; let i = index">
-              <th scope="row">{{itemNo + i +1}}</th>
-              <td>{{purchaseOrder.purchase_order_map[0].purchase_order_no}}</td>
-              <td>{{purchaseOrder.requisition_no[0].requisition_no}}</td>
-              <td>{{purchaseOrder.grand_total}}</td>
-              <td>{{purchaseOrder.company.company_name}}</td>
-              <td>{{purchaseOrder.purchase_order_detail[0].company_branch.branch_address}}</td>
-              <td>{{purchaseOrder.purchase_order_detail[0].storage_location.storage_address}}</td>
-              <td>{{purchaseOrder.purchase_order_detail[0].storage_bin.bin_no}}</td>
-              <td>{{purchaseOrder.quotation_date | date:'dd-MM-yyyy'}}</td>
-              <!-- <td>
+                <!-- <th>Status</th> -->
+                <th>Is approved</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let purchaseOrder of purchaseOrderList ; let i = index">
+                <th scope="row">{{itemNo + i +1}}</th>
+                <td>{{purchaseOrder.purchase_order_map[0].purchase_order_no}}</td>
+                <td>{{purchaseOrder.requisition_no[0].requisition_no}}</td>
+                <td>{{purchaseOrder.grand_total}}</td>
+                <td>{{purchaseOrder.company.company_name}}</td>
+                <td>{{purchaseOrder.purchase_order_detail[0].company_branch.branch_address}}</td>
+                <td>{{purchaseOrder.purchase_order_detail[0].storage_location.storage_address}}</td>
+                <td>{{purchaseOrder.purchase_order_detail[0].storage_bin.bin_no}}</td>
+                <td>{{purchaseOrder.quotation_date | date:'dd-MM-yyyy'}}</td>
+                <!-- <td>
                 <label *ngIf="purchaseOrder.is_finalised == 1">Finalised</label>
                 <label *ngIf="purchaseOrder.status && purchaseOrder.is_finalised == 0">Active</label>
                 <label *ngIf="!purchaseOrder.status && purchaseOrder.is_finalised == 0">Inactive</label>
@@ -79,43 +86,44 @@
                   <option value='1'>Active</option>
                 </select>
               </td> -->
-              <td>
-                <label *ngIf="purchaseOrder.is_finalised == 1">Finalised</label>
-                <label *ngIf="purchaseOrder.is_approve == 0 && purchaseOrder.is_finalised == 0">None</label>
-                <label *ngIf="purchaseOrder.is_approve == 1 && purchaseOrder.is_finalised == 0">Yes</label>
-                <label *ngIf="purchaseOrder.is_approve == 2 && purchaseOrder.is_finalised == 0">No</label>
-                <select *ngIf="purchaseOrder.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,purchaseOrder.id)">
-                  <option value='0'>Change Approve</option>
-                  <option value='1'>Approve</option>
-                  <option value='2'>Dis-Approve</option>
-                </select>
-              </td>
-              <td>
-                <a href="javascript:void(0);" class="anchor-action" title="Details" name="Details" [routerLink]="['/purchase-orders/details', purchaseOrder.id]">
-                  <i class="fa fa-eye"></i>
-                </a>
-              </td>
+                <td>
+                  <label *ngIf="purchaseOrder.is_finalised == 1">Finalised</label>
+                  <label *ngIf="purchaseOrder.is_approve == 0 && purchaseOrder.is_finalised == 0">None</label>
+                  <label *ngIf="purchaseOrder.is_approve == 1 && purchaseOrder.is_finalised == 0">Yes</label>
+                  <label *ngIf="purchaseOrder.is_approve == 2 && purchaseOrder.is_finalised == 0">No</label>
+                  <select *ngIf="purchaseOrder.is_finalised == 0" class="form-control" name="is_approve" (change)="changeApproveStatus($event.target.value,purchaseOrder.id)">
+                    <option value='0'>Change Approve</option>
+                    <option value='1'>Approve</option>
+                    <option value='2'>Dis-Approve</option>
+                  </select>
+                </td>
+                <td>
+                  <a href="javascript:void(0);" class="anchor-action" title="Details" name="Details" [routerLink]="['/purchase-orders/details', purchaseOrder.id]">
+                    <i class="fa fa-eye"></i>
+                  </a>
+                </td>
 
-            </tr>
-            <tr *ngIf="purchaseOrderList.length == 0">
-              <td colspan="12" class="text-center">No record found</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="col-md-12">
-          <div class="pagination-msg" *ngIf="totalPurchaseOrderList > 0">
-            <p>Showing {{lower_count}} to {{upper_count}} of {{totalPurchaseOrderList}} entries</p>
+              </tr>
+              <tr *ngIf="purchaseOrderList.length == 0">
+                <td colspan="12" class="text-center">No record found</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col-md-12">
+            <div class="pagination-msg" *ngIf="totalPurchaseOrderList > 0">
+              <p>Showing {{lower_count}} to {{upper_count}} of {{totalPurchaseOrderList}} entries</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row" *ngIf="totalPurchaseOrderList > itemPerPage">
-    <div class="col-md-12">
-      <div class="card-body pull-right">
-        <ngb-pagination [collectionSize]="totalPurchaseOrderList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()" size="sm"></ngb-pagination>
+    <div class="row" *ngIf="totalPurchaseOrderList > itemPerPage">
+      <div class="col-md-12">
+        <div class="card-body pull-right">
+          <ngb-pagination [collectionSize]="totalPurchaseOrderList" [maxSize]="paginationMaxSize" [(page)]="defaultPagination" (pageChange)="pagination()"
+            size="sm"></ngb-pagination>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
+</loading>

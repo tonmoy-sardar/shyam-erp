@@ -4,10 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-branch-list',
@@ -33,14 +32,13 @@ export class BranchListComponent implements OnInit {
   sort_by = '';
   sort_type= '';
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
@@ -82,7 +80,6 @@ export class BranchListComponent implements OnInit {
         sort_type:''
       }
     ];
-    this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -164,20 +161,25 @@ export class BranchListComponent implements OnInit {
         else{
           this.upper_count = this.totalCompanyBranchList
         }
-
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   }
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   };
 
@@ -204,7 +206,7 @@ export class BranchListComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getCompanyBranchList(this.route.snapshot.params['id']);
   };

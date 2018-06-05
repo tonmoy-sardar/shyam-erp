@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import { PurchaseRequisitionService } from '../../../core/services/purchase-requisition.service';
 import { CompanyService } from '../../../core/services/company.service';
 import { ReportsService } from '../../../core/services/reports.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-reports-purchase-requisition',
@@ -39,11 +39,11 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
   requisition_date: any;
   from_date: any;
   to_date: any;
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     private purchaseRequisitionService: PurchaseRequisitionService,
     private companyService: CompanyService,
@@ -51,7 +51,6 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -72,23 +71,26 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
     this.purchaseRequisitionService.getPurchaseRequisitionListWithoutPagination().subscribe(
       res => {
         this.requisition_list = res;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       },
       error => {
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     )
   }
 
   requisitionChange(id) {
     if (id) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.purchaseRequisitionService.getPurchaseRequisitionDetails(id).subscribe(res => {
         this.requisitionDetails = res;
         // console.log(this.requisitionDetails)
         this.requisition_details_key = true;
         this.Search_requisition_list_key = false;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       })
     }
     else {
@@ -117,7 +119,7 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
 
   getSearchRequisitionList() {
     this.Search_requisition_list_key = true;    
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     if (this.company > 0) {
@@ -155,11 +157,14 @@ export class ReportsPurchaseRequisitionComponent implements OnInit {
         else {
           this.upper_count = this.totalSearchRequisitionList
         }        
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
       },
       error => {
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };

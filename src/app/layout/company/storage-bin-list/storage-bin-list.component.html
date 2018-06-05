@@ -1,66 +1,75 @@
-<div>
+<loading [state]="loading">
+  <div>
     <div *ngIf="companyStorageBinCompShow.showList==true">
       <div style="padding-top: 20px;">
         <div class="col-md-6 offset-md-6 pull-right" style="text-align: right">
-            <app-help [heading]="help_heading" [description]="help_description"></app-help>
-            <button type="button" class="btn btn-primary" (click)="showStorageBinAdd()"><i class="fa fa-plus"></i> New Storage Bin</button>
+          <app-help [heading]="help_heading" [description]="help_description"></app-help>
+          <button type="button" class="btn btn-primary" (click)="showStorageBinAdd()">
+            <i class="fa fa-plus"></i> New Storage Bin</button>
         </div>
         <div class="clearfix"></div>
       </div>
-        
+
       <hr/>
       <div class="row">
         <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <div class="row">
-              <div class="col-md-9">
-                <h5>Storage Bin</h5>
-              </div>
-              <div class="col-md-3">
-                <form role="form" (ngSubmit)="dataSearch()">
-                  <div class="input-group">
-                    <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
-                    <div class="input-group-append">
-                      <button class="btn btn-secondary" type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-9">
+                  <h5>Storage Bin</h5>
+                </div>
+                <div class="col-md-3">
+                  <form role="form" (ngSubmit)="dataSearch()">
+                    <div class="input-group">
+                      <input type="text" class="form-control" name="search" placeholder="Search" [(ngModel)]="search_key">
+                      <div class="input-group-append">
+                        <button class="btn btn-secondary" type="submit">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-          <table class="card-body table table-hover table-sm table-bordered">
+            <table class="card-body table table-hover table-sm table-bordered">
               <thead>
-              <tr>
+                <tr>
                   <th>Sl.No.</th>
-                  <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}} <span class="pull-right"><i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i><i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i></span></th>
+                  <th *ngFor="let headerTh of headerThOption ; let i = index" (click)="sortTable(headerTh.code)" class="custom-table-head">{{headerTh.name}}
+                    <span class="pull-right">
+                      <i class="fa fa-chevron-up inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='asc'}"></i>
+                      <i class="fa fa-chevron-down inactive-color" [ngClass]="{'active-color':headerTh.sort_type=='desc'}"></i>
+                    </span>
+                  </th>
                   <th>Action</th>
-              </tr>
+                </tr>
               </thead>
               <tbody>
-              <tr  *ngFor="let companyStorageBin of companyStorageBinList ; let i = index" >
-                <th scope="row">{{itemNo + i +1}}</th>
-                <td>{{companyStorageBin.bin_no}}</td>
-                <td>{{companyStorageBin.bin_volume}}</td>
-                <td>{{companyStorageBin.uom.name}}</td>
-                <td>
-                  <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" (click)="showStorageBinEdit(companyStorageBin.id)"><i class="fa fa-edit"></i></a>
-                </td>
-              </tr>
-              <tr *ngIf="companyStorageBinList.length == 0">
-                <td colspan="9" class="text-center">No record found</td>
-              </tr>
+                <tr *ngFor="let companyStorageBin of companyStorageBinList ; let i = index">
+                  <th scope="row">{{itemNo + i +1}}</th>
+                  <td>{{companyStorageBin.bin_no}}</td>
+                  <td>{{companyStorageBin.bin_volume}}</td>
+                  <td>{{companyStorageBin.uom.name}}</td>
+                  <td>
+                    <a href="javascript:void(0);" class="anchor-action" title="Edit" name="Edit" (click)="showStorageBinEdit(companyStorageBin.id)">
+                      <i class="fa fa-edit"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr *ngIf="companyStorageBinList.length == 0">
+                  <td colspan="9" class="text-center">No record found</td>
+                </tr>
               </tbody>
-          </table>
-          <div class="col-md-12">
-            <div class="pagination-msg" *ngIf="totalCompanyStorageBinList > 0">
-              <p>Showing {{lower_count}} to {{upper_count}} of {{totalCompanyStorageBinList}} entries</p>
+            </table>
+            <div class="col-md-12">
+              <div class="pagination-msg" *ngIf="totalCompanyStorageBinList > 0">
+                <p>Showing {{lower_count}} to {{upper_count}} of {{totalCompanyStorageBinList}} entries</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
       <div class="row" *ngIf="totalCompanyStorageBinList > itemPerPage">
         <div class="col-md-12">
@@ -77,5 +86,4 @@
       <app-storage-bin-edit [companyStorageBinId]=companyStorageBinId (showStorageBinList)="reloadStorageBinList($event)"></app-storage-bin-edit>
     </div>
   </div>
-  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
-  
+</loading>

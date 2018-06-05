@@ -5,8 +5,8 @@ import { CompanyService } from '../../../core/services/company.service';
 import { DesignationsService } from '../../../core/services/designations.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-designations-edit',
@@ -21,6 +21,7 @@ export class DesignationsEditComponent implements OnInit {
   help_heading = "";
   help_description = "";
   visible_key: boolean;
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private departmentsService: DepartmentsService,
     private companyService: CompanyService,
@@ -29,12 +30,10 @@ export class DesignationsEditComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.designationDetails = {
       company: '',
       departments: '',
@@ -53,10 +52,16 @@ export class DesignationsEditComponent implements OnInit {
   getDesignationDetails(id) {
     this.designationsService.getDesignationDetails(id).subscribe(res => {
       this.designationDetails = res;
-      // console.log(this.designationDetails)
-      this.visible_key = true;
+      // console.log(this.designationDetails)      
       this.getDepartmentList(this.designationDetails.company);
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
+      this.visible_key = true;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
 
@@ -91,20 +96,20 @@ export class DesignationsEditComponent implements OnInit {
 
   updateDesignation() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.designationsService.updateDesignation(this.designationDetails).subscribe(
         response => {
           this.toastr.success('Designation updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('designations');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

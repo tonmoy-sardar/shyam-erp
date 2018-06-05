@@ -8,9 +8,9 @@ import { PurchaseOrganizationService } from '../../../core/services/purchase-org
 import { PurchaseGroupService } from '../../../core/services/purchase-group.service';
 import { MaterialService } from '../../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 import * as _ from "lodash";
 
@@ -33,7 +33,7 @@ export class PurchaseRequisitionAddComponent implements OnInit {
   purchaseRequisition;
   help_heading = "";
   help_description = "";
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private purchaseRequisitionService: PurchaseRequisitionService,
     private materialService: MaterialService,
@@ -43,13 +43,11 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
 
   ngOnInit() {
-    this.spinner.show();
     this.purchaseRequisition = {
       purchase_organization: '',
       company: ''
@@ -109,7 +107,7 @@ export class PurchaseRequisitionAddComponent implements OnInit {
 
   addPurchaseRequisition() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       var requisition_all_detail = _.cloneDeep(this.form.value.requisition_detail)
       for (var i = 0; i < requisition_all_detail.length; i++) {
         var form_data = _.cloneDeep(this.form.value);
@@ -140,15 +138,15 @@ export class PurchaseRequisitionAddComponent implements OnInit {
           this.toastr.success('Material added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('purchase-requisition');
         }
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     )
   }
@@ -210,7 +208,12 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     this.purchaseGroupService.getPurchaseGroupActiveList().subscribe(
       (data: any[]) => {
         this.purchaseGroupList = data;
-
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
@@ -219,7 +222,7 @@ export class PurchaseRequisitionAddComponent implements OnInit {
     this.purchaseOrganizationService.getPurchaseOrganizationActiveList().subscribe(
       (data: any[]) => {
         this.purchaseOrganizationList = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       }
     );
   }

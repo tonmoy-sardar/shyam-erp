@@ -3,10 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-storage-bin-edit',
@@ -25,19 +24,17 @@ export class StorageBinEditComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       bin_no: [null, Validators.required],
       bin_volume: [null, Validators.required],
@@ -75,28 +72,34 @@ export class StorageBinEditComponent implements OnInit {
     this.companyService.getCompanyStorageBinDetails(id).subscribe(
       (data: any[]) => {
         this.companyStorageBin = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
 
   updateCompanyStorageBin() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.companyService.updateCompanyStorageBin(this.companyStorageBin).subscribe(
         response => {
           //this.goToList('states');
           this.toastr.success('Storeage bin updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.showStorageBinList.emit();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

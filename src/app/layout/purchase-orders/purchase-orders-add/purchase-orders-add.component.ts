@@ -9,10 +9,9 @@ import { PurchaseOrdersService } from '../../../core/services/purchase-orders.se
 import { VendorService } from '../../../core/services/vendor.service';
 import { TermsConditionService } from '../../../core/services/terms-condition.service';
 import { GstRatesService } from '../../../core/services/gst-rates.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 declare var require: any;
 var converter = require('number-to-words');
@@ -42,7 +41,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
   total_rest_quantity: number = 0;
   help_heading = "";
   help_description = "";
-  
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -54,12 +53,10 @@ export class PurchaseOrdersAddComponent implements OnInit {
     private vendorService: VendorService,
     private termsConditionService: TermsConditionService,
     private gstRatesService: GstRatesService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       requisition: [null, Validators.required],
       quotation_no: ['', Validators.required],
@@ -105,7 +102,6 @@ export class PurchaseOrdersAddComponent implements OnInit {
   getGstRatesList() {
     this.gstRatesService.getGSTListWithoutPagination().subscribe(res => {
       this.gst_rates_list = res;
-      this.spinner.hide();
     })
   }
   getTermsConditionList() {
@@ -122,6 +118,13 @@ export class PurchaseOrdersAddComponent implements OnInit {
   getRequisitionList() {
     this.purchaseRequisitionService.getPurchaseRequisitionListWithoutPagination().subscribe(res => {
       this.requisition_list = res;
+      this.loading = LoadingState.Ready;
+    },
+    error => {
+      this.loading = LoadingState.Ready;
+      this.toastr.error('Something went wrong', '', {
+        timeOut: 3000,
+      });
     })
   }
   btnClickNav = function (toNav) {
@@ -133,7 +136,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
     })
   }
   requisitionChange(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     const order_freight_control = <FormArray>this.form.controls['purchase_order_freight'];
     const order_detail_control = <FormArray>this.form.controls['purchase_order_detail'];
     const order_terms_control = <FormArray>this.form.controls['purchase_order_terms'];
@@ -170,7 +173,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
         if (this.requisition_details.requisition_detail.length > 0) {
           order_freight_control.push(this.create_purchase_order_freight());
           this.visible_key = true;
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
         }
       })
     }
@@ -180,7 +183,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
       this.clearFormArray(order_terms_control);
       this.material_details_list = [];
       this.visible_key = false;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
     }
   }
 
@@ -387,7 +390,7 @@ export class PurchaseOrdersAddComponent implements OnInit {
       if(Math.round(this.form.value.purchase_order_detail[0].order_quantity) == this.total_rest_quantity){
         this.requisitionFinalize()
       }
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       var QtnDate = new Date(this.form.value.quotation_date.year, this.form.value.quotation_date.month - 1, this.form.value.quotation_date.day)
       this.form.patchValue({
         quotation_date: QtnDate.toISOString()
@@ -398,14 +401,14 @@ export class PurchaseOrdersAddComponent implements OnInit {
           this.toastr.success('Purchase order added successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('purchase-orders');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

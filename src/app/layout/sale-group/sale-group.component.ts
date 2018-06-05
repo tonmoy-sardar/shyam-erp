@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaleGroupService } from '../../core/services/sale-group.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-sale-group',
@@ -26,13 +26,12 @@ export class SaleGroupComponent implements OnInit {
 
   sort_by = '';
   sort_type= '';
-
+  loading: LoadingState = LoadingState.NotReady;
   headerThOption = [];
   constructor(
     private saleGroupService: SaleGroupService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
@@ -54,7 +53,6 @@ export class SaleGroupComponent implements OnInit {
         sort_type:''
       }
     ];
-    this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -70,7 +68,7 @@ export class SaleGroupComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getSaleGroupList();
   }
@@ -108,13 +106,19 @@ export class SaleGroupComponent implements OnInit {
           this.upper_count = this.totalSaleGroupList
         }
 
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
      );
   };
 
   activeSaleGroup(id){
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let saleGroup;
 
     saleGroup = {
@@ -129,16 +133,16 @@ export class SaleGroupComponent implements OnInit {
         this.getSaleGroupList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveSaleGroup(id){
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let saleGroup;
 
     saleGroup = {
@@ -154,16 +158,16 @@ export class SaleGroupComponent implements OnInit {
         this.getSaleGroupList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getSaleGroupList();
   };
 
@@ -190,7 +194,7 @@ export class SaleGroupComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getSaleGroupList();
   };

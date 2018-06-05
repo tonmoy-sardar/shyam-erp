@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import { GrnService } from '../../../core/services/grn.service';
 import { CompanyService } from '../../../core/services/company.service';
@@ -10,6 +9,7 @@ import { VendorService } from '../../../core/services/vendor.service';
 import { ReportsService } from '../../../core/services/reports.service';
 import * as Globals from '../../../core/globals';
 import * as jsPDF from 'jspdf';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-reports-grn',
@@ -43,11 +43,11 @@ export class ReportsGrnComponent implements OnInit {
   grn_date: any;
   from_date: any;
   to_date: any;
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     private grnService: GrnService,
     private companyService: CompanyService,
@@ -56,7 +56,6 @@ export class ReportsGrnComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -79,17 +78,21 @@ export class ReportsGrnComponent implements OnInit {
       res => {
         this.grn_list = res;
         // console.log(res)
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       },
       error => {
-        this.spinner.hide();
+        console.log('error', error)
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     )
   }
 
   grnChange(id) {
     if (id) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.grnDetails = '';
       this.material_details_list = [];
       this.grnService.getGrnDetails(id).subscribe(res => {
@@ -119,7 +122,7 @@ export class ReportsGrnComponent implements OnInit {
         })
         this.grn_details_key = true;
         this.Search_grn_list_key = false;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       })
 
     }
@@ -156,7 +159,7 @@ export class ReportsGrnComponent implements OnInit {
 
   getSearchGrnList() {
     this.Search_grn_list_key = true;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     if (this.company > 0) {
@@ -197,11 +200,15 @@ export class ReportsGrnComponent implements OnInit {
         else {
           this.upper_count = this.totalSearchGrnList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
       },
       error => {
-        this.spinner.hide();
+        console.log('error', error)
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };

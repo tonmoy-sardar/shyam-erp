@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
-
+import { ToastrService } from 'ngx-toastr';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-company-tree',
@@ -16,16 +15,15 @@ export class CompanyTreeComponent implements OnInit {
   companyList;
   help_heading = "";
   help_description = "";
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private router: Router,
-    private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.getCompanyList();
     this.getHelp();
   }
@@ -40,7 +38,13 @@ export class CompanyTreeComponent implements OnInit {
     this.companyService.getCompanyList().subscribe(
       (data: any[]) => {
         this.companyList = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };

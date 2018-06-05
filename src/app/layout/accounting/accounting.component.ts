@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaymentService } from '../../core/services/payment.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-accounting',
@@ -29,12 +28,11 @@ export class AccountingComponent implements OnInit {
   sort_by = '';
   sort_type= '';
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private toastr: ToastrService,
     private paymentService: PaymentService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
@@ -98,8 +96,6 @@ export class AccountingComponent implements OnInit {
         tooltip_msg:''
       }
     ];
-
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -121,7 +117,7 @@ export class AccountingComponent implements OnInit {
   };
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPaymentList();
   }
@@ -155,15 +151,21 @@ export class AccountingComponent implements OnInit {
         else {
           this.upper_count = this.totalPaymentList
         }
-        console.log(this.paymentList)
-        this.spinner.hide();
+        // console.log(this.paymentList)
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
   
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getPaymentList();
   };
 
@@ -190,7 +192,7 @@ export class AccountingComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPaymentList();
   };

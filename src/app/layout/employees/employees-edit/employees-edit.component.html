@@ -1,4 +1,5 @@
-<div>
+<loading [state]="loading">
+  <div>
     <div class="row">
       <div class="col-md-6">
         <h4 class="page-header">Employee Edit</h4>
@@ -21,21 +22,24 @@
                 <div class="row">
                   <div class="form-group col-md-4">
                     <label>First Name</label>
-                    <input type="text" class="form-control" name="first_name" placeholder="First Name" formControlName="first_name" [ngClass]="displayFieldCss('first_name')" [(ngModel)]="employee_details.first_name">
+                    <input type="text" class="form-control" name="first_name" placeholder="First Name" formControlName="first_name" [ngClass]="displayFieldCss('first_name')"
+                      [(ngModel)]="employee_details.first_name">
                     <div class="invalid-feedback" *ngIf="form.controls['first_name'].hasError('required')">
                       Please enter first Name
                     </div>
                   </div>
                   <div class="form-group col-md-4">
                     <label>Last Name</label>
-                    <input type="text" class="form-control" name="last_name" placeholder="Last Name" formControlName="last_name" [ngClass]="displayFieldCss('last_name')" [(ngModel)]="employee_details.last_name">
+                    <input type="text" class="form-control" name="last_name" placeholder="Last Name" formControlName="last_name" [ngClass]="displayFieldCss('last_name')"
+                      [(ngModel)]="employee_details.last_name">
                     <div class="invalid-feedback" *ngIf="form.controls['last_name'].hasError('required')">
                       Please enter last Name
                     </div>
                   </div>
                   <div class="form-group col-md-4">
                     <label>Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="Email" formControlName="email" [ngClass]="displayFieldCss('email')" [(ngModel)]="employee_details.email">
+                    <input type="email" class="form-control" name="email" placeholder="Email" formControlName="email" [ngClass]="displayFieldCss('email')"
+                      [(ngModel)]="employee_details.email">
                     <div class="invalid-feedback" *ngIf="form.controls['email'].hasError('pattern') && !form.controls['email'].hasError('required')">
                       Please enter a valid email address
                     </div>
@@ -59,7 +63,8 @@
                   </div>
                   <div class="form-group col-md-4">
                     <label>Alternate Contact No.</label>
-                    <input type="text" appOnlyNumber class="form-control" name="alt_contact" placeholder="Alternate Contact No." formControlName="alt_contact" [(ngModel)]="employee_details.alt_contact" [ngClass]="displayFieldCss('alt_contact')">
+                    <input type="text" appOnlyNumber class="form-control" name="alt_contact" placeholder="Alternate Contact No." formControlName="alt_contact"
+                      [(ngModel)]="employee_details.alt_contact" [ngClass]="displayFieldCss('alt_contact')">
 
                     <div class="invalid-feedback" *ngIf="form.controls['alt_contact'].hasError('minlength') && !form.controls['alt_contact'].hasError('required')">
                       Please enter at least 10 digit
@@ -71,7 +76,8 @@
                   <div class="form-group col-md-4">
                     <label>DOB</label>
                     <div class="input-group">
-                      <input class="form-control" placeholder="yyyy-mm-dd" name="dob" ngbDatepicker #d="ngbDatepicker" formControlName="dob" [ngClass]="displayFieldCss('dob')" [(ngModel)]="employee_details.dob">
+                      <input class="form-control" placeholder="yyyy-mm-dd" name="dob" ngbDatepicker #d="ngbDatepicker" formControlName="dob" [ngClass]="displayFieldCss('dob')"
+                        [(ngModel)]="employee_details.dob">
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
                           <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -92,8 +98,8 @@
                   </div>
                   <div class="form-group col-md-4">
                     <label>AADHAAR Number</label>
-                    <input type="text" class="form-control" name="adhaar_no" placeholder="AADHAAR Number" formControlName="adhaar_no"
-                      [ngClass]="displayFieldCss('adhaar_no')" [(ngModel)]="employee_details.adhaar_no">
+                    <input type="text" class="form-control" name="adhaar_no" placeholder="AADHAAR Number" formControlName="adhaar_no" [ngClass]="displayFieldCss('adhaar_no')"
+                      [(ngModel)]="employee_details.adhaar_no">
                     <div class="invalid-feedback" *ngIf="form.controls['adhaar_no'].hasError('required')">
                       Please enter AADHAAR
                     </div>
@@ -113,7 +119,8 @@
                       </div>
                       <div class="form-group col-md-3">
                         <label>State</label>
-                        <select class="form-control" name="emp_present_state" formControlName="emp_present_state" [ngClass]="displayFieldCss('emp_present_state')" [(ngModel)]="employee_details.emp_present_state">
+                        <select class="form-control" name="emp_present_state" formControlName="emp_present_state" [ngClass]="displayFieldCss('emp_present_state')"
+                          [(ngModel)]="employee_details.emp_present_state">
                           <option value="">Select State</option>
                           <option value="{{state.id}}" *ngFor="let state of stateList">{{state.state_name}}</option>
                         </select>
@@ -123,14 +130,16 @@
                       </div>
                       <div class="form-group col-md-3">
                         <label>City</label>
-                        <input class="form-control" placeholder="City" name="emp_present_city" formControlName="emp_present_city" [ngClass]="displayFieldCss('emp_present_city')" [(ngModel)]="employee_details.emp_present_city">
+                        <input class="form-control" placeholder="City" name="emp_present_city" formControlName="emp_present_city" [ngClass]="displayFieldCss('emp_present_city')"
+                          [(ngModel)]="employee_details.emp_present_city">
                         <div class="invalid-feedback" *ngIf="form.controls['emp_present_city'].hasError('required')">
                           Please enter city
                         </div>
                       </div>
                       <div class="form-group col-md-2">
                         <label>Pin</label>
-                        <input class="form-control" placeholder="Pin" name="emp_present_pin" formControlName="emp_present_pin" [ngClass]="displayFieldCss('emp_present_pin')" [(ngModel)]="employee_details.emp_present_pin">
+                        <input class="form-control" placeholder="Pin" name="emp_present_pin" formControlName="emp_present_pin" [ngClass]="displayFieldCss('emp_present_pin')"
+                          [(ngModel)]="employee_details.emp_present_pin">
                         <div class="invalid-feedback" *ngIf="form.controls['emp_present_pin'].hasError('required')">
                           Please enter pincode
                         </div>
@@ -144,7 +153,8 @@
                     <div class="row">
                       <div class="form-group col-md-4">
                         <label>Address</label>
-                        <textarea class="form-control" rows="1" placeholder="Address" name="emp_permanent_address" formControlName="emp_permanent_address" [(ngModel)]="employee_details.emp_permanent_address"></textarea>
+                        <textarea class="form-control" rows="1" placeholder="Address" name="emp_permanent_address" formControlName="emp_permanent_address"
+                          [(ngModel)]="employee_details.emp_permanent_address"></textarea>
                       </div>
                       <div class="form-group col-md-3">
                         <label>State</label>
@@ -167,7 +177,8 @@
                 <div class="row">
                   <div class="form-group col-md-4">
                     <label>Company</label>
-                    <select class="form-control" name="company" formControlName="company" [ngClass]="displayFieldCss('company')" (change)="companyChange($event.target.value)" [(ngModel)]="employee_details.company">
+                    <select class="form-control" name="company" formControlName="company" [ngClass]="displayFieldCss('company')" (change)="companyChange($event.target.value)"
+                      [(ngModel)]="employee_details.company">
                       <option value="">Select Company</option>
                       <option *ngFor="let company of company_list" value="{{company.id}}">{{company.company_name}}</option>
                     </select>
@@ -188,7 +199,8 @@
                   </div>
                   <div class="form-group col-md-4">
                     <label>Designation</label>
-                    <select class="form-control" name="designation" formControlName="designation" [ngClass]="displayFieldCss('designation')" [(ngModel)]="employee_details.designation">
+                    <select class="form-control" name="designation" formControlName="designation" [ngClass]="displayFieldCss('designation')"
+                      [(ngModel)]="employee_details.designation">
                       <option value="">Select Department</option>
                       <option *ngFor="let designation of designation_list" value="{{designation.id}}">{{designation.designation_name}}</option>
                     </select>
@@ -208,4 +220,4 @@
       </div>
     </div>
   </div>
-  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
+</loading>

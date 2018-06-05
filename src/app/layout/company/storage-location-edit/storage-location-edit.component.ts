@@ -4,10 +4,9 @@ import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-storage-location-edit',
@@ -24,7 +23,7 @@ export class StorageLocationEditComponent implements OnInit {
   companyBranchList;
   help_heading = "";
   help_description = "";
-  
+  loading: LoadingState = LoadingState.NotReady;
   form: FormGroup;
   constructor(
     private companyService: CompanyService,
@@ -33,12 +32,10 @@ export class StorageLocationEditComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       storage_email: [null, [Validators.required,Validators.email]],
       storage_contact_no: [null, Validators.required],
@@ -79,27 +76,33 @@ export class StorageLocationEditComponent implements OnInit {
     this.companyService.getCompanyStorageDetails(id).subscribe(
       (data: any[]) => {
         this.companyStorage = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
 
   updateCompanyStorage() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.companyService.updateCompanyStorage(this.companyStorage).subscribe(
         response => {
           this.toastr.success('Store updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.showStorageList.emit();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

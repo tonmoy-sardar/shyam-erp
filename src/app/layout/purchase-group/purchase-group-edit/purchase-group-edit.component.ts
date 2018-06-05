@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PurchaseGroupService } from '../../../core/services/purchase-group.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-group-edit',
@@ -17,18 +17,17 @@ export class PurchaseGroupEditComponent implements OnInit {
   form: FormGroup;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private purchaseGroupService: PurchaseGroupService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       description: [null, Validators.required]
@@ -53,7 +52,13 @@ export class PurchaseGroupEditComponent implements OnInit {
     this.purchaseGroupService.getPurchaseGroupDetails(id).subscribe(
       (data: any[]) => {
         this.purchaseGroup = data;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
@@ -65,20 +70,20 @@ export class PurchaseGroupEditComponent implements OnInit {
 
   updatePurchaseGroup() {
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.purchaseGroupService.updatePurchaseGroup(this.purchaseGroup).subscribe(
         response => {
           this.toastr.success('Purchase group updated successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('purchase-group');
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     } else {

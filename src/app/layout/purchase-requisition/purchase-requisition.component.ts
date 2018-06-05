@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseRequisitionService } from '../../core/services/purchase-requisition.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-requisition',
@@ -26,65 +25,62 @@ export class PurchaseRequisitionComponent implements OnInit {
   itemPerPage: number;
 
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private purchaseRequisitionService: PurchaseRequisitionService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
 
     this.headerThOption = [
-      {  
+      {
         name: "PR No.",
         code: "requisition_map__requisition_no",
-        sort_type:'',
-        has_tooltip:true,
-        tooltip_msg:'Purchase Requisition Number'
+        sort_type: '',
+        has_tooltip: true,
+        tooltip_msg: 'Purchase Requisition Number'
       },
-      {  
+      {
         name: "Company",
         code: "company__company_name",
-        sort_type:'',
-        has_tooltip:false,
-        tooltip_msg:''
+        sort_type: '',
+        has_tooltip: false,
+        tooltip_msg: ''
       },
-      {  
+      {
         name: "P. Org.",
         code: "purchase_org__name",
-        sort_type:'',
-        has_tooltip:true,
-        tooltip_msg:'Purchase Organisation'
+        sort_type: '',
+        has_tooltip: true,
+        tooltip_msg: 'Purchase Organisation'
       },
-      {  
+      {
         name: "P. Group",
         code: "purchase_grp__name",
-        sort_type:'',
-        has_tooltip:true,
-        tooltip_msg:'Purchase Group'
+        sort_type: '',
+        has_tooltip: true,
+        tooltip_msg: 'Purchase Group'
       },
-      {  
+      {
         name: "PR Raised Date",
         code: "created_at",
-        sort_type:'',
-        has_tooltip:true,
-        tooltip_msg:'Purchase Requisition Raised Date'
+        sort_type: '',
+        has_tooltip: true,
+        tooltip_msg: 'Purchase Requisition Raised Date'
       },
-      {  
+      {
         name: "PR Raised By",
         code: "created_by__first_name",
-        sort_type:'',
-        has_tooltip:true,
-        tooltip_msg:'Purchase Requisition Raised By'
+        sort_type: '',
+        has_tooltip: true,
+        tooltip_msg: 'Purchase Requisition Raised By'
       }
     ];
-
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -107,17 +103,14 @@ export class PurchaseRequisitionComponent implements OnInit {
   getPurchaseRequisitionList() {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
     this.purchaseRequisitionService.getPurchaseRequisitionList(params).subscribe(
@@ -126,20 +119,26 @@ export class PurchaseRequisitionComponent implements OnInit {
         this.purchaseRequisitionList = data['results'];
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
-        if(this.totalPurchaseRequisitionList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalPurchaseRequisitionList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalPurchaseRequisitionList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(this.purchaseRequisitionList)
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
 
   changeStatus(value, id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let purchaseRequisition;
     if (value != "") {
       if (value == 0) {
@@ -162,10 +161,10 @@ export class PurchaseRequisitionComponent implements OnInit {
           this.getPurchaseRequisitionList();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -173,7 +172,7 @@ export class PurchaseRequisitionComponent implements OnInit {
 
   changeApproveStatus(value, id) {
     if (value > 0) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       let purchaseRequisition;
 
       purchaseRequisition = {
@@ -189,10 +188,10 @@ export class PurchaseRequisitionComponent implements OnInit {
           this.getPurchaseRequisitionList();
         },
         error => {
-          console.log('error', error)
-          // this.toastr.error('everything is broken', '', {
-          //   timeOut: 3000,
-          // });
+          this.loading = LoadingState.Ready;
+          this.toastr.error('Something went wrong', '', {
+            timeOut: 3000,
+          });
         }
       );
     }
@@ -200,39 +199,35 @@ export class PurchaseRequisitionComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseRequisitionList();
   }
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getPurchaseRequisitionList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseRequisitionList();
   };

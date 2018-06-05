@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseGroupService } from '../../core/services/purchase-group.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-group',
@@ -25,35 +25,34 @@ export class PurchaseGroupComponent implements OnInit {
   itemPerPage: number;
 
   sort_by = '';
-  sort_type= '';
+  sort_type = '';
   headerThOption = [];
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private purchaseGroupService: PurchaseGroupService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
     this.headerThOption = [
-      {  
+      {
         name: "Group Name",
         code: "name",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Group Description",
         code: "description",
-        sort_type:''
+        sort_type: ''
       },
-      {  
+      {
         name: "Status",
         code: "status",
-        sort_type:''
+        sort_type: ''
       }
     ];
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -73,24 +72,21 @@ export class PurchaseGroupComponent implements OnInit {
     this.router.navigateByUrl('/' + toNav);
   };
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseGroupList();
   }
   getPurchaseGroupList = function () {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
-    if(this.search_key !='')
-    {
+    if (this.search_key != '') {
       params.set('search', this.search_key.toString());
     }
-    if(this.sort_by !='')
-    {
+    if (this.sort_by != '') {
       params.set('field_name', this.sort_by.toString());
     }
 
-    if(this.sort_type !='')
-    {
+    if (this.sort_type != '') {
       params.set('order_by', this.sort_type.toString());
     }
     this.purchaseGroupService.getPurchaseGroupList(params).subscribe(
@@ -100,19 +96,25 @@ export class PurchaseGroupComponent implements OnInit {
         this.itemNo = (this.defaultPagination - 1) * this.itemPerPage;
         this.lower_count = this.itemNo + 1;
 
-        if(this.totalPurchaseGroupList > this.itemPerPage*this.defaultPagination){
-          this.upper_count = this.itemPerPage*this.defaultPagination
+        if (this.totalPurchaseGroupList > this.itemPerPage * this.defaultPagination) {
+          this.upper_count = this.itemPerPage * this.defaultPagination
         }
-        else{
+        else {
           this.upper_count = this.totalPurchaseGroupList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activePurchaseGroup = function (id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let purchaseGroup;
 
     purchaseGroup = {
@@ -127,16 +129,16 @@ export class PurchaseGroupComponent implements OnInit {
         this.getPurchaseGroupList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactivePurchaseGroup = function (id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let purchaseGroup;
 
     purchaseGroup = {
@@ -152,42 +154,38 @@ export class PurchaseGroupComponent implements OnInit {
         this.getPurchaseGroupList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
   pagination = function () {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getPurchaseGroupList();
   };
 
-  sortTable(value)
-  {
+  sortTable(value) {
     let type = '';
     this.headerThOption.forEach(function (optionValue) {
-      if(optionValue.code == value)
-      {
-        if(optionValue.sort_type =='desc')
-        {
+      if (optionValue.code == value) {
+        if (optionValue.sort_type == 'desc') {
           type = 'asc';
         }
-        else
-        {
+        else {
           type = 'desc';
         }
         optionValue.sort_type = type;
       }
-      else{
+      else {
         optionValue.sort_type = '';
       }
     });
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getPurchaseGroupList();
   };

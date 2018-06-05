@@ -4,10 +4,9 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { GrnService } from '../../../core/services/grn.service';
 import { PurchaseInvoiceService } from '../../../core/services/purchase-invoice.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-invoice-add',
@@ -23,18 +22,17 @@ export class PurchaseInvoiceAddComponent implements OnInit {
   grn_details: any;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private purchaseInvoiceService: PurchaseInvoiceService,
     private grnService: GrnService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.form = this.formBuilder.group({
       grn: ['', Validators.required],
       po_order: ['', Validators.required],
@@ -62,12 +60,12 @@ export class PurchaseInvoiceAddComponent implements OnInit {
   getGrnList() {
     this.grnService.getGrnListWithoutPagination().subscribe(res => {
       this.grnList = res;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
       // console.log(res);
     })
   }
   grnChange(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     const pur_invoice_detail_control = <FormArray>this.form.controls['pur_invoice_detail'];
     if (id) {
       this.clearFormArray(pur_invoice_detail_control)
@@ -110,14 +108,14 @@ export class PurchaseInvoiceAddComponent implements OnInit {
           company: this.grn_details.company.id,
         })
         this.visible_key = true;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       })
     }
     else {
       this.clearFormArray(pur_invoice_detail_control);
       this.material_details_list = [];
       this.visible_key = false;
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
     }
   }
   clearFormArray = (formArray: FormArray) => {
@@ -169,7 +167,7 @@ export class PurchaseInvoiceAddComponent implements OnInit {
       total_amount: amount_sum
     })
     if (this.form.valid) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       console.log(this.form.value)
       this.purchaseInvoiceService.addNewPurchaseInvoice(this.form.value).subscribe(
         response => {
@@ -197,7 +195,7 @@ export class PurchaseInvoiceAddComponent implements OnInit {
     this.grnService.FinalizeGrn(d).subscribe(
       response => {
         // console.log(response)
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         this.toastr.success('Purchase invoice added successfully', '', {
           timeOut: 3000,
         });

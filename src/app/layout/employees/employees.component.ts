@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmployeesService } from '../../core/services/employees.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ConfirmDialogComponent } from '../../core/component/confirm-dialog/confirm-dialog.component';
+import { LoadingState } from '../../core/component/loading/loading.component';
+
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -29,12 +30,11 @@ export class EmployeesComponent implements OnInit {
   itemPerPage: number;
   dialogRef: MatDialogRef<ConfirmDialogComponent>;
   headerThOption = [];
-
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private employeesService: EmployeesService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     public dialog: MatDialog
   ) { }
@@ -58,22 +58,22 @@ export class EmployeesComponent implements OnInit {
       },
       {  
         name: "Contact",
-        code: "Contact",
+        code: "contact",
         sort_type:''
       },
       {  
         name: "Company",
-        code: "company.company_name",
+        code: "company__company_name",
         sort_type:''
       },
       {  
         name: "Department",
-        code: "departments.department_name",
+        code: "departments__department_name",
         sort_type:''
       },
       {  
         name: "Designation",
-        code: "designation.designation_name",
+        code: "designation__designation_name",
         sort_type:''
       },
       {  
@@ -82,7 +82,6 @@ export class EmployeesComponent implements OnInit {
         sort_type:''
       }
     ];
-    this.spinner.show();
     this.itemNo = 0;
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
@@ -99,7 +98,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getEmployeeList();
   }
@@ -137,17 +136,20 @@ export class EmployeesComponent implements OnInit {
         else {
           this.upper_count = this.totalEmployeeList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
       },
       error => {
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeState(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let employee;
 
     employee = {
@@ -162,17 +164,16 @@ export class EmployeesComponent implements OnInit {
         this.getEmployeeList();
       },
       error => {
-        this.spinner.hide();
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveState(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let employee;
 
     employee = {
@@ -188,11 +189,10 @@ export class EmployeesComponent implements OnInit {
         this.getEmployeeList();
       },
       error => {
-        this.spinner.hide();
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -205,7 +205,7 @@ export class EmployeesComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.spinner.show();
+        this.loading = LoadingState.Processing;
         let employee;
 
         employee = {
@@ -220,11 +220,10 @@ export class EmployeesComponent implements OnInit {
             this.getEmployeeList();
           },
           error => {
-            this.spinner.hide();
-            console.log('error', error)
-            // this.toastr.error('everything is broken', '', {
-            //   timeOut: 3000,
-            // });
+            this.loading = LoadingState.Ready;
+            this.toastr.error('Something went wrong', '', {
+              timeOut: 3000,
+            });
           }
         );
       }
@@ -234,7 +233,7 @@ export class EmployeesComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getEmployeeList();
   };
 
@@ -261,7 +260,7 @@ export class EmployeesComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getEmployeeList();
   };

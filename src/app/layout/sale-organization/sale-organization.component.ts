@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaleOrganizationService } from '../../core/services/sale-organization.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-sale-organization',
@@ -26,13 +26,12 @@ export class SaleOrganizationComponent implements OnInit {
 
   sort_by = '';
   sort_type= '';
-
+  loading: LoadingState = LoadingState.NotReady;
   headerThOption = [];
   constructor(
     private saleOrganizationService: SaleOrganizationService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
@@ -54,7 +53,6 @@ export class SaleOrganizationComponent implements OnInit {
         sort_type:''
       }
     ];
-    this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -70,7 +68,7 @@ export class SaleOrganizationComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getSaleOrganizationList();
   }
@@ -106,13 +104,19 @@ export class SaleOrganizationComponent implements OnInit {
         else{
           this.upper_count = this.totalSaleOrganizationList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   activeSaleOrganization = function (id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let saleOrganization;
 
     saleOrganization = {
@@ -127,16 +131,16 @@ export class SaleOrganizationComponent implements OnInit {
         this.getSaleOrganizationList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   inactiveSaleOrganization = function (id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let saleOrganization;
 
     saleOrganization = {
@@ -152,16 +156,16 @@ export class SaleOrganizationComponent implements OnInit {
         this.getSaleOrganizationList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   pagination = function () {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getSaleOrganizationList();
   };
 
@@ -188,7 +192,7 @@ export class SaleOrganizationComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getSaleOrganizationList();
   };

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { StatesService } from '../../../core/services/states.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { ToastrService } from 'ngx-toastr';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-company-details',
@@ -17,17 +17,17 @@ export class CompanyDetailsComponent implements OnInit {
   states;
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private companyService: CompanyService,
     private statesService: StatesService,
     private router: Router,
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService,
-    private helpService: HelpService
+    private helpService: HelpService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.company = {
       id: '',
       company_name: '',
@@ -68,6 +68,13 @@ export class CompanyDetailsComponent implements OnInit {
         if (this.company.company_state) {
           this.getStateDetails(this.company.company_state);
         }
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   }
@@ -76,7 +83,6 @@ export class CompanyDetailsComponent implements OnInit {
     this.statesService.getStateDetails(id).subscribe(
       (data: any[]) => {
         this.states = data;
-        this.spinner.hide();
       }
     );
   }

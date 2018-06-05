@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MaterialService } from '../../core/services/material.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../core/services/help.service';
 import * as Globals from '../../core/globals';
+import { LoadingState } from '../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-material',
@@ -26,13 +26,12 @@ export class MaterialComponent implements OnInit {
   upper_count: number;
   paginationMaxSize: number;
   itemPerPage: number;
-
+  loading: LoadingState = LoadingState.NotReady;
   headerThOption = [];
   constructor(
     private materialService: MaterialService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
@@ -51,7 +50,6 @@ export class MaterialComponent implements OnInit {
       }
     ];
 
-    this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -67,7 +65,7 @@ export class MaterialComponent implements OnInit {
   }
 
   dataSearch() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getMaterialList();
   }
@@ -100,13 +98,19 @@ export class MaterialComponent implements OnInit {
         else {
           this.upper_count = this.totalMaterialList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
 
   deleteMaterial(id) {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let material;
 
     material = {
@@ -121,10 +125,10 @@ export class MaterialComponent implements OnInit {
         this.getMaterialList();
       },
       error => {
-        console.log('error', error)
-        // this.toastr.error('everything is broken', '', {
-        //   timeOut: 3000,
-        // });
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };
@@ -134,7 +138,7 @@ export class MaterialComponent implements OnInit {
   };
 
   pagination() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.getMaterialList();
   };
 
@@ -161,7 +165,7 @@ export class MaterialComponent implements OnInit {
 
     this.sort_by = value;
     this.sort_type = type;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.defaultPagination = 1;
     this.getMaterialList();
   };

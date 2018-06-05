@@ -1,4 +1,5 @@
-<div>
+<loading [state]="loading">
+  <div>
     <div class="row">
       <div class="col-md-6">
         <h4 class="page-header">Purchase Order Details</h4>
@@ -11,7 +12,7 @@
       <div class="clearfix"></div>
     </div>
     <hr/>
-  
+
     <div *ngIf="visible_key">
       <div class="row">
         <div class="col-md-12">
@@ -21,7 +22,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <table class="card-body table table-sm table-bordered">
-  
+
                     <tbody>
                       <tr>
                         <td>
@@ -36,7 +37,7 @@
                         <td>
                           <label>{{purchaseOrder.requisition_no[0].requisition_no}}</label>
                         </td>
-  
+
                       </tr>
                       <tr>
                         <td>
@@ -87,10 +88,10 @@
                         <td colspan="3">
                           <label>{{purchaseOrder.created_by.first_name}}</label>
                         </td>
-  
+
                       </tr>
                     </tbody>
-  
+
                   </table>
                 </div>
                 <div class="col-md-12">
@@ -172,8 +173,16 @@
                           <label>{{item.sub_total}}</label>
                         </td>
                       </tr>
-                      <tr><td colspan="9"></td><td>Grand Total</td><td>{{purchaseOrder.grand_total}}</td></tr>
-                      <tr><td colspan="11">Amount in words : <strong>{{purchaseOrder.grand_total_words}}</strong></td></tr>
+                      <tr>
+                        <td colspan="9"></td>
+                        <td>Grand Total</td>
+                        <td>{{purchaseOrder.grand_total}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="11">Amount in words :
+                          <strong>{{purchaseOrder.grand_total_words}}</strong>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -182,7 +191,7 @@
                   <hr/>
                 </div>
                 <div class="col-md-12">
-                  <table class="card-body table table-hover table-sm table-bordered">                 
+                  <table class="card-body table table-hover table-sm table-bordered">
                     <thead>
                       <tr>
                         <th>
@@ -211,6 +220,6 @@
         </div>
       </div>
     </div>
-  
+
   </div>
-  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="ball-spin"></ngx-spinner>
+</loading>

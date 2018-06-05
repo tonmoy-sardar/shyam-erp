@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HelpService } from '../../../core/services/help.service';
 import { PurchaseOrdersService } from '../../../core/services/purchase-orders.service';
 import { CompanyService } from '../../../core/services/company.service';
 import { VendorService } from '../../../core/services/vendor.service';
 import { ReportsService } from '../../../core/services/reports.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-reports-purchase-order',
@@ -42,11 +42,11 @@ export class ReportsPurchaseOrderComponent implements OnInit {
   order_date: any;
   from_date: any;
   to_date: any;
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService,
     private purchaseOrdersService: PurchaseOrdersService,
     private companyService: CompanyService,
@@ -55,7 +55,6 @@ export class ReportsPurchaseOrderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.defaultPagination = 1;
     this.paginationMaxSize = Globals.paginationMaxSize;
     this.itemPerPage = Globals.itemPerPage;
@@ -76,23 +75,32 @@ export class ReportsPurchaseOrderComponent implements OnInit {
     this.purchaseOrdersService.getPurchaseOrderListWithoutPagination().subscribe(
       res => {
         this.order_list = res;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
       },
       error => {
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     )
   }
 
   orderChange(id) {
     if (id) {
-      this.spinner.show();
+      this.loading = LoadingState.Processing;
       this.purchaseOrdersService.getPurchaseOrderDetails(id).subscribe(res => {
         this.orderDetails = res;
         // console.log(this.orderDetails)
         this.order_details_key = true;
         this.Search_order_list_key = false;
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+      },
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       })
     }
     else {
@@ -127,7 +135,7 @@ export class ReportsPurchaseOrderComponent implements OnInit {
 
   getSearchOrderList() {
     this.Search_order_list_key = true;
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     let params: URLSearchParams = new URLSearchParams();
     params.set('page', this.defaultPagination.toString());
     if (this.company > 0) {
@@ -168,11 +176,14 @@ export class ReportsPurchaseOrderComponent implements OnInit {
         else {
           this.upper_count = this.totalSearchOrderList
         }
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
         // console.log(data)
       },
       error => {
-        this.spinner.hide();
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
       }
     );
   };

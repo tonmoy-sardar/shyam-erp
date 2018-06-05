@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PurchaseOrganizationService } from '../../../core/services/purchase-organization.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 import { HelpService } from '../../../core/services/help.service';
 import * as Globals from '../../../core/globals';
+import { LoadingState } from '../../../core/component/loading/loading.component';
 
 @Component({
   selector: 'app-purchase-organization-mapping',
@@ -17,17 +16,16 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
   PurchaseOrganizationMapingList: any[] = [];
   help_heading = "";
   help_description = "";
+  loading: LoadingState = LoadingState.NotReady;
   constructor(
     private purchaseOrganizationService: PurchaseOrganizationService,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private helpService: HelpService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.getCompanyBranchTree();
     this.getPurchaseOragnizationList(this.route.snapshot.params['id'])
     this.getHelp();
@@ -51,7 +49,7 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
   getPurchaseOragnizationList(id){
     this.purchaseOrganizationService.getPurchaseOrganizationMapingList(id).subscribe(res => {
       this.PurchaseOrganizationMapingList = res['results'];
-      this.spinner.hide();
+      this.loading = LoadingState.Ready;
     })
   }
   
@@ -75,7 +73,7 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
   };
 
   updatePurchaseOrganizationMapping() {
-    this.spinner.show();
+    this.loading = LoadingState.Processing;
     this.purchaseOrganizationService.deletePurchaseOrganizationMapping(this.route.snapshot.params['id']).subscribe(res => {
       for (var i = 0; i < this.companyBranchTree.length; i++) {
         if (this.companyBranchTree[i].company_branch.filter(item => { return item.checked; }).length > 0) {
@@ -95,7 +93,7 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
           this.toastr.success('Purchase organization mapping successfully', '', {
             timeOut: 3000,
           });
-          this.spinner.hide();
+          this.loading = LoadingState.Ready;
           this.goToList('purchase-organization')
         }
   
@@ -109,7 +107,12 @@ export class PurchaseOrganizationMappingComponent implements OnInit {
       response => {
         
       },
-      error => console.log('error', error)
+      error => {
+        this.loading = LoadingState.Ready;
+        this.toastr.error('Something went wrong', '', {
+          timeOut: 3000,
+        });
+      }
     );
   }
 
