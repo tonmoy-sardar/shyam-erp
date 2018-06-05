@@ -35,11 +35,9 @@ export class CompanyAddComponent implements OnInit {
       parent: new FormControl('', Validators.required),
       company_name: new FormControl('', Validators.required),
       company_url: new FormControl('', [
-        Validators.required,
         Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
       ]),
       company_email: new FormControl('', [
-        Validators.required,
         Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
       ]),
       company_contact: new FormControl('', [
@@ -51,9 +49,9 @@ export class CompanyAddComponent implements OnInit {
       company_state: new FormControl('', Validators.required),
       company_city: new FormControl('', Validators.required),
       company_pin: new FormControl('', Validators.required),
-      company_gst: new FormControl('', Validators.required),
-      company_pan: new FormControl('', Validators.required),
-      company_cin: new FormControl('', Validators.required)
+      company_gst: new FormControl(''),
+      company_pan: new FormControl(''),
+      company_cin: new FormControl('')
     });
     this.getCompanyDropdownList();
     this.getStateList();

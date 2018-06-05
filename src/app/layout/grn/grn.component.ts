@@ -61,7 +61,7 @@ export class GrnComponent implements OnInit {
       },
       {  
         name: "PO. No.",
-        code: "purchase_order_no__purchase_order_no",
+        code: "po_order__purchase_order_map__purchase_order_no",
         sort_type:'',
         has_tooltip:true,
         tooltip_msg:'Purchase Order Number'
