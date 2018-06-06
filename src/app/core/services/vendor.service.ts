@@ -34,7 +34,7 @@ export class VendorService {
   }
 
   getVendorDetails(id): Observable<any> {
-    return this.http.get(environment.apiEndpoint + 'vendor_master/' + id + '/', {
+    return this.http.get(environment.apiEndpoint + 'all_vendor/' + id + '/', {
       headers: new HttpHeaders().set('Authorization', 'Token ' + localStorage.getItem('logedUserToken'))
     })
   }
