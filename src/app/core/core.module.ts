@@ -69,7 +69,7 @@ import { VendorTypeService }  from './services/vendor-type.service';
 import { ExpensesService } from './services/expenses.service';
 import { ContractorsService } from './services/contractors.service';
 import { WindowRefService } from './services/window-ref.service';
-
+import { MaterialGroupService } from './services/material-group.service';
 
 @NgModule({
   imports: [
@@ -186,7 +186,8 @@ export class CoreModule {
         VendorTypeService,
         ExpensesService,
         ContractorsService,
-        WindowRefService
+        WindowRefService,
+        MaterialGroupService
       ]
     };
   }
