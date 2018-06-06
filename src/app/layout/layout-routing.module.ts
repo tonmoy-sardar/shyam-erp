@@ -24,6 +24,7 @@ const routes: Routes = [
         loadChildren: './terms-condition/terms-condition.module#TermsConditionModule'
       },
       { path: 'banks', loadChildren: './banks/banks.module#BanksModule' },
+      { path: 'material-group', loadChildren: './material-group/material-group.module#MaterialGroupModule' },
       { path: 'material', loadChildren: './material/material.module#MaterialModule' },
       { path: 'transport', loadChildren: './transport/transport.module#TransportModule' },
       { path: 'purchase-organization', loadChildren: './purchase-organization/purchase-organization.module#PurchaseOrganizationModule' },
